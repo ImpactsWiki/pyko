@@ -19,4 +19,5 @@ Current features include:
 Future features:
 * Fracture and gaps
 * yaml input files
+* Numba performance enhancements (the current python code is about 10x slower than fortran)
 
