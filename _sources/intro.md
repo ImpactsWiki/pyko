@@ -5,19 +5,22 @@ This code was developed from the book <a href="https://link.springer.com/book/10
 
 This resource is available as part of the <a href="https://impacts.wiki">Impacts Community Wiki Project</a>.
 
-This code is currently in development.
+This code is under development.
 
 Current features include:
 * Planar, cylindrical, and spherical geometry
 * Elastic-plastic von Mises model
 * EOS models: ideal gas, Mie-Grueneisen, and SESAME tables
 * Fixed and free boundary conditions
-* Ascii and binary output
+* Ascii and binary (using pickle) output
 * Jupyter notebook plotting and animation scripts
 * Verification tests
 
-Future features:
+Wish list:
 * Fracture and gaps
 * yaml input files
 * Numba performance enhancements (the current python code is about 10x slower than fortran)
+* More strength models
+* Tillotson EOS
+* Absorbing boundary condition
 
