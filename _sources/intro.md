@@ -1,11 +1,19 @@
-# Welcome to your Jupyter Book
+# pyKO hydrocode
 
-This is a small sample book to give you a feel for how book content is
-structured.
-It shows off a few of the major file types, as well as some sample content.
-It does not go in-depth into any particular topic - check out [the Jupyter Book documentation](https://jupyterbook.org) for more information.
+pyKO is a 1d Lagrangian Elastic-Plastic Hydrocode written in python.
+This code was developed from the book <a href="https://link.springer.com/book/10.1007/978-3-662-03885-7">Computer Simulation of Dynamic Phenomena by Mark Wilkins</a> and the <a href="https://www.eng.mu.edu/shockphysics/KO/">fortran KO code by John Borg</a>.
 
-Check out the content pages bundled with this sample book to see more.
+This resource is available as part of the <a href="https://impacts.wiki">Impacts Community Wiki Project</a>.
 
-```{tableofcontents}
-```
+This code is currently in development.
+
+Current features include:
+* Planar, cylindrical, and spherical geometry
+* Elastic-plastic von Mises model
+* EOS models: ideal gas, Mie-Grueneisen, and SESAME tables
+* Fixed and free boundary conditions
+* Ascii and binary output
+* Jupyter notebook plotting and animation scripts
+* Verification tests
+
+
