@@ -16,4 +16,7 @@ Current features include:
 * Jupyter notebook plotting and animation scripts
 * Verification tests
 
+Future features:
+* Fracture and gaps
+* yaml input files
 
