@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Notebooks with MyST Markdown &#8212; pyKO</title>
+    <title>Equations of State &#8212; pyKO</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -50,9 +50,12 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Content with notebooks" href="notebooks.html" />
+    <link rel="next" title="Content with notebooks" href="notebooks.html" />
+    <link rel="prev" title="User Manual" href="manual.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -118,8 +121,8 @@ const thebe_selector_output = ".output, .cell_output"
    User Manual
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="eos.html">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
    Equations of State
   </a>
  </li>
@@ -128,8 +131,8 @@ const thebe_selector_output = ".output, .cell_output"
    Content with notebooks
   </a>
  </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
+ <li class="toctree-l1">
+  <a class="reference internal" href="markdown-notebooks.html">
    Notebooks with MyST Markdown
   </a>
  </li>
@@ -184,35 +187,6 @@ title="Toggle navigation"
         
     </div>
     <div class="header-article__right">
-<div class="menu-dropdown menu-dropdown-launch-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Launch interactive content">
-      <i class="fas fa-rocket"></i>
-  </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="https://mybinder.org/v2/gh/ImpactsWiki/pyKO/master?urlpath=tree/markdown-notebooks.md"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Launch on Binder"
->
-  
-
-<span class="headerbtn__icon-container">
-  
-    <img src="_static/images/logo_binder.svg">
-  </span>
-<span class="headerbtn__text-container">Binder</span>
-</a>
-
-      </li>
-      
-    </ul>
-  </div>
-</div>
-
 <button onclick="toggleFullScreen()"
   class="headerbtn"
   data-toggle="tooltip"
@@ -248,24 +222,7 @@ title="Source repository"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="_sources/markdown-notebooks.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Download notebook file"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-code"></i>
-  </span>
-<span class="headerbtn__text-container">.ipynb</span>
-</a>
-
-      </li>
-      
-      <li>
-        <a href="_sources/markdown-notebooks.md"
+        <a href="_sources/eos.md"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -325,18 +282,23 @@ title="Print to PDF"
     <nav id="bd-toc-nav" aria-label="Page">
         <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#an-example-cell">
-   An example cell
+  <a class="reference internal nav-link" href="#ideal-gas-law">
+   Ideal Gas Law
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#create-a-notebook-with-myst-markdown">
-   Create a notebook with MyST Markdown
+  <a class="reference internal nav-link" href="#mie-gruneisen-eos">
+   Mie-Grüneisen EOS
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#quickly-add-yaml-metadata-for-myst-notebooks">
-   Quickly add YAML metadata for MyST Notebooks
+  <a class="reference internal nav-link" href="#sesame-tables">
+   SESAME Tables
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#references">
+   References
   </a>
  </li>
 </ul>
@@ -348,7 +310,7 @@ title="Print to PDF"
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Notebooks with MyST Markdown</h1>
+                <h1>Equations of State</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -359,18 +321,23 @@ title="Print to PDF"
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#an-example-cell">
-   An example cell
+  <a class="reference internal nav-link" href="#ideal-gas-law">
+   Ideal Gas Law
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#create-a-notebook-with-myst-markdown">
-   Create a notebook with MyST Markdown
+  <a class="reference internal nav-link" href="#mie-gruneisen-eos">
+   Mie-Grüneisen EOS
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#quickly-add-yaml-metadata-for-myst-notebooks">
-   Quickly add YAML metadata for MyST Notebooks
+  <a class="reference internal nav-link" href="#sesame-tables">
+   SESAME Tables
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#references">
+   References
   </a>
  </li>
 </ul>
@@ -383,49 +350,75 @@ title="Print to PDF"
                 
               <div>
                 
-  <section class="tex2jax_ignore mathjax_ignore" id="notebooks-with-myst-markdown">
-<h1>Notebooks with MyST Markdown<a class="headerlink" href="#notebooks-with-myst-markdown" title="Permalink to this headline">#</a></h1>
-<p>Jupyter Book also lets you write text-based notebooks using MyST Markdown.
-See <a class="reference external" href="https://jupyterbook.org/file-types/myst-notebooks.html">the Notebooks with MyST Markdown documentation</a> for more detailed instructions.
-This page shows off a notebook written in MyST Markdown.</p>
-<section id="an-example-cell">
-<h2>An example cell<a class="headerlink" href="#an-example-cell" title="Permalink to this headline">#</a></h2>
-<p>With MyST Markdown, you can define code cells with a directive like so:</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4
-</pre></div>
-</div>
-</div>
-</div>
-<p>When your book is built, the contents of any <code class="docutils literal notranslate"><span class="pre">{code-cell}</span></code> blocks will be
-executed with your default Jupyter kernel, and their outputs will be displayed
-in-line with the rest of your content.</p>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<p>Jupyter Book uses <a class="reference external" href="https://jupytext.readthedocs.io/en/latest/">Jupytext</a> to convert text-based files to notebooks, and can support <a class="reference external" href="https://jupyterbook.org/file-types/jupytext.html">many other text-based notebook files</a>.</p>
-</div>
+  <section class="tex2jax_ignore mathjax_ignore" id="equations-of-state">
+<h1>Equations of State<a class="headerlink" href="#equations-of-state" title="Permalink to this headline">#</a></h1>
+<p>The following equation of state (EOS) models are supported:</p>
+<ul class="simple">
+<li><p>Ideal gas</p></li>
+<li><p>Mie-Grüneisen EOS</p></li>
+<li><p>SESAME tables</p></li>
+</ul>
+<section id="ideal-gas-law">
+<h2>Ideal Gas Law<a class="headerlink" href="#ideal-gas-law" title="Permalink to this headline">#</a></h2>
 </section>
-<section id="create-a-notebook-with-myst-markdown">
-<h2>Create a notebook with MyST Markdown<a class="headerlink" href="#create-a-notebook-with-myst-markdown" title="Permalink to this headline">#</a></h2>
-<p>MyST Markdown notebooks are defined by two things:</p>
-<ol class="simple">
-<li><p>YAML metadata that is needed to understand if / how it should convert text files to notebooks (including information about the kernel needed).
-See the YAML at the top of this page for example.</p></li>
-<li><p>The presence of <code class="docutils literal notranslate"><span class="pre">{code-cell}</span></code> directives, which will be executed with your book.</p></li>
-</ol>
-<p>That’s all that is needed to get started!</p>
+<section id="mie-gruneisen-eos">
+<h2>Mie-Grüneisen EOS<a class="headerlink" href="#mie-gruneisen-eos" title="Permalink to this headline">#</a></h2>
+<p>The Mie-Grüneisen model uses a reference curve, usually the principal Hugoniot, and a thermal parameter to describe a pressure-volume-energy EOS surface (e.g., see Chapter 5 in <span id="id1">[<a class="reference internal" href="#id5" title="Jerry W. Forbes. Shock Wave Compression of Condensed Matter. Springer Berlin Heidelberg, Berlin, Heidelberg, 2012. ISBN 978-3-642-32534-2. URL: http://link.springer.com/10.1007/978-3-642-32535-9, doi:10.1007/978-3-642-32535-9.">Forbes, 2012</a>]</span>).</p>
+<p>The thermal Grüneisen parameter <span class="math notranslate nohighlight">\(\gamma\)</span> is given by</p>
+<div class="math notranslate nohighlight">
+\[ 
+\gamma(V) = V \left[\frac{dP}{dE}\right]_V, \label{eq1}\tag{1}
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\gamma\)</span> is often assumed to only depend on volume. Note that parentheses are used to denote dependent variables.</p>
+<p>In the IM Tool, the functional form for the Grüneisen parameter is currently limited to</p>
+<div class="math notranslate nohighlight">
+\[
+\gamma(V)= \gamma_0 \left[V/V_0\right]^q. \label{eq2}\tag{2}
+\]</div>
+<p>The options for the form for the Grüneisen parameter will be expanded as new equation of state options are developed.</p>
+<p>A word of caution: these simple equations for the shock Hugoniot and the Grüneisen parameter are unlikely to be thermodynamically self-consistent over wide ranges of volume. Beware using the Mie-Grüneisen model over wide ranges of pressure and density. Non-physical results will be obtained with equations that are not self-consistent.</p>
+<p>The Mie-Grüneisen equation of state defines a thermal pressure term, <span class="math notranslate nohighlight">\(P(V,E)\)</span>, at specific volume <span class="math notranslate nohighlight">\(V\)</span> and specific internal energy <span class="math notranslate nohighlight">\(E\)</span> referenced to a known state at <span class="math notranslate nohighlight">\(V\)</span>, which in this case is the principal shock Hugoniot with pressure <span class="math notranslate nohighlight">\(P_H(V)\)</span> and specific internal energy <span class="math notranslate nohighlight">\(E_H(V)\)</span>. Then the thermal pressure term is given by</p>
+<div class="math notranslate nohighlight">
+\[ 
+P(V,E) = P_H(V)+\frac{\gamma(V)}{V} \left[E(V)-E_H(V)\right]. \label{eq3}\tag{3}
+\]</div>
+<p>A single shock must satisfy the Rankine-Hugoniot (R-H) conservation equations between an initial state, <span class="math notranslate nohighlight">\(s_0\)</span>, and the shock state, <span class="math notranslate nohighlight">\(s_H\)</span>. The initial state <span class="math notranslate nohighlight">\(s_0\)</span> is defined by the state variables: specific volume <span class="math notranslate nohighlight">\(V_0\)</span>, presure <span class="math notranslate nohighlight">\(P_0\)</span>, and specific energy <span class="math notranslate nohighlight">\(E_0\)</span> (which then specifies the initial specific entropy <span class="math notranslate nohighlight">\(S_0\)</span> and temperature <span class="math notranslate nohighlight">\(T_0\)</span>). Note the tabulated initial value for the Grüneisen parameter <span class="math notranslate nohighlight">\(\gamma_0\)</span> must correspond to state <span class="math notranslate nohighlight">\(s_0\)</span>. The R-H energy conservation equation is</p>
+<div class="math notranslate nohighlight">
+\[ 
+E_H(V)=E_0+\left[\frac{P_0+P_H(V)}{2}\right]\left[V_0-V\right]. \label{eq4}\tag{4}
+\]</div>
+<p>Combining these two equations defines the Mie-Grüneisen equation of state surface, which is limited to the volume range where <span class="math notranslate nohighlight">\(P_H(V)\)</span> is defined,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+P(V,E) &amp; =  P_H(V)+\frac{\gamma(V)}{V}\left[E(V)-E_0\right] - \left[P_0+P_H(V)\right]\frac{\gamma(V)}{2V}[V_0-V]  \\
+       &amp; =  \frac{\gamma(V)}{V}\left[E(V)-E_0\right] + P_H(V)\left\{ 1- \frac{\gamma(V)}{2V}\left[V_0-V\right] \right\}
+        - \frac{P_0\gamma(V)}{2V}\left[V_0-V\right],\label{eq5} (5)
+\end{split}\]</div>
+<p>and the last term is dropped when <span class="math notranslate nohighlight">\(P_0=0\)</span>. The IM Tool assumes <span class="math notranslate nohighlight">\(E_0=0\)</span> and <span class="math notranslate nohighlight">\(P_0=0\)</span> and <span class="math notranslate nohighlight">\(V_0=1/\rho_0\)</span>, where <span class="math notranslate nohighlight">\(\rho_0\)</span> is the initial density in the material database.</p>
 </section>
-<section id="quickly-add-yaml-metadata-for-myst-notebooks">
-<h2>Quickly add YAML metadata for MyST Notebooks<a class="headerlink" href="#quickly-add-yaml-metadata-for-myst-notebooks" title="Permalink to this headline">#</a></h2>
-<p>If you have a markdown file and you’d like to quickly add YAML metadata to it, so that Jupyter Book will treat it as a MyST Markdown Notebook, run the following command:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">jupyter</span><span class="o">-</span><span class="n">book</span> <span class="n">myst</span> <span class="n">init</span> <span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">markdownfile</span><span class="o">.</span><span class="n">md</span>
-</pre></div>
+<section id="sesame-tables">
+<h2>SESAME Tables<a class="headerlink" href="#sesame-tables" title="Permalink to this headline">#</a></h2>
+<p>SESAME tables are gridded EOS surfaces that are interpolated during problem execution to solve the energy equation. pyKO uses bilinear interpolation on the density-temperature grid.</p>
+<p>Supported table formats:</p>
+<ul class="simple">
+<li><p>LANL standard 201+301 format. This table format specficiation is described in <span id="id2">Lyon <em>et al.</em> [<a class="reference internal" href="#id4" title="Stanford P. Lyon, James D. Johnson, and Group T-1. SESAME: The Los Alamos Laboratory Equation of State Database. Technical Report, Los Alamos LAUR-92-3407, 1992.">1992</a>]</span> (<a href="https://github.com/ststewart/aneos-forsterite-2019/blob/master/EOS-docs/Lyon-Johnson-1992-SESAME-database.pdf">PDF file</a>).</p></li>
+</ul>
+<aside class="margin sidebar">
+<p class="sidebar-title">Table interpolation</p>
+<p>Future documentation will discuss pros and cons of different interpolation schemes.</p>
+</aside>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">#</a></h2>
+<div class="docutils container" id="id3">
+<dl class="citation">
+<dt class="label" id="id5"><span class="brackets"><a class="fn-backref" href="#id1">For12</a></span></dt>
+<dd><p>Jerry W. Forbes. <em>Shock Wave Compression of Condensed Matter</em>. Springer Berlin Heidelberg, Berlin, Heidelberg, 2012. ISBN 978-3-642-32534-2. URL: <a class="reference external" href="http://link.springer.com/10.1007/978-3-642-32535-9">http://link.springer.com/10.1007/978-3-642-32535-9</a>, <a class="reference external" href="https://doi.org/10.1007/978-3-642-32535-9">doi:10.1007/978-3-642-32535-9</a>.</p>
+</dd>
+<dt class="label" id="id4"><span class="brackets"><a class="fn-backref" href="#id2">LJT192</a></span></dt>
+<dd><p>Stanford P. Lyon, James D. Johnson, and Group T-1. SESAME: The Los Alamos Laboratory Equation of State Database. Technical Report, Los Alamos LAUR-92-3407, 1992.</p>
+</dd>
+</dl>
 </div>
 </section>
 </section>
@@ -457,12 +450,19 @@ See the YAML at the top of this page for example.</p></li>
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="notebooks.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="manual.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Content with notebooks</p>
+            <p class="prev-next-title">User Manual</p>
         </div>
+    </a>
+    <a class='right-next' id="next-link" href="notebooks.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Content with notebooks</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
     </a>
 </div>
             </footer>

@@ -119,6 +119,11 @@ const thebe_selector_output = ".output, .cell_output"
   </a>
  </li>
  <li class="toctree-l1">
+  <a class="reference internal" href="eos.html">
+   Equations of State
+  </a>
+ </li>
+ <li class="toctree-l1">
   <a class="reference internal" href="notebooks.html">
    Content with notebooks
   </a>
@@ -192,19 +197,10 @@ title="Fullscreen mode"
   </span>
 
 </button>
-
-<div class="menu-dropdown menu-dropdown-repository-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Source repositories">
-      <i class="fab fa-github"></i>
-  </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="https://github.com/ImpactsWiki/pyKO/tree/gh-pages"
+<a href="https://github.com/ImpactsWiki/pyKO/tree/gh-pages"
    class="headerbtn"
    data-toggle="tooltip"
-data-placement="left"
+data-placement="bottom"
 title="Source repository"
 >
   
@@ -212,31 +208,8 @@ title="Source repository"
 <span class="headerbtn__icon-container">
   <i class="fab fa-github"></i>
   </span>
-<span class="headerbtn__text-container">repository</span>
+
 </a>
-
-      </li>
-      
-      <li>
-        <a href="https://github.com/ImpactsWiki/pyKO/tree/gh-pages/issues/new?title=Issue%20on%20page%20%2Fintro.html&body=Your%20issue%20content%20here."
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Open an issue"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-lightbulb"></i>
-  </span>
-<span class="headerbtn__text-container">open issue</span>
-</a>
-
-      </li>
-      
-    </ul>
-  </div>
-</div>
 
 <div class="menu-dropdown menu-dropdown-download-buttons">
   <button class="headerbtn menu-dropdown__trigger"
@@ -317,20 +290,22 @@ This code was developed from the book <a href="https://link.springer.com/book/10
 <ul class="simple">
 <li><p>Planar, cylindrical, and spherical geometry</p></li>
 <li><p>Elastic-plastic von Mises model</p></li>
-<li><p>EOS models: ideal gas, Mie-Grueneisen, and SESAME tables</p></li>
+<li><p>EOS models: ideal gas, Mie-Grueneisen, and tabular EOS</p></li>
 <li><p>Fixed and free boundary conditions</p></li>
 <li><p>Ascii and binary (using pickle) output</p></li>
 <li><p>Jupyter notebook plotting and animation scripts</p></li>
 <li><p>Verification tests</p></li>
+<li><p>Yaml configuration (input) files with unit conversion using pint</p></li>
+<li><p>Initial gaps</p></li>
 </ul>
 <p>Wish list:</p>
 <ul class="simple">
 <li><p>Fracture and gaps</p></li>
-<li><p>yaml input files</p></li>
 <li><p>Numba performance enhancements (the current python code is about 10x slower than fortran)</p></li>
 <li><p>More strength models</p></li>
 <li><p>Tillotson EOS</p></li>
 <li><p>Absorbing boundary condition</p></li>
+<li><p>Gravity</p></li>
 </ul>
 <div class="toctree-wrapper compound">
 </div>
