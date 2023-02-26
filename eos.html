@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Equations of State &#8212; pyKO</title>
+    <title>Equations of state &#8212; pyKO</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -54,8 +54,8 @@ const thebe_selector_output = ".output, .cell_output"
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Content with notebooks" href="notebooks.html" />
-    <link rel="prev" title="User Manual" href="manual.html" />
+    <link rel="next" title="Material strength" href="strength.html" />
+    <link rel="prev" title="Configuration file" href="configuration-file.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -118,22 +118,27 @@ const thebe_selector_output = ".output, .cell_output"
         <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="manual.html">
-   User Manual
+   User manual
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="code-overview.html">
+   Code overview
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="configuration-file.html">
+   Configuration file
   </a>
  </li>
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
-   Equations of State
+   Equations of state
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="notebooks.html">
-   Content with notebooks
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="markdown-notebooks.html">
-   Notebooks with MyST Markdown
+  <a class="reference internal" href="strength.html">
+   Material strength
   </a>
  </li>
 </ul>
@@ -187,6 +192,35 @@ title="Toggle navigation"
         
     </div>
     <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/ImpactsWiki/pyKO/master?urlpath=tree/eos.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
 <button onclick="toggleFullScreen()"
   class="headerbtn"
   data-toggle="tooltip"
@@ -221,6 +255,23 @@ title="Source repository"
   </button>
   <div class="menu-dropdown__content">
     <ul>
+      <li>
+        <a href="_sources/eos.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download notebook file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
       <li>
         <a href="_sources/eos.md"
    class="headerbtn"
@@ -283,7 +334,7 @@ title="Print to PDF"
         <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#ideal-gas-law">
-   Ideal Gas Law
+   Ideal gas law
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
@@ -292,8 +343,8 @@ title="Print to PDF"
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#sesame-tables">
-   SESAME Tables
+  <a class="reference internal nav-link" href="#tabular-eos">
+   Tabular EOS
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
@@ -310,7 +361,7 @@ title="Print to PDF"
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Equations of State</h1>
+                <h1>Equations of state</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -322,7 +373,7 @@ title="Print to PDF"
                             <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#ideal-gas-law">
-   Ideal Gas Law
+   Ideal gas law
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
@@ -331,8 +382,8 @@ title="Print to PDF"
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#sesame-tables">
-   SESAME Tables
+  <a class="reference internal nav-link" href="#tabular-eos">
+   Tabular EOS
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
@@ -351,41 +402,76 @@ title="Print to PDF"
               <div>
                 
   <section class="tex2jax_ignore mathjax_ignore" id="equations-of-state">
-<h1>Equations of State<a class="headerlink" href="#equations-of-state" title="Permalink to this headline">#</a></h1>
+<span id="page-eos"></span><h1>Equations of state<a class="headerlink" href="#equations-of-state" title="Permalink to this headline">#</a></h1>
 <p>The following equation of state (EOS) models are supported:</p>
 <ul class="simple">
-<li><p>Ideal gas</p></li>
+<li><p>Ideal gas EOS</p></li>
 <li><p>Mie-Grüneisen EOS</p></li>
-<li><p>SESAME tables</p></li>
+<li><p>Tabular EOS</p></li>
 </ul>
 <section id="ideal-gas-law">
-<h2>Ideal Gas Law<a class="headerlink" href="#ideal-gas-law" title="Permalink to this headline">#</a></h2>
+<h2>Ideal gas law<a class="headerlink" href="#ideal-gas-law" title="Permalink to this headline">#</a></h2>
+<p>The ideal gas is defined by the initial conditions, the ratio of specific heat capacities, <span class="math notranslate nohighlight">\(\gamma\)</span>, and the specific heat capacity at constant volume <span class="math notranslate nohighlight">\(c_v\)</span>. The specific heat capacity is used to determine temperature assuming <span class="math notranslate nohighlight">\(T=E/cv\)</span>. <span class="math notranslate nohighlight">\(cv\)</span> must be a non-zero value. The initial conditions must specify the initial density, pressure, energy and particle velocity.</p>
+<p>Example configuration file entry (mks):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mat1</span><span class="p">:</span>
+    <span class="n">init</span><span class="p">:</span>
+        <span class="n">up0</span>    <span class="p">:</span> <span class="mf">0.0</span>
+        <span class="n">rho0</span>   <span class="p">:</span> <span class="mf">10.0E3</span>
+        <span class="n">p0</span>     <span class="p">:</span> <span class="mf">100.0E11</span>
+        <span class="n">e0</span>     <span class="p">:</span> <span class="mf">2.5E9</span>
+    <span class="n">eos</span><span class="p">:</span> 
+        <span class="n">name</span>   <span class="p">:</span> <span class="s1">&#39;IDG 1&#39;</span>
+        <span class="nb">type</span>   <span class="p">:</span> <span class="s1">&#39;IDG&#39;</span>
+        <span class="n">gamma0</span> <span class="p">:</span> <span class="mf">1.4</span>
+        <span class="n">cv</span>     <span class="p">:</span> <span class="mf">2.5E8</span>
+</pre></div>
+</div>
 </section>
 <section id="mie-gruneisen-eos">
 <h2>Mie-Grüneisen EOS<a class="headerlink" href="#mie-gruneisen-eos" title="Permalink to this headline">#</a></h2>
 <p>The Mie-Grüneisen model uses a reference curve, usually the principal Hugoniot, and a thermal parameter to describe a pressure-volume-energy EOS surface (e.g., see Chapter 5 in <span id="id1">[<a class="reference internal" href="#id5" title="Jerry W. Forbes. Shock Wave Compression of Condensed Matter. Springer Berlin Heidelberg, Berlin, Heidelberg, 2012. ISBN 978-3-642-32534-2. URL: http://link.springer.com/10.1007/978-3-642-32535-9, doi:10.1007/978-3-642-32535-9.">Forbes, 2012</a>]</span>).</p>
+<p>The material model requires a reference density, Hugoniot parameters, and the Grüneisen gamma.
+The principal Hugoniot is described by a quadratic equation: <span class="math notranslate nohighlight">\(U_S = c_0 + s_1 u_p + s_2 u_p^2\)</span>. The specific heat capacity is used to determine temperature assuming <span class="math notranslate nohighlight">\(T=E/cv\)</span>. <span class="math notranslate nohighlight">\(cv\)</span> must be a non-zero value.</p>
+<p>The initial conditions must specify the initial density, pressure, energy and particle velocity.</p>
+<p>Example configuration file entry (mks):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mat1</span><span class="p">:</span>
+    <span class="n">init</span><span class="p">:</span>
+        <span class="n">up0</span>    <span class="p">:</span> <span class="mf">0.0</span>
+        <span class="n">rho0</span>   <span class="p">:</span> <span class="mf">8930.0</span>
+        <span class="n">p0</span>     <span class="p">:</span> <span class="mf">0.0</span>
+        <span class="n">e0</span>     <span class="p">:</span> <span class="mf">0.0</span>
+    <span class="n">eos</span><span class="p">:</span>
+        <span class="n">name</span>   <span class="p">:</span> <span class="s1">&#39;Cu test&#39;</span>
+        <span class="nb">type</span>   <span class="p">:</span> <span class="s1">&#39;MGR&#39;</span>
+        <span class="n">rhoref</span> <span class="p">:</span> <span class="mf">8930.0</span>
+        <span class="n">c0</span>     <span class="p">:</span> <span class="mf">3900.0</span>
+        <span class="n">s1</span>     <span class="p">:</span> <span class="mf">1.49</span>
+        <span class="n">s2</span>     <span class="p">:</span> <span class="mf">0.0</span>
+        <span class="n">gamma0</span> <span class="p">:</span> <span class="mf">1.99</span>
+        <span class="n">cv</span>     <span class="p">:</span> <span class="mf">1.0E6</span>
+</pre></div>
+</div>
 <p>The thermal Grüneisen parameter <span class="math notranslate nohighlight">\(\gamma\)</span> is given by</p>
 <div class="math notranslate nohighlight">
 \[ 
-\gamma(V) = V \left[\frac{dP}{dE}\right]_V, \label{eq1}\tag{1}
+\gamma(V) = V \left[\frac{dP}{dE}\right]_V, 
 \]</div>
 <p>where <span class="math notranslate nohighlight">\(\gamma\)</span> is often assumed to only depend on volume. Note that parentheses are used to denote dependent variables.</p>
-<p>In the IM Tool, the functional form for the Grüneisen parameter is currently limited to</p>
+<p>In pyKO, it is assumed that <span class="math notranslate nohighlight">\(\gamma\)</span> is solely dependent on V and</p>
 <div class="math notranslate nohighlight">
 \[
-\gamma(V)= \gamma_0 \left[V/V_0\right]^q. \label{eq2}\tag{2}
+\frac{\gamma(V)}{V} = \frac{\gamma_0}{V_0} = {\rm constant.}
 \]</div>
-<p>The options for the form for the Grüneisen parameter will be expanded as new equation of state options are developed.</p>
-<p>A word of caution: these simple equations for the shock Hugoniot and the Grüneisen parameter are unlikely to be thermodynamically self-consistent over wide ranges of volume. Beware using the Mie-Grüneisen model over wide ranges of pressure and density. Non-physical results will be obtained with equations that are not self-consistent.</p>
+<p>A word of caution: these simple equations for the shock Hugoniot and the Grüneisen parameter are unlikely to be thermodynamically self-consistent over wide ranges of volume. Beware using the Mie-Grüneisen model over wide ranges of pressure and density.</p>
 <p>The Mie-Grüneisen equation of state defines a thermal pressure term, <span class="math notranslate nohighlight">\(P(V,E)\)</span>, at specific volume <span class="math notranslate nohighlight">\(V\)</span> and specific internal energy <span class="math notranslate nohighlight">\(E\)</span> referenced to a known state at <span class="math notranslate nohighlight">\(V\)</span>, which in this case is the principal shock Hugoniot with pressure <span class="math notranslate nohighlight">\(P_H(V)\)</span> and specific internal energy <span class="math notranslate nohighlight">\(E_H(V)\)</span>. Then the thermal pressure term is given by</p>
 <div class="math notranslate nohighlight">
 \[ 
-P(V,E) = P_H(V)+\frac{\gamma(V)}{V} \left[E(V)-E_H(V)\right]. \label{eq3}\tag{3}
+P(V,E) = P_H(V)+\frac{\gamma(V)}{V} \left[E(V)-E_H(V)\right]. 
 \]</div>
-<p>A single shock must satisfy the Rankine-Hugoniot (R-H) conservation equations between an initial state, <span class="math notranslate nohighlight">\(s_0\)</span>, and the shock state, <span class="math notranslate nohighlight">\(s_H\)</span>. The initial state <span class="math notranslate nohighlight">\(s_0\)</span> is defined by the state variables: specific volume <span class="math notranslate nohighlight">\(V_0\)</span>, presure <span class="math notranslate nohighlight">\(P_0\)</span>, and specific energy <span class="math notranslate nohighlight">\(E_0\)</span> (which then specifies the initial specific entropy <span class="math notranslate nohighlight">\(S_0\)</span> and temperature <span class="math notranslate nohighlight">\(T_0\)</span>). Note the tabulated initial value for the Grüneisen parameter <span class="math notranslate nohighlight">\(\gamma_0\)</span> must correspond to state <span class="math notranslate nohighlight">\(s_0\)</span>. The R-H energy conservation equation is</p>
+<p>A single shock must satisfy the Rankine-Hugoniot conservation equations between an initial state, <span class="math notranslate nohighlight">\(s_0\)</span>, and the shock state, <span class="math notranslate nohighlight">\(s_H\)</span>. The initial state <span class="math notranslate nohighlight">\(s_0\)</span> is defined by the state variables: specific volume <span class="math notranslate nohighlight">\(V_0\)</span>, presure <span class="math notranslate nohighlight">\(P_0\)</span>, and specific energy <span class="math notranslate nohighlight">\(E_0\)</span> (which then specifies the initial specific entropy <span class="math notranslate nohighlight">\(S_0\)</span> and temperature <span class="math notranslate nohighlight">\(T_0\)</span>). Note the tabulated initial value for the Grüneisen parameter <span class="math notranslate nohighlight">\(\gamma_0\)</span> must correspond to state <span class="math notranslate nohighlight">\(s_0\)</span>. The energy conservation equation is</p>
 <div class="math notranslate nohighlight">
 \[ 
-E_H(V)=E_0+\left[\frac{P_0+P_H(V)}{2}\right]\left[V_0-V\right]. \label{eq4}\tag{4}
+E_H(V)=E_0+\left[\frac{P_0+P_H(V)}{2}\right]\left[V_0-V\right]. 
 \]</div>
 <p>Combining these two equations defines the Mie-Grüneisen equation of state surface, which is limited to the volume range where <span class="math notranslate nohighlight">\(P_H(V)\)</span> is defined,</p>
 <div class="math notranslate nohighlight">
@@ -394,15 +480,36 @@ P(V,E) &amp; =  P_H(V)+\frac{\gamma(V)}{V}\left[E(V)-E_0\right] - \left[P_0+P_H(
        &amp; =  \frac{\gamma(V)}{V}\left[E(V)-E_0\right] + P_H(V)\left\{ 1- \frac{\gamma(V)}{2V}\left[V_0-V\right] \right\}
         - \frac{P_0\gamma(V)}{2V}\left[V_0-V\right],\label{eq5} (5)
 \end{split}\]</div>
-<p>and the last term is dropped when <span class="math notranslate nohighlight">\(P_0=0\)</span>. The IM Tool assumes <span class="math notranslate nohighlight">\(E_0=0\)</span> and <span class="math notranslate nohighlight">\(P_0=0\)</span> and <span class="math notranslate nohighlight">\(V_0=1/\rho_0\)</span>, where <span class="math notranslate nohighlight">\(\rho_0\)</span> is the initial density in the material database.</p>
+<p>and the last term is dropped when <span class="math notranslate nohighlight">\(P_0=0\)</span>.</p>
 </section>
-<section id="sesame-tables">
-<h2>SESAME Tables<a class="headerlink" href="#sesame-tables" title="Permalink to this headline">#</a></h2>
-<p>SESAME tables are gridded EOS surfaces that are interpolated during problem execution to solve the energy equation. pyKO uses bilinear interpolation on the density-temperature grid.</p>
-<p>Supported table formats:</p>
+<section id="tabular-eos">
+<h2>Tabular EOS<a class="headerlink" href="#tabular-eos" title="Permalink to this headline">#</a></h2>
+<p>A tabular EOS contains the thermodynamic variables for the material over a rectangular grid of two independent variables, typically density and temperature. The pressure-volume-energy relationships are interpolated during problem execution to solve the energy conservation equation. pyKO uses bilinear interpolation on the density-temperature grid, but other tabular EOS schemes are easy to implement.</p>
+<p>The SESClass.readses function assumes STD and EXT formats compatible with the eos_table.py module from the Stewart group.</p>
 <ul class="simple">
-<li><p>LANL standard 201+301 format. This table format specficiation is described in <span id="id2">Lyon <em>et al.</em> [<a class="reference internal" href="#id4" title="Stanford P. Lyon, James D. Johnson, and Group T-1. SESAME: The Los Alamos Laboratory Equation of State Database. Technical Report, Los Alamos LAUR-92-3407, 1992.">1992</a>]</span> (<a href="https://github.com/ststewart/aneos-forsterite-2019/blob/master/EOS-docs/Lyon-Johnson-1992-SESAME-database.pdf">PDF file</a>).</p></li>
+<li><p>SESAME standard 201+301 format. This table format specficiation is described in <span id="id2">Lyon <em>et al.</em> [<a class="reference internal" href="#id4" title="Stanford P. Lyon, James D. Johnson, and Group T-1. SESAME: The Los Alamos Laboratory Equation of State Database. Technical Report, Los Alamos LAUR-92-3407, 1992.">1992</a>]</span> (<a href="https://github.com/ststewart/aneos-forsterite-2019/blob/master/EOS-docs/Lyon-Johnson-1992-SESAME-database.pdf">PDF file</a>).</p></li>
 </ul>
+<p>The units in the tabular EOS must be specified in the pyKO configuration file (see <a class="reference internal" href="configuration-file.html#config-units"><span class="std std-ref">Units</span></a>).</p>
+<p>Stewart Group ANEOS tables (<a class="reference external" href="https://github.com/ststewart?tab=repositories">https://github.com/ststewart?tab=repositories</a>) have the following format:</p>
+<ul class="simple">
+<li><p>NEW-SESAME-STD.TXT: Standard length SESAME file with 201 table and 301 table (density, temperature, pressure, sp. internal energy, Helmholtz free energy). 301 table units: g/cm<sup>3</sup>, K, GPa, MJ/kg, MJ/kg.</p></li>
+<li><p>NEW-SESAME-EXT.TXT: SESAME-style table with extra variables from ANEOS. Contains the standard 201 table and non-standard 301-extra-variables EOS table. The 301 table has: density grid values, temperature grid values, sp. entropy(T,rho), sound speed(T,rho), sp. heat capacity(T,rho), KPA flag(T,rho). 2-D arrays list all densities, looping over each temperature. 301 table units: g/cm<sup>3</sup>, K, MJ/K/kg, cm/s, MJ/K/kg, integer flag. The KPA flag is an ANEOS output with phase information.</p></li>
+</ul>
+<p>To use a tabular EOS, specify the path, std and ext file names and the units for the file (in the units section). To use a different tabular format, customize the readses function to interface with the eos_tables.py module.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mat1</span><span class="p">:</span>
+    <span class="n">init</span><span class="p">:</span>
+        <span class="n">up0</span>    <span class="p">:</span> <span class="mf">0.0</span>
+        <span class="n">rho0</span>   <span class="p">:</span> <span class="mf">3220.0</span>
+        <span class="n">p0</span>     <span class="p">:</span> <span class="mf">1.e5</span>
+        <span class="n">e0</span>     <span class="p">:</span> <span class="mf">73277.974035</span>
+    <span class="n">eos</span><span class="p">:</span> 
+        <span class="n">name</span>   <span class="p">:</span> <span class="s1">&#39;Forsterite&#39;</span>
+        <span class="nb">type</span>   <span class="p">:</span> <span class="s1">&#39;SES&#39;</span>
+        <span class="n">path</span>    <span class="p">:</span> <span class="s1">&#39;../aneos-forsterite-2019/&#39;</span>
+        <span class="n">filestd</span> <span class="p">:</span> <span class="s1">&#39;NEW-SESAME-STD.TXT&#39;</span>
+        <span class="n">fileext</span> <span class="p">:</span> <span class="s1">&#39;NEW-SESAME-EXT.TXT&#39;</span>
+</pre></div>
+</div>
 <aside class="margin sidebar">
 <p class="sidebar-title">Table interpolation</p>
 <p>Future documentation will discuss pros and cons of different interpolation schemes.</p>
@@ -450,17 +557,17 @@ P(V,E) &amp; =  P_H(V)+\frac{\gamma(V)}{V}\left[E(V)-E_0\right] - \left[P_0+P_H(
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="manual.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="configuration-file.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">User Manual</p>
+            <p class="prev-next-title">Configuration file</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="notebooks.html" title="next page">
+    <a class='right-next' id="next-link" href="strength.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Content with notebooks</p>
+        <p class="prev-next-title">Material strength</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

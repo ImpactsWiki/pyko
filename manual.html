@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>User Manual &#8212; pyKO</title>
+    <title>User manual &#8212; pyKO</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -52,7 +52,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Equations of State" href="eos.html" />
+    <link rel="next" title="Code overview" href="code-overview.html" />
     <link rel="prev" title="pyKO hydrocode" href="intro.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
@@ -116,22 +116,27 @@ const thebe_selector_output = ".output, .cell_output"
         <ul class="current nav bd-sidenav">
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
-   User Manual
+   User manual
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="code-overview.html">
+   Code overview
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="configuration-file.html">
+   Configuration file
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="eos.html">
-   Equations of State
+   Equations of state
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="notebooks.html">
-   Content with notebooks
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="markdown-notebooks.html">
-   Notebooks with MyST Markdown
+  <a class="reference internal" href="strength.html">
+   Material strength
   </a>
  </li>
 </ul>
@@ -292,8 +297,8 @@ title="Print to PDF"
   </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#pyko-files">
-   pyKO files
+  <a class="reference internal nav-link" href="#pyko-source-files">
+   pyKO source files
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
@@ -317,7 +322,7 @@ title="Print to PDF"
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>User Manual</h1>
+                <h1>User manual</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -340,8 +345,8 @@ title="Print to PDF"
   </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#pyko-files">
-   pyKO files
+  <a class="reference internal nav-link" href="#pyko-source-files">
+   pyKO source files
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
@@ -367,72 +372,83 @@ title="Print to PDF"
               <div>
                 
   <section class="tex2jax_ignore mathjax_ignore" id="user-manual">
-<h1>User Manual<a class="headerlink" href="#user-manual" title="Permalink to this headline">#</a></h1>
-<p>pyKO is a 1-D elastic-plastic, 2nd order, Lagrangian hydrocode<br>
-Adapted from John Borg’s Fortran KO code v11 (<a class="reference external" href="https://www.eng.mu.edu/shockphysics/KO/">https://www.eng.mu.edu/shockphysics/KO/</a>)<br>
-Based on Mark Wilkins, Computer Simulation of Dynamic Phenomena, Springer-Verlag, 1999</p>
+<h1>User manual<a class="headerlink" href="#user-manual" title="Permalink to this headline">#</a></h1>
+<p>pyKO is a 1-D elastic-plastic, 2nd order, Lagrangian hydrocode written in python.</p>
+<p>This code was developed from the book <a href="https://link.springer.com/book/10.1007/978-3-662-03885-7">Computer Simulation of Dynamic Phenomena by Mark Wilkins</a> (Springer-Verlag, 1999) and the <a href="https://www.eng.mu.edu/shockphysics/KO/">fortran KO code v11 by John Borg</a>.</p>
 <section id="features">
 <h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">#</a></h2>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>* planar, cylindrical, spherical geometries
-* fixed and free boundary conditions
-* Von Mises shear strength
-* EOS
-    * Ideal gas
-    * Mie-Grueneisen
-    * Tabular EOS
-* I/O
-    1. For testing and comparison to fortran KO:
-       Fixed formatting ascii input and output files
-    2. Preferred I/O
-       Yaml configuration (input) files with unit conversion using pint
-       Binary output files using pickle with units
-</pre></div>
-</div>
+<ul class="simple">
+<li><p>Planar, cylindrical, spherical geometries</p></li>
+<li><p>Fixed (symmetric, zero particle velocity) and free (zero presure) boundary conditions</p></li>
+<li><p>Von Mises shear strength</p></li>
+<li><p>EOS</p>
+<ul>
+<li><p>Ideal gas</p></li>
+<li><p>Mie-Grueneisen</p></li>
+<li><p>Tabular EOS</p></li>
+</ul>
+</li>
+<li><p>Input and output</p>
+<ol class="simple">
+<li><p>For testing and comparison to fortran KO:
+Fixed formatting ascii input and output files</p></li>
+<li><p>Preferred I/O
+Yaml configuration (input) files with unit conversion using pint
+Binary output files using pickle with units</p></li>
+</ol>
+</li>
+</ul>
 <section id="wish-list">
 <h3>Wish list<a class="headerlink" href="#wish-list" title="Permalink to this headline">#</a></h3>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>* Fracture and gaps
-* Variable mesh spacing
-* Tillotson EOS
-* Gravity
-* More strength models
-</pre></div>
-</div>
+<ul class="simple">
+<li><p>Fracture and gaps</p></li>
+<li><p>Variable mesh spacing</p></li>
+<li><p>Tillotson EOS</p></li>
+<li><p>Gravity</p></li>
+<li><p>More strength models</p></li>
+<li><p>Restart from binary</p></li>
+<li><p>Absorbing boundary condition</p></li>
+<li><p>Numba performance enhancements (this code is about 10x slower than fortran)</p></li>
+</ul>
 </section>
 </section>
-<section id="pyko-files">
-<h2>pyKO files<a class="headerlink" href="#pyko-files" title="Permalink to this headline">#</a></h2>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>* pyko.py: primary code file
-* eos_table.py: module for using EOS tables developed for ANEOS model
-</pre></div>
-</div>
+<section id="pyko-source-files">
+<h2>pyKO source files<a class="headerlink" href="#pyko-source-files" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="http://pyko.py">pyko.py</a>: primary hydrocode and I/O functions</p></li>
+<li><p>eos_table.py: module for using EOS tables developed for ANEOS models</p></li>
+</ul>
 </section>
 <section id="required-packages">
 <h2>Required packages<a class="headerlink" href="#required-packages" title="Permalink to this headline">#</a></h2>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>* Python 3.9+
-* Numpy
-* Pint
-* Yaml
-* Pickle
-</pre></div>
-</div>
-<p>Required for test cases and visualization examples:
-* Pandas
-* Hvplot
-* Matplotlib
-* Scipy (for <a class="reference external" href="http://sodshock.py">sodshock.py</a>)</p>
+<ul class="simple">
+<li><p>Python (developed in 3.9.16)</p></li>
+<li><p>Numpy (1.24.2)</p></li>
+<li><p>Pint (0.20.1)</p></li>
+<li><p>Yaml (6.0)</p></li>
+<li><p>Pickle (4.0)</p></li>
+</ul>
+<p>Required python packages for test cases and visualization examples:<p></p>
+<ul class="simple">
+<li><p>JupyterLab (3.5.0)</p></li>
+<li><p>Pandas (1.4.2)</p></li>
+<li><p>Hvplot (0.8.2)</p></li>
+<li><p>Matplotlib (3.7.0)</p></li>
+<li><p>Scipy (1.9.1) (needed for <a class="reference external" href="http://sodshock.py">sodshock.py</a>)</p></li>
+</ul>
 <section id="test-cases-in-repository">
 <h3>Test cases in repository<a class="headerlink" href="#test-cases-in-repository" title="Permalink to this headline">#</a></h3>
 <p>Test cases are included as Jupyter Notebooks, for training and validation.<br>
 The ANEOS models used here are for TESTING ONLY; they are not research-level EOS models.<br>
 Each test has fortran-style ascii input file and new pyKO yaml configuration file.<p></p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>* Test 1: Two Mie-Grueneisen plates planar impact, comparison to fortran KO
-* Test 1b: Three plates
-* Test 2: Sod shock tube test for ideal gases, comparison to analytic solution and fortran KO
-* Test 3: EOS table ideal gas Sod shock tube test, comparison to analytic solutoin
-* Test 4: EOS table planar plate impact, comparison to Mie-Grueneisen fortran KO
-* Test 5: EOS table expansion of shocked water into free space
-</pre></div>
-</div>
+<ul class="simple">
+<li><p>Test 1: Two Mie-Grueneisen plates planar impact, comparison to fortran KO</p></li>
+<li><p>Test 1b: Three plates</p></li>
+<li><p>Test 2: Sod shock tube test for ideal gases, comparison to analytic solution and fortran KO</p></li>
+<li><p>Test 3: EOS table ideal gas Sod shock tube test, comparison to analytic solutoin</p></li>
+<li><p>Test 4: EOS table planar plate impact, comparison to Mie-Grueneisen fortran KO</p></li>
+<li><p>Test 5: EOS table expansion of shocked water into free space</p></li>
+</ul>
 </section>
 </section>
 </section>
@@ -471,10 +487,10 @@ Each test has fortran-style ascii input file and new pyKO yaml configuration fil
             <p class="prev-next-title">pyKO hydrocode</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="eos.html" title="next page">
+    <a class='right-next' id="next-link" href="code-overview.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Equations of State</p>
+        <p class="prev-next-title">Code overview</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>pyKO hydrocode &#8212; pyKO</title>
+    <title>Material strength &#8212; pyKO</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -52,7 +52,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="User manual" href="manual.html" />
+    <link rel="prev" title="Equations of state" href="eos.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -106,13 +106,13 @@ const thebe_selector_output = ".output, .cell_output"
     <div class="bd-toc-item active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
-            <li class="toctree-l1 current active">
-                <a class="reference internal" href="#">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
                     pyKO hydrocode
                 </a>
             </li>
         </ul>
-        <ul class="nav bd-sidenav">
+        <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="manual.html">
    User manual
@@ -133,8 +133,8 @@ const thebe_selector_output = ".output, .cell_output"
    Equations of state
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="strength.html">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
    Material strength
   </a>
  </li>
@@ -189,6 +189,35 @@ title="Toggle navigation"
         
     </div>
     <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/ImpactsWiki/pyKO/master?urlpath=tree/strength.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
 <button onclick="toggleFullScreen()"
   class="headerbtn"
   data-toggle="tooltip"
@@ -224,7 +253,24 @@ title="Source repository"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="_sources/intro.md"
+        <a href="_sources/strength.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download notebook file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="_sources/strength.md"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -261,23 +307,80 @@ title="Print to PDF"
     </ul>
   </div>
 </div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
 
     </div>
 </div>
 
 <!-- Table of contents -->
 <div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#von-mises-strength">
+   Von Mises strength
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#hydrodynamic-material">
+   Hydrodynamic material
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#fracture">
+   Fracture
+  </a>
+ </li>
+</ul>
+
+    </nav>
 </div>
     </div>
     <div class="article row">
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>pyKO hydrocode</h1>
+                <h1>Material strength</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
                         
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#von-mises-strength">
+   Von Mises strength
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#hydrodynamic-material">
+   Hydrodynamic material
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#fracture">
+   Fracture
+  </a>
+ </li>
+</ul>
+
+                        </nav>
                     </div>
                 </div>
             </div>
@@ -285,14 +388,34 @@ title="Print to PDF"
                 
               <div>
                 
-  <section class="tex2jax_ignore mathjax_ignore" id="pyko-hydrocode">
-<h1>pyKO hydrocode<a class="headerlink" href="#pyko-hydrocode" title="Permalink to this headline">#</a></h1>
-<p>pyKO is a 1d Lagrangian Elastic-Plastic Hydrocode written in python.
-This code was developed from the book <a href="https://link.springer.com/book/10.1007/978-3-662-03885-7">Computer Simulation of Dynamic Phenomena by Mark Wilkins</a> (Springer-Verlag, 1999) and the <a href="https://www.eng.mu.edu/shockphysics/KO/">fortran KO code v11 by John Borg</a>.</p>
-<p>This resource is available as part of the <a href="https://impacts.wiki">Impacts Community Wiki Project</a>. This code is meant to be an easily modified and expandable teaching/learning tool that can be run in a Jupyter notebook.</p>
-<p>This code is currently in development (<a class="reference external" href="https://github.com/StewartGroup/ko-hydrocode">https://github.com/StewartGroup/ko-hydrocode</a>) and a public release will be available in the future at <a class="reference external" href="https://github.com/ImpactsWiki/pyko">https://github.com/ImpactsWiki/pyko</a>.</p>
-<div class="toctree-wrapper compound">
+  <section class="tex2jax_ignore mathjax_ignore" id="material-strength">
+<span id="page-strength"></span><h1>Material strength<a class="headerlink" href="#material-strength" title="Permalink to this headline">#</a></h1>
+<section id="von-mises-strength">
+<h2>Von Mises strength<a class="headerlink" href="#von-mises-strength" title="Permalink to this headline">#</a></h2>
+<p>Von Mises strength requires two material parameters: the shear modulus and the yield strength.</p>
+<p>Example configuration file entry (mks):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mat1</span><span class="p">:</span>
+    <span class="nb">str</span><span class="p">:</span>
+        <span class="nb">type</span>   <span class="p">:</span> <span class="s1">&#39;VM&#39;</span>
+        <span class="n">gmod</span>   <span class="p">:</span> <span class="mf">47.7E9</span>
+        <span class="n">ys</span>     <span class="p">:</span> <span class="mf">0.12E9</span>
+</pre></div>
 </div>
+</section>
+<section id="hydrodynamic-material">
+<h2>Hydrodynamic material<a class="headerlink" href="#hydrodynamic-material" title="Permalink to this headline">#</a></h2>
+<p>A hydrodynamic material is indicated with this configuration file entry:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mat1</span><span class="p">:</span>
+    <span class="nb">str</span><span class="p">:</span>
+        <span class="nb">type</span>   <span class="p">:</span> <span class="s1">&#39;HYDRO&#39;</span>
+</pre></div>
+</div>
+</section>
+<section id="fracture">
+<h2>Fracture<a class="headerlink" href="#fracture" title="Permalink to this headline">#</a></h2>
+<p>Fracture is not yet implemented but coming soon.</p>
+<p>Fracture requires the Mie-Grueneisen EOS or a tabular EOS with a tension region.</p>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -322,12 +445,12 @@ This code was developed from the book <a href="https://link.springer.com/book/10
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='right-next' id="next-link" href="manual.html" title="next page">
-    <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">User manual</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
+    <a class='left-prev' id="prev-link" href="eos.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Equations of state</p>
+        </div>
     </a>
 </div>
             </footer>

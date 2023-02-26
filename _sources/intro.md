@@ -1,28 +1,8 @@
 # pyKO hydrocode
 
 pyKO is a 1d Lagrangian Elastic-Plastic Hydrocode written in python.
-This code was developed from the book <a href="https://link.springer.com/book/10.1007/978-3-662-03885-7">Computer Simulation of Dynamic Phenomena by Mark Wilkins</a> and the <a href="https://www.eng.mu.edu/shockphysics/KO/">fortran KO code by John Borg</a>.
+This code was developed from the book <a href="https://link.springer.com/book/10.1007/978-3-662-03885-7">Computer Simulation of Dynamic Phenomena by Mark Wilkins</a> (Springer-Verlag, 1999) and the <a href="https://www.eng.mu.edu/shockphysics/KO/">fortran KO code v11 by John Borg</a>.
 
-This resource is available as part of the <a href="https://impacts.wiki">Impacts Community Wiki Project</a>.
+This resource is available as part of the <a href="https://impacts.wiki">Impacts Community Wiki Project</a>. This code is meant to be an easily modified and expandable teaching/learning tool that can be run in a Jupyter notebook.
 
-This code is under development.
-
-Current features include:
-* Planar, cylindrical, and spherical geometry
-* Elastic-plastic von Mises model
-* EOS models: ideal gas, Mie-Grueneisen, and tabular EOS
-* Fixed and free boundary conditions
-* Ascii and binary (using pickle) output
-* Jupyter notebook plotting and animation scripts
-* Verification tests
-* Yaml configuration (input) files with unit conversion using pint
-* Initial gaps
-
-Wish list:
-* Fracture and gaps
-* Numba performance enhancements (the current python code is about 10x slower than fortran)
-* More strength models
-* Tillotson EOS
-* Absorbing boundary condition
-* Gravity
-
+This code is currently in development (https://github.com/StewartGroup/ko-hydrocode) and a public release will be available in the future at https://github.com/ImpactsWiki/pyko.

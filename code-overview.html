@@ -1,0 +1,589 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Code overview &#8212; pyKO</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Configuration file" href="configuration-file.html" />
+    <link rel="prev" title="User manual" href="manual.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/impacts-wiki.jpg" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">pyKO</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    pyKO hydrocode
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="manual.html">
+   User manual
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Code overview
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="configuration-file.html">
+   Configuration file
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="eos.html">
+   Equations of state
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="strength.html">
+   Material strength
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+<a href="https://github.com/ImpactsWiki/pyKO/tree/gh-pages"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="bottom"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="_sources/code-overview.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#time-and-spatial-domains">
+   Time and spatial domains
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#principal-classes">
+   Principal classes
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#material-properties-and-boundary-conditions">
+   Material properties and boundary conditions
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#input-and-output-functions-and-classes">
+   Input and output functions and classes
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#customizing-the-binary-snapshots">
+     Customizing the binary snapshots
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#units">
+   Units
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Code overview</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#time-and-spatial-domains">
+   Time and spatial domains
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#principal-classes">
+   Principal classes
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#material-properties-and-boundary-conditions">
+   Material properties and boundary conditions
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#input-and-output-functions-and-classes">
+   Input and output functions and classes
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#customizing-the-binary-snapshots">
+     Customizing the binary snapshots
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#units">
+   Units
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="code-overview">
+<h1>Code overview<a class="headerlink" href="#code-overview" title="Permalink to this headline">#</a></h1>
+<section id="time-and-spatial-domains">
+<h2>Time and spatial domains<a class="headerlink" href="#time-and-spatial-domains" title="Permalink to this headline">#</a></h2>
+<p>The KO code uses a time centered finite difference method. The central calculation involves 4 half time steps and nj spatial nodes. The spatial domain is comprised of mesh edges (even j nodes), where position and velocity are defined, and mesh centers (odd j nodes), where thermodynamic parameters are defined. The main hydro arrays have size (nt,nj) with nt(=4) time indices and nj(=number of nodes) spatial indices.</p>
+<p>In Wilkins notation, delta_t<sup>n</sup> = t<sup>n+1/2</sup> - t<sup>n-1/2</sup> is used with the pressure field to advance the Lagrangian nodes from time t<sup>n-1/2</sup> to t<sup>n+1/2</sup>.
+The position of mesh edges are advanced delta_t<sup>n+1/2</sup> = t<sup>n+1</sup>-t<sup>n</sup> == one true time step, which is determined from the stability conditions with delta_t<sup>n</sup> = (1/2)(delta_t<sup>n+1/2</sup> + delta_t<sup>n-1/2</sup>). Time centering is upset when stability conditions permit deviation from these relationships.</p>
+<p>Mapping the Wilkins notation to the python time array indices:</p>
+<ul class="simple">
+<li><p>t(0) = n-1/2</p></li>
+<li><p>t(1) = n</p></li>
+<li><p>t(2) = n+1/2</p></li>
+<li><p>t(3) = n+1</p></li>
+<li><p>True time step = t(3)-t(1)</p></li>
+</ul>
+</section>
+<section id="principal-classes">
+<h2>Principal classes<a class="headerlink" href="#principal-classes" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p><b>RunClass</b>: This class holds all of the simulation parameters. The configuration file parameters are read into this class.</p>
+<ul>
+<li><p><i>checkinput</i> function: prints the simulation parameters for user inspection</p></li>
+</ul>
+</li>
+<li><p><b>DomainClass</b>: This class holds the primary (time,length) arrays for the hydrocode calculation.</p>
+<ul>
+<li><p><i>makegrid</i> function: initializes the hydro arrays in the DomainClass object based on RunClass information, filling the t(2) and t(3) positions</p></li>
+<li><p><i>advancetime</i> function: advances the hydro arrays one time step</p></li>
+<li><p><i>shiftdata</i> function: at the beginning of a time step, the time indices t(2) and t(3) are shifted to positions t(0) and t(1)</p></li>
+<li><p><i>createinteriorboundary</i> function: inserts a pair of free surfaces and void cell in the spatial domain</p></li>
+<li><p><i>closeinteriorboundary</i> function: removes a pair of free surfaces and void cell in the spatial domain</p></li>
+<li><p><i>checkforcontact</i> function: if interior free surface(s) is(are) present, check for contact during the current time step</p></li>
+<li><p><i>writefirstoutput</i> function: creates ascii or binary output file and writes the problem configuration at time zero</p></li>
+<li><p><i>appendoutput</i> function: appends ascii snapshot data to output file</p></li>
+<li><p><i>binaryoutputpint</i> function: appends binary snapshot data (OutputClass object) to output file using pickle and pint</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="material-properties-and-boundary-conditions">
+<h2>Material properties and boundary conditions<a class="headerlink" href="#material-properties-and-boundary-conditions" title="Permalink to this headline">#</a></h2>
+<p>Equations of state</p>
+<ul class="simple">
+<li><p><b>IDGClass</b>: ideal gas material parameters</p></li>
+<li><p><b>MGRClass</b>: Mie-Grueneisen material parameters and functions</p></li>
+<li><p><b>SESClass</b>: Class to hold tabular EOS and associated functions; requires the eos_table.py module.</p>
+<ul>
+<li><p><i>readtable</i> function: Reads in Stewart group style NEW-SESAME-STD.TXT and NEW-SESAME-EXT.TXT tables.</p></li>
+<li><p><i>sesp</i>: Main run-time function for bilinear interpolation on spatial domain vector to extract table P and T from rho and U.</p></li>
+<li><p><i>onept(rho,u)</i>: Bilinear interpolation to extract table one point P and T from rho and U. Used to help define initial conditions.</p></li>
+<li><p><i>onepu(rho,t)</i>: Bilinear interpolation to extract table one point P and U from rho and T. Used to help define initial conditions.</p></li>
+</ul>
+</li>
+</ul>
+<p>Strength</p>
+<ul class="simple">
+<li><p><b>HydroClass</b>: Class to indicate hydrodynamic material</p></li>
+<li><p><b>VonMisesClass</b>: Class to hold strength parameters</p></li>
+<li><p><b>FractureClass</b>: Class to hold fracture parameters</p></li>
+</ul>
+<p>Boundaries</p>
+<ul class="simple">
+<li><p><b>BCClass</b>: Class to hold boundary condition parameters</p></li>
+</ul>
+</section>
+<section id="input-and-output-functions-and-classes">
+<h2>Input and output functions and classes<a class="headerlink" href="#input-and-output-functions-and-classes" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p><b>readinput_borg</b> function: reads formatted ascii problem initialization file that is compatible with modified fortran KO. Populates the RunClass object.</p></li>
+<li><p><b>readinput_yaml</b> function: reads yaml formatted configuration file into a dictionary object (named config) and then populates the main RunClass with simulation parameters (object named run). The input parameter units are converted to code units using pint. Tabular EOS are converted to code units.</p></li>
+<li><p><b>run</b> function: primary wrapper function for I/O and calling main hydro time steps</p></li>
+<li><p><b>OutputClass</b>: This class holds the data arrays for binary snapshot output using pickle. Create a new OutputClass object to load data from the binary pickle file. The OutputClass data arrays contains only mesh-centered values (odd j), with position and velocity interpolated from the mesh edges (even j). Interior void spaces are included as an empty mesh center.</p></li>
+</ul>
+<section id="customizing-the-binary-snapshots">
+<h3>Customizing the binary snapshots<a class="headerlink" href="#customizing-the-binary-snapshots" title="Permalink to this headline">#</a></h3>
+<p>The default values in OutputClass can be customized by editing the arrays in the class and DomainClass.binaryoutputpint function. Several DomainClass variables are not included in the default binary snapshot. For pandas compatibility, all arrays in the OutputClass must be the same length (all oddj).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">OutputClass</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Problem domain data structure for output dumps &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Initialize the main arrays for the problem domain &quot;&quot;&quot;</span>
+        <span class="c1"># unknown number of cells initially. Initialize data types with zero length.</span>
+        <span class="c1"># variables in space at a particular snapshot in time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stepn</span>    <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int&#39;</span><span class="p">)</span> <span class="c1"># counter for the number of time steps; int</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time</span>     <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># same time for each cell; used to make pandas conversion easier</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mat</span>      <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int&#39;</span><span class="p">)</span> <span class="c1"># material id number</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pos</span>      <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># position in 1D geometry (x,r_cyl,r_sph)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rho0</span>     <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># initial density rho0 g/cm3</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rho</span>      <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># local density g/cm3</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">up</span>       <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># particle velocity</span>
+        <span class="c1">#self.iev0     = np.zeros(0) # internal energy per initial volume 1e12 erg/cm3</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ie</span>       <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># specific internal energy </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pres</span>     <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># pressure Mbar</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mass</span>     <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># mass in node g</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">temp</span>     <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># temperature K</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sigmar</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># total radial stress sigma_r, only evaluated at n=1 current time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sigmao</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># total tangential stress sigma_theta, only evaluated at n=1 current time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">etot</span>     <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># total IE + total KE</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">j</span>        <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># node index for comparisons to fKO</span>
+        <span class="c1">#self.vr       = np.zeros(0) # relative volume to initial state=rho0/rho=1/eta in Wilkins [dimless]</span>
+        <span class="c1">#self.phi      = np.zeros(0) # rho0*(pos_j+1-pos_j)/vr_j+1/2 = (pos_j+1-pos_j)/rho_j+1/2=phi in Wilkins</span>
+        <span class="c1">#self.q        = np.zeros(0) # artificial viscosity Mbar</span>
+        <span class="c1">#self.eps1     = np.zeros(0) # velocity strain dup/dpos, per microsec</span>
+        <span class="c1">#self.eps2     = np.zeros(0) # velocity strain up/pos, per microsec</span>
+        <span class="c1"># these variables are evaluated at n=3; full time step ahead</span>
+        <span class="c1">#self.beta     = np.zeros(0) # (sigmar-sigmao)/(0.5 dpos)*rho = beta in Wilkins</span>
+        <span class="c1">#self.s1       = np.zeros(0) # s1 stress deviator deriv = 2G(deps1-dvr/vr/3)</span>
+        <span class="c1">#self.s2       = np.zeros(0) # s2 stress deviator deriv</span>
+        <span class="c1">#self.s3       = np.zeros(0) # s3 stress deviator deriv; not needed in 1D; kept for equation clarity</span>
+        <span class="c1">#self.entropy  = np.zeros(0) # entropy [DEBUG check eu/cm3 units]</span>
+        <span class="c1"># variables in time only - n</span>
+        <span class="c1">#self.ibc      = np.zeros(0,dtype=&#39;int&#39;) # boundary condition id number, integer</span>
+        <span class="c1">#self.yld      = np.zeros(0) # yield stress</span>
+        <span class="c1">#self.pfrac    = np.zeros(0) # fracture stress</span>
+        <span class="c1">#self.deltaz   = np.zeros(0) # distortion energy Mbar</span>
+        <span class="c1">#self.alocal   = np.zeros(0) # intermediate variable for AV</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="units">
+<h2>Units<a class="headerlink" href="#units" title="Permalink to this headline">#</a></h2>
+<p>pyKO uses the <a href="https://pint.readthedocs.io/en/stable/">pint package</a> to convert user-specified input units to a self-consistent set of internal code units. The data in the binary output files are converted from code units to the same user-specified input units. The example input files use mks units.</p>
+<p>The pint package is also used to convert any tabular EOS files into code units. Refer to the configuration file section on <a class="reference internal" href="configuration-file.html#config-units"><span class="std std-ref">Units</span></a>.</p>
+<p>The original KO code units are suitable for calculations of lab-scale gas gun impact experiments: microseconds, cm, g, and 1 eu = 10<sup>12</sup> ergs. The code normalizes volume to the initial volume (v0) so that changes in density are internalized as relative volume. To maintain self-consistent units, all specific quantities are multiplied by the initial density, so that specific internal energy (eu/g) becomes internal energy per initial volume (eu/cm<sup>3</sup>).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="n">time</span>            <span class="p">:</span> <span class="s1">&#39;microseconds&#39;</span>
+    <span class="n">length</span>          <span class="p">:</span> <span class="s1">&#39;cm&#39;</span>
+    <span class="n">mass</span>            <span class="p">:</span> <span class="s1">&#39;g&#39;</span>
+    <span class="n">density</span>         <span class="p">:</span> <span class="s1">&#39;g/cm^3&#39;</span>
+    <span class="n">relative_volume</span> <span class="p">:</span> <span class="s1">&#39;dimensionless&#39;</span> 
+    <span class="n">velocity</span>        <span class="p">:</span> <span class="s1">&#39;cm/microsecond&#39;</span>
+    <span class="n">pressure</span>        <span class="p">:</span> <span class="s1">&#39;megabar&#39;</span>
+    <span class="n">temperature</span>     <span class="p">:</span> <span class="s1">&#39;K&#39;</span>
+    <span class="n">energy</span>          <span class="p">:</span> <span class="s1">&#39;eu&#39;</span>
+    <span class="n">sp_energy</span>       <span class="p">:</span> <span class="s1">&#39;eu/g&#39;</span>
+    <span class="n">sp_heat_cap</span>     <span class="p">:</span> <span class="s1">&#39;eu/K/g&#39;</span>
+    <span class="n">sp_entropy</span>      <span class="p">:</span> <span class="s1">&#39;eu/K/g&#39;</span>
+    <span class="n">ie_perv0</span>        <span class="p">:</span> <span class="s1">&#39;eu/cm^3&#39;</span>
+    <span class="n">cv_perv0</span>        <span class="p">:</span> <span class="s1">&#39;eu/cm^3/K&#39;</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="manual.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">User manual</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="configuration-file.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Configuration file</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By S. T. Stewart for the Impacts Community Wiki Project<br/>
+  
+      &copy; Copyright 2023.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>
