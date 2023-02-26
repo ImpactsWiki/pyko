@@ -333,7 +333,7 @@ title="Print to PDF"
     <nav id="bd-toc-nav" aria-label="Page">
         <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#ideal-gas-law">
+  <a class="reference internal nav-link" href="#eos-idg">
    Ideal gas law
   </a>
  </li>
@@ -372,7 +372,7 @@ title="Print to PDF"
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#ideal-gas-law">
+  <a class="reference internal nav-link" href="#eos-idg">
    Ideal gas law
   </a>
  </li>
@@ -405,12 +405,12 @@ title="Print to PDF"
 <span id="page-eos"></span><h1>Equations of state<a class="headerlink" href="#equations-of-state" title="Permalink to this headline">#</a></h1>
 <p>The following equation of state (EOS) models are supported:</p>
 <ul class="simple">
-<li><p>Ideal gas EOS</p></li>
-<li><p>Mie-Grüneisen EOS</p></li>
-<li><p>Tabular EOS</p></li>
+<li><p><a class="reference internal" href="#eos-idg"><span class="std std-ref">Ideal gas law</span></a></p></li>
+<li><p><a class="reference internal" href="#eos-mgr"><span class="std std-ref">Mie-Grüneisen EOS</span></a></p></li>
+<li><p><a class="reference internal" href="#eos-ses"><span class="std std-ref">Tabular EOS</span></a></p></li>
 </ul>
-<section id="ideal-gas-law">
-<h2>Ideal gas law<a class="headerlink" href="#ideal-gas-law" title="Permalink to this headline">#</a></h2>
+<section id="eos-idg">
+<span id="ideal-gas-law"></span><h2>Ideal gas law<a class="headerlink" href="#eos-idg" title="Permalink to this headline">#</a></h2>
 <p>The ideal gas is defined by the initial conditions, the ratio of specific heat capacities, <span class="math notranslate nohighlight">\(\gamma\)</span>, and the specific heat capacity at constant volume <span class="math notranslate nohighlight">\(c_v\)</span>. The specific heat capacity is used to determine temperature assuming <span class="math notranslate nohighlight">\(T=E/cv\)</span>. <span class="math notranslate nohighlight">\(cv\)</span> must be a non-zero value. The initial conditions must specify the initial density, pressure, energy and particle velocity.</p>
 <p>Example configuration file entry (mks):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mat1</span><span class="p">:</span>
@@ -428,7 +428,7 @@ title="Print to PDF"
 </div>
 </section>
 <section id="mie-gruneisen-eos">
-<h2>Mie-Grüneisen EOS<a class="headerlink" href="#mie-gruneisen-eos" title="Permalink to this headline">#</a></h2>
+<span id="eos-mgr"></span><h2>Mie-Grüneisen EOS<a class="headerlink" href="#mie-gruneisen-eos" title="Permalink to this headline">#</a></h2>
 <p>The Mie-Grüneisen model uses a reference curve, usually the principal Hugoniot, and a thermal parameter to describe a pressure-volume-energy EOS surface (e.g., see Chapter 5 in <span id="id1">[<a class="reference internal" href="#id5" title="Jerry W. Forbes. Shock Wave Compression of Condensed Matter. Springer Berlin Heidelberg, Berlin, Heidelberg, 2012. ISBN 978-3-642-32534-2. URL: http://link.springer.com/10.1007/978-3-642-32535-9, doi:10.1007/978-3-642-32535-9.">Forbes, 2012</a>]</span>).</p>
 <p>The material model requires a reference density, Hugoniot parameters, and the Grüneisen gamma.
 The principal Hugoniot is described by a quadratic equation: <span class="math notranslate nohighlight">\(U_S = c_0 + s_1 u_p + s_2 u_p^2\)</span>. The specific heat capacity is used to determine temperature assuming <span class="math notranslate nohighlight">\(T=E/cv\)</span>. <span class="math notranslate nohighlight">\(cv\)</span> must be a non-zero value.</p>
@@ -483,7 +483,7 @@ P(V,E) &amp; =  P_H(V)+\frac{\gamma(V)}{V}\left[E(V)-E_0\right] - \left[P_0+P_H(
 <p>and the last term is dropped when <span class="math notranslate nohighlight">\(P_0=0\)</span>.</p>
 </section>
 <section id="tabular-eos">
-<h2>Tabular EOS<a class="headerlink" href="#tabular-eos" title="Permalink to this headline">#</a></h2>
+<span id="eos-ses"></span><h2>Tabular EOS<a class="headerlink" href="#tabular-eos" title="Permalink to this headline">#</a></h2>
 <p>A tabular EOS contains the thermodynamic variables for the material over a rectangular grid of two independent variables, typically density and temperature. The pressure-volume-energy relationships are interpolated during problem execution to solve the energy conservation equation. pyKO uses bilinear interpolation on the density-temperature grid, but other tabular EOS schemes are easy to implement.</p>
 <p>The SESClass.readses function assumes STD and EXT formats compatible with the eos_table.py module from the Stewart group.</p>
 <ul class="simple">

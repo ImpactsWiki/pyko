@@ -14,10 +14,11 @@ kernelspec:
 # Equations of state
 
 The following equation of state (EOS) models are supported:
-* Ideal gas EOS
-* Mie-Gr&uuml;neisen EOS
-* Tabular EOS
+* [](eos:idg)
+* [](eos:mgr)
+* [](eos:ses)
 
+(eos:idg)=
 ## Ideal gas law
 
 The ideal gas is defined by the initial conditions, the ratio of specific heat capacities, $\gamma$, and the specific heat capacity at constant volume $c_v$. The specific heat capacity is used to determine temperature assuming $T=E/cv$. $cv$ must be a non-zero value. The initial conditions must specify the initial density, pressure, energy and particle velocity.
@@ -37,7 +38,7 @@ mat1:
         cv     : 2.5E8
 ```
 
-
+(eos:mgr)=
 ## Mie-Gr&uuml;neisen EOS
 
 The Mie-Gr&uuml;neisen model uses a reference curve, usually the principal Hugoniot, and a thermal parameter to describe a pressure-volume-energy EOS surface (e.g., see Chapter 5 in {cite}`Forbes2012`). 
@@ -104,6 +105,7 @@ $$
 
 and the last term is dropped when $P_0=0$. 
 
+(eos:ses)=
 ## Tabular EOS
 
 A tabular EOS contains the thermodynamic variables for the material over a rectangular grid of two independent variables, typically density and temperature. The pressure-volume-energy relationships are interpolated during problem execution to solve the energy conservation equation. pyKO uses bilinear interpolation on the density-temperature grid, but other tabular EOS schemes are easy to implement.
