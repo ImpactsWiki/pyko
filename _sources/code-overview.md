@@ -2,7 +2,7 @@
 
 ## Time and spatial domains
 
-The KO code uses a time centered finite difference method. The central calculation involves 4 half time steps and nj spatial nodes. The spatial domain is comprised of mesh edges (even j nodes), where position and velocity are defined, and mesh centers (odd j nodes), where thermodynamic parameters are defined. The main hydro arrays have size (nt,nj) with nt(=4) time indices and nj(=number of nodes) spatial indices.
+The KO code uses a 2nd order time centered finite difference method. The central calculation involves 4 half time steps and nj spatial nodes. The spatial domain is comprised of mesh edges (even j nodes), where position and velocity are defined, and mesh centers (odd j nodes), where thermodynamic parameters are defined. The main hydro arrays have size (nt,nj) with nt(=4) time indices and nj(=number of nodes) spatial indices.
 
 In Wilkins notation, delta_t<sup>n</sup> = t<sup>n+1/2</sup> - t<sup>n-1/2</sup> is used with the pressure field to advance the Lagrangian nodes from time t<sup>n-1/2</sup> to t<sup>n+1/2</sup>.
 The position of mesh edges are advanced delta_t<sup>n+1/2</sup> = t<sup>n+1</sup>-t<sup>n</sup> == one true time step, which is determined from the stability conditions with delta_t<sup>n</sup> = (1/2)(delta_t<sup>n+1/2</sup> + delta_t<sup>n-1/2</sup>). Time centering is upset when stability conditions permit deviation from these relationships.
