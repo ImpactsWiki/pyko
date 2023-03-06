@@ -50,8 +50,11 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Example materials" href="materials.html" />
     <link rel="prev" title="Equations of state" href="eos.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
@@ -136,6 +139,16 @@ const thebe_selector_output = ".output, .cell_output"
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
    Material strength
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="materials.html">
+   Example materials
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="references.html">
+   References
   </a>
  </li>
 </ul>
@@ -392,7 +405,9 @@ title="Print to PDF"
 <span id="page-strength"></span><h1>Material strength<a class="headerlink" href="#material-strength" title="Permalink to this headline">#</a></h1>
 <section id="von-mises-strength">
 <h2>Von Mises strength<a class="headerlink" href="#von-mises-strength" title="Permalink to this headline">#</a></h2>
-<p>Von Mises strength requires two material parameters: the shear modulus and the yield strength.</p>
+<p>A <a href="https://en.wikipedia.org/wiki/Von_Mises_yield_criterion">Von Mises material</a> yields when the second invariant of deviatoric stress
+<span class="math notranslate nohighlight">\(J_{2}\)</span> reaches a critical value (input parameter ys=yield stress=<span class="math notranslate nohighlight">\(\sigma_{vm}\)</span>). Under uniaxial stress, the material yields when the principal stress exceeds the yield stress, <span class="math notranslate nohighlight">\(\sigma_1 &gt; \sigma_{vm}\)</span>. Planar shock waves are uniaxial strain, and the Hugoniot Elastic Limit <span class="math notranslate nohighlight">\(\sigma_{HEL} = (1-\nu) \sigma_{vm} / (1-2\nu)\)</span>.</p>
+<p>Von Mises strength requires two material parameters: the shear modulus (gmod) and the yield stress (ys).</p>
 <p>Example configuration file entry (mks):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mat1</span><span class="p">:</span>
     <span class="nb">str</span><span class="p">:</span>
@@ -404,7 +419,7 @@ title="Print to PDF"
 </section>
 <section id="hydrodynamic-material">
 <h2>Hydrodynamic material<a class="headerlink" href="#hydrodynamic-material" title="Permalink to this headline">#</a></h2>
-<p>A hydrodynamic material is indicated with this configuration file entry:</p>
+<p>A hydrodynamic material (shear modulus <span class="math notranslate nohighlight">\(G=0\)</span>) is indicated with this configuration file entry:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mat1</span><span class="p">:</span>
     <span class="nb">str</span><span class="p">:</span>
         <span class="nb">type</span>   <span class="p">:</span> <span class="s1">&#39;HYDRO&#39;</span>
@@ -415,6 +430,12 @@ title="Print to PDF"
 <h2>Fracture<a class="headerlink" href="#fracture" title="Permalink to this headline">#</a></h2>
 <p>Fracture is not yet implemented but coming soon.</p>
 <p>Fracture requires the Mie-Grueneisen EOS or a tabular EOS with a tension region.</p>
+<p>Example configuration file entry (mks):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mat1</span><span class="p">:</span>
+    <span class="n">frac</span><span class="p">:</span>
+        <span class="n">pfrac</span>  <span class="p">:</span> <span class="mf">1.0E7</span>
+</pre></div>
+</div>
 </section>
 </section>
 
@@ -451,6 +472,13 @@ title="Print to PDF"
             <p class="prev-next-subtitle">previous</p>
             <p class="prev-next-title">Equations of state</p>
         </div>
+    </a>
+    <a class='right-next' id="next-link" href="materials.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Example materials</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
     </a>
 </div>
             </footer>

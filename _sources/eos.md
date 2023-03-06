@@ -142,11 +142,3 @@ mat1:
 Future documentation will discuss pros and cons of different interpolation schemes.
 ```
 
-
-
-## References
-
-
-```{bibliography}
-```
-

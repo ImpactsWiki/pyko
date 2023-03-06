@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Notebooks with MyST Markdown &#8212; pyKO</title>
+    <title>Example materials &#8212; pyKO</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -50,8 +50,12 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="References" href="references.html" />
+    <link rel="prev" title="Material strength" href="strength.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -111,7 +115,7 @@ const thebe_selector_output = ".output, .cell_output"
                 </a>
             </li>
         </ul>
-        <ul class="nav bd-sidenav">
+        <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="manual.html">
    User manual
@@ -137,8 +141,8 @@ const thebe_selector_output = ".output, .cell_output"
    Material strength
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="materials.html">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
    Example materials
   </a>
  </li>
@@ -206,7 +210,7 @@ title="Toggle navigation"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="https://mybinder.org/v2/gh/ImpactsWiki/pyKO/master?urlpath=tree/markdown-notebooks.md"
+        <a href="https://mybinder.org/v2/gh/ImpactsWiki/pyKO/master?urlpath=tree/materials.md"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -262,7 +266,7 @@ title="Source repository"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="_sources/markdown-notebooks.ipynb"
+        <a href="_sources/materials.ipynb"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -279,7 +283,7 @@ title="Download notebook file"
       </li>
       
       <li>
-        <a href="_sources/markdown-notebooks.md"
+        <a href="_sources/materials.md"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -339,18 +343,18 @@ title="Print to PDF"
     <nav id="bd-toc-nav" aria-label="Page">
         <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#an-example-cell">
-   An example cell
+  <a class="reference internal nav-link" href="#water-ice">
+   Water Ice
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#create-a-notebook-with-myst-markdown">
-   Create a notebook with MyST Markdown
+  <a class="reference internal nav-link" href="#aluminum-6061">
+   Aluminum 6061
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#quickly-add-yaml-metadata-for-myst-notebooks">
-   Quickly add YAML metadata for MyST Notebooks
+  <a class="reference internal nav-link" href="#copper">
+   Copper
   </a>
  </li>
 </ul>
@@ -362,7 +366,7 @@ title="Print to PDF"
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Notebooks with MyST Markdown</h1>
+                <h1>Example materials</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -373,18 +377,18 @@ title="Print to PDF"
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#an-example-cell">
-   An example cell
+  <a class="reference internal nav-link" href="#water-ice">
+   Water Ice
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#create-a-notebook-with-myst-markdown">
-   Create a notebook with MyST Markdown
+  <a class="reference internal nav-link" href="#aluminum-6061">
+   Aluminum 6061
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#quickly-add-yaml-metadata-for-myst-notebooks">
-   Quickly add YAML metadata for MyST Notebooks
+  <a class="reference internal nav-link" href="#copper">
+   Copper
   </a>
  </li>
 </ul>
@@ -397,48 +401,52 @@ title="Print to PDF"
                 
               <div>
                 
-  <section class="tex2jax_ignore mathjax_ignore" id="notebooks-with-myst-markdown">
-<h1>Notebooks with MyST Markdown<a class="headerlink" href="#notebooks-with-myst-markdown" title="Permalink to this headline">#</a></h1>
-<p>Jupyter Book also lets you write text-based notebooks using MyST Markdown.
-See <a class="reference external" href="https://jupyterbook.org/file-types/myst-notebooks.html">the Notebooks with MyST Markdown documentation</a> for more detailed instructions.
-This page shows off a notebook written in MyST Markdown.</p>
-<section id="an-example-cell">
-<h2>An example cell<a class="headerlink" href="#an-example-cell" title="Permalink to this headline">#</a></h2>
-<p>With MyST Markdown, you can define code cells with a directive like so:</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
+  <section class="tex2jax_ignore mathjax_ignore" id="example-materials">
+<span id="page-materials"></span><h1>Example materials<a class="headerlink" href="#example-materials" title="Permalink to this headline">#</a></h1>
+<section id="water-ice">
+<h2>Water Ice<a class="headerlink" href="#water-ice" title="Permalink to this headline">#</a></h2>
+<p>The properties of ice depend on the grain structure, temperature and strain rates. Nominal values for the Young’s modulus <span class="math notranslate nohighlight">\(E=9\)</span> GPa and poisson’s ratio <span class="math notranslate nohighlight">\(\nu=0.32\)</span> <span id="id1">[<a class="reference internal" href="references.html#id5" title="J.J. Petrovic. Review Mechanical properties of ice and snow. Journal of Materials Science, 38:1–6, 2003. doi:10.1023/A:1021134128038.">Petrovic, 2003</a>]</span>. The corresponding shear modulus <span class="math notranslate nohighlight">\(G = \frac{E}{2(1+\nu)} = 3.38\)</span> GPa. Cold ice under uniaxial strain has a Hugoniot Elastic Limit of 0.62 GPa <span id="id2">[<a class="reference internal" href="references.html#id6" title="Sarah T. Stewart and Thomas J. Ahrens. Shock properties of H2O ice. Journal of Geophysical Research E: Planets, 110(3):1–23, 2005. doi:10.1029/2004JE002305.">Stewart and Ahrens, 2005</a>]</span>. The average tensile strength for ice is 1.43 MPa at low strain rates <span id="id3">[<a class="reference internal" href="references.html#id5" title="J.J. Petrovic. Review Mechanical properties of ice and snow. Journal of Materials Science, 38:1–6, 2003. doi:10.1023/A:1021134128038.">Petrovic, 2003</a>]</span>; the dynamic spall strength of ice is about 17 MPa <span id="id4">[<a class="reference internal" href="references.html#id8" title="Manfred A. Lange and Thomas J. Ahrens. The dynamic tensile strength of ice and ice-silicate mixtures. Journal of Geophysical Research, 88(B2):1197, 1983. URL: http://doi.wiley.com/10.1029/JB088iB02p01197, doi:10.1029/JB088iB02p01197.">Lange and Ahrens, 1983</a>]</span>. The relationship between the Hugoniot Elastic Limit and the von Mises yield stress is:</p>
+<p><span class="math notranslate nohighlight">\(\sigma_{vm}  = \frac{(1-2\nu) \sigma_{HEL}}{(1-\nu)} = 0.328\)</span> GPa.</p>
+<p>Bulk modulus of ice is about 10 GPa at 150 K <span id="id5">[<a class="reference internal" href="references.html#id9" title="J. J. Neumeier. Elastic Constants, Bulk Modulus, and Compressibility of H$_2$O Ice Ih for the Temperature Range 50 K – 273 K. J. Phys. Chem. Ref. Data, 47:033101, 2018. doi:10.1063/1.5030640.">Neumeier, 2018</a>]</span>.</p>
+<p>There are multiple options for the equation of state for H<sub>2</sub>O, each with various strengths and weaknesses and should be chosen based on the desired application.</p>
+<p>Example configuration file entry (mks):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mat1</span><span class="p">:</span>
+    <span class="nb">str</span><span class="p">:</span>
+        <span class="nb">type</span>   <span class="p">:</span> <span class="s1">&#39;VM&#39;</span>
+        <span class="n">gmod</span>   <span class="p">:</span> <span class="mf">3.38E9</span>
+        <span class="n">ys</span>     <span class="p">:</span> <span class="mf">0.328E9</span>
+        <span class="n">kmod</span>   <span class="p">:</span> <span class="mf">10.0E9</span>
+        <span class="n">cs0</span>    <span class="p">:</span> <span class="mf">3305.0</span>
+    <span class="n">frac</span><span class="p">:</span>
+        <span class="n">pfrac</span>  <span class="p">:</span> <span class="mf">17.0E6</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4
+</section>
+<section id="aluminum-6061">
+<h2>Aluminum 6061<a class="headerlink" href="#aluminum-6061" title="Permalink to this headline">#</a></h2>
+<p>Al 6061 data from <a class="reference external" href="https://www.matweb.com/">https://www.matweb.com/</a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mat1</span><span class="p">:</span>
+    <span class="nb">str</span><span class="p">:</span>
+        <span class="nb">type</span>   <span class="p">:</span> <span class="s1">&#39;VM&#39;</span>
+        <span class="n">gmod</span>   <span class="p">:</span> <span class="mf">26.0E9</span>
+        <span class="n">ys</span>     <span class="p">:</span> <span class="mf">207.0E6</span>
+    <span class="n">frac</span><span class="p">:</span>
+        <span class="n">pfrac</span>  <span class="p">:</span> <span class="mf">276.0E6</span>
 </pre></div>
 </div>
-</div>
-</div>
-<p>When your book is built, the contents of any <code class="docutils literal notranslate"><span class="pre">{code-cell}</span></code> blocks will be
-executed with your default Jupyter kernel, and their outputs will be displayed
-in-line with the rest of your content.</p>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<p>Jupyter Book uses <a class="reference external" href="https://jupytext.readthedocs.io/en/latest/">Jupytext</a> to convert text-based files to notebooks, and can support <a class="reference external" href="https://jupyterbook.org/file-types/jupytext.html">many other text-based notebook files</a>.</p>
-</div>
 </section>
-<section id="create-a-notebook-with-myst-markdown">
-<h2>Create a notebook with MyST Markdown<a class="headerlink" href="#create-a-notebook-with-myst-markdown" title="Permalink to this headline">#</a></h2>
-<p>MyST Markdown notebooks are defined by two things:</p>
-<ol class="simple">
-<li><p>YAML metadata that is needed to understand if / how it should convert text files to notebooks (including information about the kernel needed).
-See the YAML at the top of this page for example.</p></li>
-<li><p>The presence of <code class="docutils literal notranslate"><span class="pre">{code-cell}</span></code> directives, which will be executed with your book.</p></li>
-</ol>
-<p>That’s all that is needed to get started!</p>
-</section>
-<section id="quickly-add-yaml-metadata-for-myst-notebooks">
-<h2>Quickly add YAML metadata for MyST Notebooks<a class="headerlink" href="#quickly-add-yaml-metadata-for-myst-notebooks" title="Permalink to this headline">#</a></h2>
-<p>If you have a markdown file and you’d like to quickly add YAML metadata to it, so that Jupyter Book will treat it as a MyST Markdown Notebook, run the following command:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">jupyter</span><span class="o">-</span><span class="n">book</span> <span class="n">myst</span> <span class="n">init</span> <span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">markdownfile</span><span class="o">.</span><span class="n">md</span>
+<section id="copper">
+<h2>Copper<a class="headerlink" href="#copper" title="Permalink to this headline">#</a></h2>
+<p>Annealed copper shear modulus (46 GPa) and Poisson’s ratio (0.343) from <a class="reference external" href="https://www.matweb.com/">https://www.matweb.com/</a>.</p>
+<p>Hugoniot elastic limit and tensile strength are dependence on temperature, strain rate, propagation distance, etc. <span id="id6">[<a class="reference internal" href="references.html#id7" title="E. B. Zaretsky and G. I. Kanel. Response of copper to shock-wave loading at temperatures up to the melting point. Journal of Applied Physics, 114(8):083511, aug 2013. URL: http://aip.scitation.org/doi/10.1063/1.4819328, doi:10.1063/1.4819328.">Zaretsky and Kanel, 2013</a>]</span>. These are nominal values for demonstration purposes only.
+For an HEL of 0.2 GPa, <span class="math notranslate nohighlight">\(\sigma_{vm}=0.0956\)</span> GPa.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mat1</span><span class="p">:</span>
+    <span class="nb">str</span><span class="p">:</span>
+        <span class="nb">type</span>   <span class="p">:</span> <span class="s1">&#39;VM&#39;</span>
+        <span class="n">gmod</span>   <span class="p">:</span> <span class="mf">46.0E9</span>
+        <span class="n">ys</span>     <span class="p">:</span> <span class="mf">0.0956E9</span>
+    <span class="n">frac</span><span class="p">:</span>
+        <span class="n">pfrac</span>  <span class="p">:</span> <span class="mf">1.9E9</span>
 </pre></div>
 </div>
 </section>
@@ -471,6 +479,20 @@ See the YAML at the top of this page for example.</p></li>
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="strength.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Material strength</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="references.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">References</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
 </div>
             </footer>
         </div>

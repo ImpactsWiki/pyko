@@ -141,6 +141,16 @@ const thebe_selector_output = ".output, .cell_output"
    Material strength
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="materials.html">
+   Example materials
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="references.html">
+   References
+  </a>
+ </li>
 </ul>
 
     </div>
@@ -347,11 +357,6 @@ title="Print to PDF"
    Tabular EOS
   </a>
  </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#references">
-   References
-  </a>
- </li>
 </ul>
 
     </nav>
@@ -384,11 +389,6 @@ title="Print to PDF"
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#tabular-eos">
    Tabular EOS
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#references">
-   References
   </a>
  </li>
 </ul>
@@ -429,7 +429,7 @@ title="Print to PDF"
 </section>
 <section id="mie-gruneisen-eos">
 <span id="eos-mgr"></span><h2>Mie-Grüneisen EOS<a class="headerlink" href="#mie-gruneisen-eos" title="Permalink to this headline">#</a></h2>
-<p>The Mie-Grüneisen model uses a reference curve, usually the principal Hugoniot, and a thermal parameter to describe a pressure-volume-energy EOS surface (e.g., see Chapter 5 in <span id="id1">[<a class="reference internal" href="#id5" title="Jerry W. Forbes. Shock Wave Compression of Condensed Matter. Springer Berlin Heidelberg, Berlin, Heidelberg, 2012. ISBN 978-3-642-32534-2. URL: http://link.springer.com/10.1007/978-3-642-32535-9, doi:10.1007/978-3-642-32535-9.">Forbes, 2012</a>]</span>).</p>
+<p>The Mie-Grüneisen model uses a reference curve, usually the principal Hugoniot, and a thermal parameter to describe a pressure-volume-energy EOS surface (e.g., see Chapter 5 in <span id="id1">[<a class="reference internal" href="references.html#id3" title="Jerry W. Forbes. Shock Wave Compression of Condensed Matter. Springer Berlin Heidelberg, Berlin, Heidelberg, 2012. ISBN 978-3-642-32534-2. URL: http://link.springer.com/10.1007/978-3-642-32535-9, doi:10.1007/978-3-642-32535-9.">Forbes, 2012</a>]</span>).</p>
 <p>The material model requires a reference density, Hugoniot parameters, and the Grüneisen gamma.
 The principal Hugoniot is described by a quadratic equation: <span class="math notranslate nohighlight">\(U_S = c_0 + s_1 u_p + s_2 u_p^2\)</span>. The specific heat capacity is used to determine temperature assuming <span class="math notranslate nohighlight">\(T=E/cv\)</span>. <span class="math notranslate nohighlight">\(cv\)</span> must be a non-zero value.</p>
 <p>The initial conditions must specify the initial density, pressure, energy and particle velocity.</p>
@@ -487,7 +487,7 @@ P(V,E) &amp; =  P_H(V)+\frac{\gamma(V)}{V}\left[E(V)-E_0\right] - \left[P_0+P_H(
 <p>A tabular EOS contains the thermodynamic variables for the material over a rectangular grid of two independent variables, typically density and temperature. The pressure-volume-energy relationships are interpolated during problem execution to solve the energy conservation equation. pyKO uses bilinear interpolation on the density-temperature grid, but other tabular EOS schemes are easy to implement.</p>
 <p>The SESClass.readses function assumes STD and EXT formats compatible with the eos_table.py module from the Stewart group.</p>
 <ul class="simple">
-<li><p>SESAME standard 201+301 format. This table format specficiation is described in <span id="id2">Lyon <em>et al.</em> [<a class="reference internal" href="#id4" title="Stanford P. Lyon, James D. Johnson, and Group T-1. SESAME: The Los Alamos Laboratory Equation of State Database. Technical Report, Los Alamos LAUR-92-3407, 1992.">1992</a>]</span> (<a href="https://github.com/ststewart/aneos-forsterite-2019/blob/master/EOS-docs/Lyon-Johnson-1992-SESAME-database.pdf">PDF file</a>).</p></li>
+<li><p>SESAME standard 201+301 format. This table format specficiation is described in <span id="id2">Lyon <em>et al.</em> [<a class="reference internal" href="references.html#id2" title="Stanford P. Lyon, James D. Johnson, and Group T-1. SESAME: The Los Alamos Laboratory Equation of State Database. Technical Report, Los Alamos LAUR-92-3407, 1992.">1992</a>]</span> (<a href="https://github.com/ststewart/aneos-forsterite-2019/blob/master/EOS-docs/Lyon-Johnson-1992-SESAME-database.pdf">PDF file</a>).</p></li>
 </ul>
 <p>The units in the tabular EOS must be specified in the pyKO configuration file (see <a class="reference internal" href="configuration-file.html#config-units"><span class="std std-ref">Units</span></a>).</p>
 <p>Stewart Group ANEOS tables (<a class="reference external" href="https://github.com/ststewart?tab=repositories">https://github.com/ststewart?tab=repositories</a>) have the following format:</p>
@@ -514,19 +514,6 @@ P(V,E) &amp; =  P_H(V)+\frac{\gamma(V)}{V}\left[E(V)-E_0\right] - \left[P_0+P_H(
 <p class="sidebar-title">Table interpolation</p>
 <p>Future documentation will discuss pros and cons of different interpolation schemes.</p>
 </aside>
-</section>
-<section id="references">
-<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">#</a></h2>
-<div class="docutils container" id="id3">
-<dl class="citation">
-<dt class="label" id="id5"><span class="brackets"><a class="fn-backref" href="#id1">For12</a></span></dt>
-<dd><p>Jerry W. Forbes. <em>Shock Wave Compression of Condensed Matter</em>. Springer Berlin Heidelberg, Berlin, Heidelberg, 2012. ISBN 978-3-642-32534-2. URL: <a class="reference external" href="http://link.springer.com/10.1007/978-3-642-32535-9">http://link.springer.com/10.1007/978-3-642-32535-9</a>, <a class="reference external" href="https://doi.org/10.1007/978-3-642-32535-9">doi:10.1007/978-3-642-32535-9</a>.</p>
-</dd>
-<dt class="label" id="id4"><span class="brackets"><a class="fn-backref" href="#id2">LJT192</a></span></dt>
-<dd><p>Stanford P. Lyon, James D. Johnson, and Group T-1. SESAME: The Los Alamos Laboratory Equation of State Database. Technical Report, Los Alamos LAUR-92-3407, 1992.</p>
-</dd>
-</dl>
-</div>
 </section>
 </section>
 
