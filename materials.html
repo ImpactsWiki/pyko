@@ -357,6 +357,28 @@ title="Print to PDF"
    Copper
   </a>
  </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#stainless-steel-304">
+   Stainless steel 304
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#quartz">
+   Quartz
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#alpha-quartz">
+     alpha quartz
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#fused-quartz">
+     Fused quartz
+    </a>
+   </li>
+  </ul>
+ </li>
 </ul>
 
     </nav>
@@ -391,6 +413,28 @@ title="Print to PDF"
    Copper
   </a>
  </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#stainless-steel-304">
+   Stainless steel 304
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#quartz">
+   Quartz
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#alpha-quartz">
+     alpha quartz
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#fused-quartz">
+     Fused quartz
+    </a>
+   </li>
+  </ul>
+ </li>
 </ul>
 
                         </nav>
@@ -424,6 +468,7 @@ title="Print to PDF"
 </section>
 <section id="aluminum-6061">
 <h2>Aluminum 6061<a class="headerlink" href="#aluminum-6061" title="Permalink to this headline">#</a></h2>
+<!-- (https://www.matweb.com/search/datasheet.aspx?matguid=b8d536e0b9b54bd7b69e4124d8f1d20a&ckck=1) -->
 <p>Al 6061 data from <a class="reference external" href="https://www.matweb.com/">https://www.matweb.com/</a>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mat1</span><span class="p">:</span>
     <span class="nb">str</span><span class="p">:</span>
@@ -437,6 +482,7 @@ title="Print to PDF"
 </section>
 <section id="copper">
 <h2>Copper<a class="headerlink" href="#copper" title="Permalink to this headline">#</a></h2>
+<!--  (https://www.matweb.com/search/datasheet.aspx?matguid=9aebe83845c04c1db5126fada6f76f7e) -->
 <p>Annealed copper shear modulus (46 GPa) and Poisson’s ratio (0.343) from <a class="reference external" href="https://www.matweb.com/">https://www.matweb.com/</a>.</p>
 <p>Hugoniot elastic limit and tensile strength are dependence on temperature, strain rate, propagation distance, etc. <span id="id6">[<a class="reference internal" href="references.html#id7" title="E. B. Zaretsky and G. I. Kanel. Response of copper to shock-wave loading at temperatures up to the melting point. Journal of Applied Physics, 114(8):083511, aug 2013. URL: http://aip.scitation.org/doi/10.1063/1.4819328, doi:10.1063/1.4819328.">Zaretsky and Kanel, 2013</a>]</span>. These are nominal values for demonstration purposes only.
 For an HEL of 0.2 GPa, <span class="math notranslate nohighlight">\(\sigma_{vm}=0.0956\)</span> GPa.</p>
@@ -449,6 +495,54 @@ For an HEL of 0.2 GPa, <span class="math notranslate nohighlight">\(\sigma_{vm}=
         <span class="n">pfrac</span>  <span class="p">:</span> <span class="mf">1.9E9</span>
 </pre></div>
 </div>
+</section>
+<section id="stainless-steel-304">
+<h2>Stainless steel 304<a class="headerlink" href="#stainless-steel-304" title="Permalink to this headline">#</a></h2>
+<p>Most parameters from <span id="id7">[<a class="reference internal" href="references.html#id10" title="Thomas S. Duffy and Thomas J. Ahrens. Dynamic compression of an Fe–Cr–Ni alloy to 80 GPa. Journal of Applied Physics, 82(9):4259–4269, nov 1997. URL: http://aip.scitation.org/doi/10.1063/1.366233, doi:10.1063/1.366233.">Duffy and Ahrens, 1997</a>]</span>. <span class="math notranslate nohighlight">\(\nu_0=0.29\)</span>.</p>
+<p><span class="math notranslate nohighlight">\(c_v=502.416\)</span> J/K/kg from <a class="reference external" href="https://www.engineersedge.com/materials/specific_heat_capacity_of_metals_13259.htm">https://www.engineersedge.com/materials/specific_heat_capacity_of_metals_13259.htm</a></p>
+<p>Need tensile strength; this is a guess.</p>
+<p>All values mks.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mat1</span><span class="p">:</span>
+    <span class="n">eos</span><span class="p">:</span>
+        <span class="n">name</span>   <span class="p">:</span> <span class="s1">&#39;Steel 304&#39;</span>
+        <span class="nb">type</span>   <span class="p">:</span> <span class="s1">&#39;MGR&#39;</span>
+        <span class="n">rhoref</span> <span class="p">:</span> <span class="mf">7870.0</span>
+        <span class="n">c0</span>     <span class="p">:</span> <span class="mf">4580.0</span>
+        <span class="n">s1</span>     <span class="p">:</span> <span class="mf">1.49</span>
+        <span class="n">s2</span>     <span class="p">:</span> <span class="mf">0.0</span>
+        <span class="n">gamma0</span> <span class="p">:</span> <span class="mf">2.2</span>
+        <span class="n">cv</span>     <span class="p">:</span> <span class="mf">502.416</span>
+    <span class="nb">str</span><span class="p">:</span>
+        <span class="nb">type</span>   <span class="p">:</span> <span class="s1">&#39;VM&#39;</span>
+        <span class="n">gmod</span>   <span class="p">:</span> <span class="mf">78.0E9</span>
+        <span class="n">ys</span>     <span class="p">:</span> <span class="mf">0.2E9</span>
+    <span class="n">frac</span><span class="p">:</span>
+        <span class="n">pfrac</span>  <span class="p">:</span> <span class="mf">1.0E9</span>
+</pre></div>
+</div>
+</section>
+<section id="quartz">
+<h2>Quartz<a class="headerlink" href="#quartz" title="Permalink to this headline">#</a></h2>
+<section id="alpha-quartz">
+<h3>alpha quartz<a class="headerlink" href="#alpha-quartz" title="Permalink to this headline">#</a></h3>
+<p>Wackerle (1962) HEL strongly dependent on orientation. Nominal <span class="math notranslate nohighlight">\(\sigma_{HEL}=10\)</span> GPa.</p>
+<p><span class="math notranslate nohighlight">\(\nu=0.08\)</span> <a class="reference external" href="https://agupubs.onlinelibrary.wiley.com/doi/full/10.1002/2017JB014606">https://agupubs.onlinelibrary.wiley.com/doi/full/10.1002/2017JB014606</a></p>
+<p><span class="math notranslate nohighlight">\(\sigma_{vm}  = \frac{(1-2\nu) \sigma_{HEL}}{(1-\nu)} = 9.3\)</span> GPa.</p>
+<p>Shear modulus <a class="reference external" href="http://www-odp.tamu.edu/publications/204_SR/103/103_t1.htm">http://www-odp.tamu.edu/publications/204_SR/103/103_t1.htm</a></p>
+<p>Dynamic tensile strength approximately 1 GPa <a class="reference external" href="https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2022GL100468">https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2022GL100468</a></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mat1</span><span class="p">:</span>
+    <span class="nb">str</span><span class="p">:</span>
+        <span class="nb">type</span>   <span class="p">:</span> <span class="s1">&#39;VM&#39;</span>
+        <span class="n">gmod</span>   <span class="p">:</span> <span class="mf">44.0E9</span>
+        <span class="n">ys</span>     <span class="p">:</span> <span class="mf">9.3E9</span>
+    <span class="n">frac</span><span class="p">:</span>
+        <span class="n">pfrac</span>  <span class="p">:</span> <span class="mf">1.0E9</span>
+</pre></div>
+</div>
+</section>
+<section id="fused-quartz">
+<h3>Fused quartz<a class="headerlink" href="#fused-quartz" title="Permalink to this headline">#</a></h3>
+</section>
 </section>
 </section>
 

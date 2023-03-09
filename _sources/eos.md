@@ -142,3 +142,39 @@ mat1:
 Future documentation will discuss pros and cons of different interpolation schemes.
 ```
 
+
+(eos:til)=
+## Tillotson EOS
+
+```
+# parameters: [rho0, E0, EIV, ECV, AA, BB, a, b, alpha, beta]
+# units:    [kg/m3, J/kg, J/kg, J/kg, Pa, Pa, [-]x4]
+# these olivine parameters are from Marinova et al. 2011 Icarus 
+# dunitetill = [3500.0, 550.0e+6, 4.500e+6, 14.50e+6, 131.00e+9,  49.00e+9, 0.5, 1.4, 5.0, 5.0]
+# Basalt parameters from iSALE -- from where? Benz?
+# basalttill = [2650.0, 4.87E8, 4.72E6, 18.2E6, 5.3E10, 5.3E10, 0.6, 0.6, 5., 5.]
+```
+
+Example configuration file entry (mks):
+```
+mat1:
+    init:
+        up0    : 0.0
+        rho0   : 3500.0
+        p0     : 0.0
+        e0     : 0.0
+    eos:
+        name   : 'Dunite'
+        type   : 'TIL'
+        rhoref : 3500.0
+        E0     : 550.0E6
+        EIV    : 4.5E6
+        ECV    : 14.5E6
+        AA     : 131.0E9
+        BB     : 49.0E9
+        a      : 0.5
+        b      : 1.4
+        alpha  : 5.0
+        beta   : 5.0
+```
+

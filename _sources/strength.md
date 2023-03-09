@@ -42,9 +42,9 @@ mat1:
         type   : 'HYDRO'
 ```
 
-## Fracture
+## Fracture and void space
 
-Fracture is not yet implemented but coming soon.
+Dynamic fracture is implemented but not stable nor validated at this time.
 
 Fracture requires the Mie-Grueneisen EOS or a tabular EOS with a tension region.
 
@@ -52,5 +52,9 @@ Example configuration file entry (mks):
 ```
 mat1:
     frac:
-        pfrac  : 1.0E7
+        pfrac  : 1.0E9
 ```
+
+The code has the ability to close void spaces when surfaces come into contact. 
+The current implementation of void closure uses a simplified calculation compared to Wilkins book for the time step for contact.
+The full convergence loop for contact time should be implemented in the future.

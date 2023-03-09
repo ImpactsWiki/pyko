@@ -9,6 +9,7 @@ This code was developed from the book <a href="https://link.springer.com/book/10
 * Planar, cylindrical, spherical geometries
 * Fixed (symmetric, zero particle velocity) and free (zero presure) boundary conditions
 * Von Mises shear strength
+* Initial gaps, dynamic fracture, void closure on contact
 * EOS
     * Ideal gas
     * Mie-Grueneisen
@@ -19,10 +20,11 @@ This code was developed from the book <a href="https://link.springer.com/book/10
     2. Preferred I/O
        Yaml configuration (input) files with unit conversion using pint
        Binary output files using pickle with units
+    3. Customizable outputs: standard cell data output in binary format; debug output in binary format with all node variables
 
 ### Wish list
 
-* Fracture and gaps
+* Full Wilkins convergence loop for time step to void closure
 * Variable mesh spacing
 * Tillotson EOS
 * Gravity

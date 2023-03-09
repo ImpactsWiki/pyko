@@ -357,6 +357,11 @@ title="Print to PDF"
    Tabular EOS
   </a>
  </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tillotson-eos">
+   Tillotson EOS
+  </a>
+ </li>
 </ul>
 
     </nav>
@@ -389,6 +394,11 @@ title="Print to PDF"
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#tabular-eos">
    Tabular EOS
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tillotson-eos">
+   Tillotson EOS
   </a>
  </li>
 </ul>
@@ -514,6 +524,39 @@ P(V,E) &amp; =  P_H(V)+\frac{\gamma(V)}{V}\left[E(V)-E_0\right] - \left[P_0+P_H(
 <p class="sidebar-title">Table interpolation</p>
 <p>Future documentation will discuss pros and cons of different interpolation schemes.</p>
 </aside>
+</section>
+<section id="tillotson-eos">
+<span id="eos-til"></span><h2>Tillotson EOS<a class="headerlink" href="#tillotson-eos" title="Permalink to this headline">#</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># parameters: [rho0, E0, EIV, ECV, AA, BB, a, b, alpha, beta]</span>
+<span class="c1"># units:    [kg/m3, J/kg, J/kg, J/kg, Pa, Pa, [-]x4]</span>
+<span class="c1"># these olivine parameters are from Marinova et al. 2011 Icarus </span>
+<span class="c1"># dunitetill = [3500.0, 550.0e+6, 4.500e+6, 14.50e+6, 131.00e+9,  49.00e+9, 0.5, 1.4, 5.0, 5.0]</span>
+<span class="c1"># Basalt parameters from iSALE -- from where? Benz?</span>
+<span class="c1"># basalttill = [2650.0, 4.87E8, 4.72E6, 18.2E6, 5.3E10, 5.3E10, 0.6, 0.6, 5., 5.]</span>
+</pre></div>
+</div>
+<p>Example configuration file entry (mks):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mat1</span><span class="p">:</span>
+    <span class="n">init</span><span class="p">:</span>
+        <span class="n">up0</span>    <span class="p">:</span> <span class="mf">0.0</span>
+        <span class="n">rho0</span>   <span class="p">:</span> <span class="mf">3500.0</span>
+        <span class="n">p0</span>     <span class="p">:</span> <span class="mf">0.0</span>
+        <span class="n">e0</span>     <span class="p">:</span> <span class="mf">0.0</span>
+    <span class="n">eos</span><span class="p">:</span>
+        <span class="n">name</span>   <span class="p">:</span> <span class="s1">&#39;Dunite&#39;</span>
+        <span class="nb">type</span>   <span class="p">:</span> <span class="s1">&#39;TIL&#39;</span>
+        <span class="n">rhoref</span> <span class="p">:</span> <span class="mf">3500.0</span>
+        <span class="n">E0</span>     <span class="p">:</span> <span class="mf">550.0E6</span>
+        <span class="n">EIV</span>    <span class="p">:</span> <span class="mf">4.5E6</span>
+        <span class="n">ECV</span>    <span class="p">:</span> <span class="mf">14.5E6</span>
+        <span class="n">AA</span>     <span class="p">:</span> <span class="mf">131.0E9</span>
+        <span class="n">BB</span>     <span class="p">:</span> <span class="mf">49.0E9</span>
+        <span class="n">a</span>      <span class="p">:</span> <span class="mf">0.5</span>
+        <span class="n">b</span>      <span class="p">:</span> <span class="mf">1.4</span>
+        <span class="n">alpha</span>  <span class="p">:</span> <span class="mf">5.0</span>
+        <span class="n">beta</span>   <span class="p">:</span> <span class="mf">5.0</span>
+</pre></div>
+</div>
 </section>
 </section>
 

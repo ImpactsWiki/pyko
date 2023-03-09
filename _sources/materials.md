@@ -40,7 +40,7 @@ mat1:
 
 ## Aluminum 6061
 
-[//]: #  (https://www.matweb.com/search/datasheet.aspx?matguid=b8d536e0b9b54bd7b69e4124d8f1d20a&ckck=1)
+<!-- (https://www.matweb.com/search/datasheet.aspx?matguid=b8d536e0b9b54bd7b69e4124d8f1d20a&ckck=1) -->
 
 Al 6061 data from https://www.matweb.com/.
 
@@ -56,7 +56,7 @@ mat1:
 
 ## Copper
 
-[//]: #  (https://www.matweb.com/search/datasheet.aspx?matguid=9aebe83845c04c1db5126fada6f76f7e)
+<!--  (https://www.matweb.com/search/datasheet.aspx?matguid=9aebe83845c04c1db5126fada6f76f7e) -->
 
 Annealed copper shear modulus (46 GPa) and Poisson's ratio (0.343) from https://www.matweb.com/.
 
@@ -72,3 +72,60 @@ mat1:
     frac:
         pfrac  : 1.9E9
 ```
+
+## Stainless steel 304
+
+Most parameters from {cite}`Duffy1997`. $\nu_0=0.29$.
+
+$c_v=502.416$ J/K/kg from https://www.engineersedge.com/materials/specific_heat_capacity_of_metals_13259.htm
+
+Need tensile strength; this is a guess.
+
+All values mks.
+```
+mat1:
+    eos:
+        name   : 'Steel 304'
+        type   : 'MGR'
+        rhoref : 7870.0
+        c0     : 4580.0
+        s1     : 1.49
+        s2     : 0.0
+        gamma0 : 2.2
+        cv     : 502.416
+    str:
+        type   : 'VM'
+        gmod   : 78.0E9
+        ys     : 0.2E9
+    frac:
+        pfrac  : 1.0E9
+```
+
+## Quartz
+
+### alpha quartz
+
+Wackerle (1962) HEL strongly dependent on orientation. Nominal $\sigma_{HEL}=10$ GPa. 
+
+$\nu=0.08$ https://agupubs.onlinelibrary.wiley.com/doi/full/10.1002/2017JB014606
+
+$\sigma_{vm}  = \frac{(1-2\nu) \sigma_{HEL}}{(1-\nu)} = 9.3$ GPa.
+
+Shear modulus http://www-odp.tamu.edu/publications/204_SR/103/103_t1.htm
+
+Dynamic tensile strength approximately 1 GPa https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2022GL100468
+
+```
+mat1:
+    str:
+        type   : 'VM'
+        gmod   : 44.0E9
+        ys     : 9.3E9
+    frac:
+        pfrac  : 1.0E9
+```
+
+### Fused quartz
+
+
+
