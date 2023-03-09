@@ -4,7 +4,7 @@
 
 This repository currently hosts only the user manual for pyKO. 
 
-The code is currently in beta testing. If you wish to be a beta
+The code is in beta testing. If you wish to be a beta
 tester, please send your github username to ststewart [at] ucdavis.edu.
 
 A future public release will be hosted in this repository.
