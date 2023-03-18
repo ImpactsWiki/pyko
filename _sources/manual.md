@@ -36,8 +36,8 @@ This code was developed from the book <a href="https://link.springer.com/book/10
 
 ## pyKO source files
 
-* pyko.py: primary hydrocode and I/O functions
-* eos_table.py: module for using EOS tables developed for ANEOS models
+* `pyko.py`: primary hydrocode and I/O functions
+* `eos_table.py`: module for EOS functions with ANEOS and Tillotson
 
 ## Required packages
 
@@ -53,7 +53,7 @@ Required python packages for test cases and visualization examples:<p>
 * Pandas (1.4.2)
 * Hvplot (0.8.2)
 * Matplotlib (3.7.0)
-* Scipy (1.9.1) (needed for sodshock.py)
+* Scipy (1.9.1) (needed for `sodshock.py`)
 
 ### Test cases in repository
 Test cases are included as Jupyter Notebooks, for training and validation.<br>
