@@ -10,7 +10,7 @@ This code was developed from the book <a href="https://link.springer.com/book/10
 * Fixed (symmetric, zero particle velocity) and free (zero pressure) boundary conditions
 * Von Mises shear strength
 * Initial gaps, dynamic fracture, void closure on contact
-* Gravitational acceleraiton (needs more testing)
+* Gravitational acceleration (needs more testing)
 * EOS
     * Ideal gas
     * Mie-Grueneisen
