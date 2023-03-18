@@ -42,6 +42,7 @@ This code was developed from the book <a href="https://link.springer.com/book/10
 * Restart from binary
 * Absorbing boundary condition
 * Numba performance enhancements (this code is about 10x slower than fortran)
+* Thermal diffusion
 
 ## pyKO source files
 
