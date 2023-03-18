@@ -15,7 +15,7 @@ This code was developed from the book <a href="https://link.springer.com/book/10
     * Ideal gas
     * Mie-Grueneisen
     * Tillotson (needs more testing)
-    * Tabular/SESAME, with features for tabulated ANEOS
+    * Tabular/SESAME, with tools for tabulated ANEOS
 * Input and output
     * For testing and comparison to fortran KO:<br>
       Fixed formatting ascii input and output files
