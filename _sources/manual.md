@@ -17,12 +17,14 @@ This code was developed from the book <a href="https://link.springer.com/book/10
     * Tillotson EOS (needs more testing)
     * Tabular EOS
 * Input and output
-    1. For testing and comparison to fortran KO:
-       Fixed formatting ascii input and output files
-    2. Preferred I/O
-       Yaml configuration (input) files with unit conversion using pint
-       Binary output files using pickle with units
-    3. Customizable outputs: standard cell data output in binary format; debug output in binary format with all node variables
+    * For testing and comparison to fortran KO:<br>
+      Fixed formatting ascii input and output files
+    * Preferred I/O:<br>
+      Yaml configuration (input) files with unit conversion using pint<br>
+      Binary output files using pickle with units
+    * Customizable outputs: <br>
+      User-defined cell data output in binary format<br>
+      Debug output in binary format with all node variables
 
 ### Wish list
 
