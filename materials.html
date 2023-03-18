@@ -379,6 +379,16 @@ title="Print to PDF"
    </li>
   </ul>
  </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#forsterite">
+   Forsterite
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#olivine-dunite">
+   Olivine/Dunite
+  </a>
+ </li>
 </ul>
 
     </nav>
@@ -435,6 +445,16 @@ title="Print to PDF"
    </li>
   </ul>
  </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#forsterite">
+   Forsterite
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#olivine-dunite">
+   Olivine/Dunite
+  </a>
+ </li>
 </ul>
 
                         </nav>
@@ -447,6 +467,7 @@ title="Print to PDF"
                 
   <section class="tex2jax_ignore mathjax_ignore" id="example-materials">
 <span id="page-materials"></span><h1>Example materials<a class="headerlink" href="#example-materials" title="Permalink to this headline">#</a></h1>
+<p>Disclaimer: Most of these material models are appropriate for teaching/learning purposes. Research-level models must be vetted for the specific application.</p>
 <section id="water-ice">
 <h2>Water Ice<a class="headerlink" href="#water-ice" title="Permalink to this headline">#</a></h2>
 <p>The properties of ice depend on the grain structure, temperature and strain rates. Nominal values for the Young’s modulus <span class="math notranslate nohighlight">\(E=9\)</span> GPa and poisson’s ratio <span class="math notranslate nohighlight">\(\nu=0.32\)</span> <span id="id1">[<a class="reference internal" href="references.html#id5" title="J.J. Petrovic. Review Mechanical properties of ice and snow. Journal of Materials Science, 38:1–6, 2003. doi:10.1023/A:1021134128038.">Petrovic, 2003</a>]</span>. The corresponding shear modulus <span class="math notranslate nohighlight">\(G = \frac{E}{2(1+\nu)} = 3.38\)</span> GPa. Cold ice under uniaxial strain has a Hugoniot Elastic Limit of 0.62 GPa <span id="id2">[<a class="reference internal" href="references.html#id6" title="Sarah T. Stewart and Thomas J. Ahrens. Shock properties of H2O ice. Journal of Geophysical Research E: Planets, 110(3):1–23, 2005. doi:10.1029/2004JE002305.">Stewart and Ahrens, 2005</a>]</span>. The average tensile strength for ice is 1.43 MPa at low strain rates <span id="id3">[<a class="reference internal" href="references.html#id5" title="J.J. Petrovic. Review Mechanical properties of ice and snow. Journal of Materials Science, 38:1–6, 2003. doi:10.1023/A:1021134128038.">Petrovic, 2003</a>]</span>; the dynamic spall strength of ice is about 17 MPa <span id="id4">[<a class="reference internal" href="references.html#id8" title="Manfred A. Lange and Thomas J. Ahrens. The dynamic tensile strength of ice and ice-silicate mixtures. Journal of Geophysical Research, 88(B2):1197, 1983. URL: http://doi.wiley.com/10.1029/JB088iB02p01197, doi:10.1029/JB088iB02p01197.">Lange and Ahrens, 1983</a>]</span>. The relationship between the Hugoniot Elastic Limit and the von Mises yield stress is:</p>
@@ -468,7 +489,9 @@ title="Print to PDF"
 </section>
 <section id="aluminum-6061">
 <h2>Aluminum 6061<a class="headerlink" href="#aluminum-6061" title="Permalink to this headline">#</a></h2>
-<!-- (https://www.matweb.com/search/datasheet.aspx?matguid=b8d536e0b9b54bd7b69e4124d8f1d20a&ckck=1) -->
+<!--- (https://www.matweb.com/search/datasheet.aspx?matguid=b8d536e0b9b54bd7b69e4124d8f1d20a&ckck=1) --->
+<!--- https://ascelibrary.org/doi/epdf/10.1061/%28ASCE%29EM.1943-7889.0000264 --->
+<!--- https://www.researchgate.net/profile/John-Lewandowski-3/publication/229004194_Dynamic_Tensile_Deformation_of_Aluminum_Alloy_6061-T6_and_6061-OA/links/02e7e5240329c412df000000/Dynamic-Tensile-Deformation-of-Aluminum-Alloy-6061-T6-and-6061-OA.pdf --->
 <p>Al 6061 data from <a class="reference external" href="https://www.matweb.com/">https://www.matweb.com/</a>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mat1</span><span class="p">:</span>
     <span class="nb">str</span><span class="p">:</span>
@@ -482,17 +505,19 @@ title="Print to PDF"
 </section>
 <section id="copper">
 <h2>Copper<a class="headerlink" href="#copper" title="Permalink to this headline">#</a></h2>
-<!--  (https://www.matweb.com/search/datasheet.aspx?matguid=9aebe83845c04c1db5126fada6f76f7e) -->
+<!---  (https://www.matweb.com/search/datasheet.aspx?matguid=9aebe83845c04c1db5126fada6f76f7e) --->
+<!--- https://aip.scitation.org/doi/full/10.1063/1.3607294 --->
 <p>Annealed copper shear modulus (46 GPa) and Poisson’s ratio (0.343) from <a class="reference external" href="https://www.matweb.com/">https://www.matweb.com/</a>.</p>
 <p>Hugoniot elastic limit and tensile strength are dependence on temperature, strain rate, propagation distance, etc. <span id="id6">[<a class="reference internal" href="references.html#id7" title="E. B. Zaretsky and G. I. Kanel. Response of copper to shock-wave loading at temperatures up to the melting point. Journal of Applied Physics, 114(8):083511, aug 2013. URL: http://aip.scitation.org/doi/10.1063/1.4819328, doi:10.1063/1.4819328.">Zaretsky and Kanel, 2013</a>]</span>. These are nominal values for demonstration purposes only.
 For an HEL of 0.2 GPa, <span class="math notranslate nohighlight">\(\sigma_{vm}=0.0956\)</span> GPa.</p>
+<p>Dynamic spall strength from <a class="reference external" href="https://aip.scitation.org/doi/full/10.1063/1.3607294">https://aip.scitation.org/doi/full/10.1063/1.3607294</a></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mat1</span><span class="p">:</span>
     <span class="nb">str</span><span class="p">:</span>
         <span class="nb">type</span>   <span class="p">:</span> <span class="s1">&#39;VM&#39;</span>
         <span class="n">gmod</span>   <span class="p">:</span> <span class="mf">46.0E9</span>
         <span class="n">ys</span>     <span class="p">:</span> <span class="mf">0.0956E9</span>
     <span class="n">frac</span><span class="p">:</span>
-        <span class="n">pfrac</span>  <span class="p">:</span> <span class="mf">1.9E9</span>
+        <span class="n">pfrac</span>  <span class="p">:</span> <span class="mf">1.35E9</span>
 </pre></div>
 </div>
 </section>
@@ -543,6 +568,30 @@ For an HEL of 0.2 GPa, <span class="math notranslate nohighlight">\(\sigma_{vm}=
 <section id="fused-quartz">
 <h3>Fused quartz<a class="headerlink" href="#fused-quartz" title="Permalink to this headline">#</a></h3>
 </section>
+</section>
+<section id="forsterite">
+<h2>Forsterite<a class="headerlink" href="#forsterite" title="Permalink to this headline">#</a></h2>
+<p>A tabular EOS is available from <a class="reference external" href="https://github.com/ststewart/aneos-forsterite-2019">https://github.com/ststewart/aneos-forsterite-2019</a></p>
+</section>
+<section id="olivine-dunite">
+<h2>Olivine/Dunite<a class="headerlink" href="#olivine-dunite" title="Permalink to this headline">#</a></h2>
+<p>These olivine parameters were developed in <span id="id8">[<a class="reference internal" href="references.html#id13" title="Margarita M. Marinova, Oded Aharonson, and Erik Asphaug. Geophysical consequences of planetary-scale impacts into a Mars-like planet. Icarus, 211(2):960–985, feb 2011. URL: https://linkinghub.elsevier.com/retrieve/pii/S0019103510004227, doi:10.1016/j.icarus.2010.10.032.">Marinova <em>et al.</em>, 2011</a>]</span>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mat1</span><span class="p">:</span>
+    <span class="n">eos</span><span class="p">:</span>
+        <span class="n">name</span>   <span class="p">:</span> <span class="s1">&#39;Olivine&#39;</span>
+        <span class="nb">type</span>   <span class="p">:</span> <span class="s1">&#39;TIL&#39;</span>
+        <span class="n">rhoref</span> <span class="p">:</span> <span class="mf">3500.0</span>
+        <span class="n">E0</span>     <span class="p">:</span> <span class="mf">550.0E6</span>
+        <span class="n">EIV</span>    <span class="p">:</span> <span class="mf">4.5E6</span>
+        <span class="n">ECV</span>    <span class="p">:</span> <span class="mf">14.5E6</span>
+        <span class="n">AA</span>     <span class="p">:</span> <span class="mf">131.0E9</span>
+        <span class="n">BB</span>     <span class="p">:</span> <span class="mf">49.0E9</span>
+        <span class="n">a</span>      <span class="p">:</span> <span class="mf">0.5</span>
+        <span class="n">b</span>      <span class="p">:</span> <span class="mf">1.4</span>
+        <span class="n">alpha</span>  <span class="p">:</span> <span class="mf">5.0</span>
+        <span class="n">beta</span>   <span class="p">:</span> <span class="mf">5.0</span>
+</pre></div>
+</div>
 </section>
 </section>
 

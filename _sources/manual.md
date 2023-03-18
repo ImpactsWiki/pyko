@@ -7,12 +7,14 @@ This code was developed from the book <a href="https://link.springer.com/book/10
 ## Features
 
 * Planar, cylindrical, spherical geometries
-* Fixed (symmetric, zero particle velocity) and free (zero presure) boundary conditions
+* Fixed (symmetric, zero particle velocity) and free (zero pressure) boundary conditions
 * Von Mises shear strength
 * Initial gaps, dynamic fracture, void closure on contact
+* Gravitational acceleraiton (needs more testing)
 * EOS
     * Ideal gas
     * Mie-Grueneisen
+    * Tillotson EOS (needs more testing)
     * Tabular EOS
 * Input and output
     1. For testing and comparison to fortran KO:
@@ -26,9 +28,8 @@ This code was developed from the book <a href="https://link.springer.com/book/10
 
 * Full Wilkins convergence loop for time step to void closure
 * Variable mesh spacing
-* Tillotson EOS
-* Gravity
-* More strength models
+* More strength models (will port commonly used Collins et al. MAPS 2004 with various additions)
+* Material interface separation criteria
 * Restart from binary
 * Absorbing boundary condition
 * Numba performance enhancements (this code is about 10x slower than fortran)

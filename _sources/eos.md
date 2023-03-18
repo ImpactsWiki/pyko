@@ -146,6 +146,11 @@ Future documentation will discuss pros and cons of different interpolation schem
 (eos:til)=
 ## Tillotson EOS
 
+The Tillotson EOS requires 10 parameters: rho0, E0, EIV, ECV, AA, BB, a, b, alpha, beta
+The units are kg/m$^3$, J/kg, J/kg, J/kg, Pa, Pa, and a, b, alpha, and beta are dimensionless.
+
+
+
 ```
 # parameters: [rho0, E0, EIV, ECV, AA, BB, a, b, alpha, beta]
 # units:    [kg/m3, J/kg, J/kg, J/kg, Pa, Pa, [-]x4]
@@ -155,7 +160,7 @@ Future documentation will discuss pros and cons of different interpolation schem
 # basalttill = [2650.0, 4.87E8, 4.72E6, 18.2E6, 5.3E10, 5.3E10, 0.6, 0.6, 5., 5.]
 ```
 
-Example configuration file entry (mks):
+Example configuration file entry (mks) from {cite}`Marinova2011`:
 ```
 mat1:
     init:
@@ -164,7 +169,7 @@ mat1:
         p0     : 0.0
         e0     : 0.0
     eos:
-        name   : 'Dunite'
+        name   : 'Olivine'
         type   : 'TIL'
         rhoref : 3500.0
         E0     : 550.0E6

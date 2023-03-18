@@ -527,6 +527,8 @@ P(V,E) &amp; =  P_H(V)+\frac{\gamma(V)}{V}\left[E(V)-E_0\right] - \left[P_0+P_H(
 </section>
 <section id="tillotson-eos">
 <span id="eos-til"></span><h2>Tillotson EOS<a class="headerlink" href="#tillotson-eos" title="Permalink to this headline">#</a></h2>
+<p>The Tillotson EOS requires 10 parameters: rho0, E0, EIV, ECV, AA, BB, a, b, alpha, beta
+The units are kg/m<span class="math notranslate nohighlight">\(^3\)</span>, J/kg, J/kg, J/kg, Pa, Pa, and a, b, alpha, and beta are dimensionless.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># parameters: [rho0, E0, EIV, ECV, AA, BB, a, b, alpha, beta]</span>
 <span class="c1"># units:    [kg/m3, J/kg, J/kg, J/kg, Pa, Pa, [-]x4]</span>
 <span class="c1"># these olivine parameters are from Marinova et al. 2011 Icarus </span>
@@ -535,7 +537,7 @@ P(V,E) &amp; =  P_H(V)+\frac{\gamma(V)}{V}\left[E(V)-E_0\right] - \left[P_0+P_H(
 <span class="c1"># basalttill = [2650.0, 4.87E8, 4.72E6, 18.2E6, 5.3E10, 5.3E10, 0.6, 0.6, 5., 5.]</span>
 </pre></div>
 </div>
-<p>Example configuration file entry (mks):</p>
+<p>Example configuration file entry (mks) from <span id="id3">[<a class="reference internal" href="references.html#id13" title="Margarita M. Marinova, Oded Aharonson, and Erik Asphaug. Geophysical consequences of planetary-scale impacts into a Mars-like planet. Icarus, 211(2):960–985, feb 2011. URL: https://linkinghub.elsevier.com/retrieve/pii/S0019103510004227, doi:10.1016/j.icarus.2010.10.032.">Marinova <em>et al.</em>, 2011</a>]</span>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mat1</span><span class="p">:</span>
     <span class="n">init</span><span class="p">:</span>
         <span class="n">up0</span>    <span class="p">:</span> <span class="mf">0.0</span>
@@ -543,7 +545,7 @@ P(V,E) &amp; =  P_H(V)+\frac{\gamma(V)}{V}\left[E(V)-E_0\right] - \left[P_0+P_H(
         <span class="n">p0</span>     <span class="p">:</span> <span class="mf">0.0</span>
         <span class="n">e0</span>     <span class="p">:</span> <span class="mf">0.0</span>
     <span class="n">eos</span><span class="p">:</span>
-        <span class="n">name</span>   <span class="p">:</span> <span class="s1">&#39;Dunite&#39;</span>
+        <span class="n">name</span>   <span class="p">:</span> <span class="s1">&#39;Olivine&#39;</span>
         <span class="nb">type</span>   <span class="p">:</span> <span class="s1">&#39;TIL&#39;</span>
         <span class="n">rhoref</span> <span class="p">:</span> <span class="mf">3500.0</span>
         <span class="n">E0</span>     <span class="p">:</span> <span class="mf">550.0E6</span>

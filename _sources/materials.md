@@ -13,6 +13,9 @@ kernelspec:
 (page:materials)=
 # Example materials
 
+Disclaimer: Most of these material models are appropriate for teaching/learning purposes. Research-level models must be vetted for the specific application. 
+
+
 ## Water Ice
 
 [//]: # (https://link.springer.com/article/10.1023/A:1021134128038)
@@ -40,7 +43,10 @@ mat1:
 
 ## Aluminum 6061
 
-<!-- (https://www.matweb.com/search/datasheet.aspx?matguid=b8d536e0b9b54bd7b69e4124d8f1d20a&ckck=1) -->
+<!--- (https://www.matweb.com/search/datasheet.aspx?matguid=b8d536e0b9b54bd7b69e4124d8f1d20a&ckck=1) --->
+<!--- https://ascelibrary.org/doi/epdf/10.1061/%28ASCE%29EM.1943-7889.0000264 --->
+<!--- https://www.researchgate.net/profile/John-Lewandowski-3/publication/229004194_Dynamic_Tensile_Deformation_of_Aluminum_Alloy_6061-T6_and_6061-OA/links/02e7e5240329c412df000000/Dynamic-Tensile-Deformation-of-Aluminum-Alloy-6061-T6-and-6061-OA.pdf --->
+
 
 Al 6061 data from https://www.matweb.com/.
 
@@ -56,12 +62,15 @@ mat1:
 
 ## Copper
 
-<!--  (https://www.matweb.com/search/datasheet.aspx?matguid=9aebe83845c04c1db5126fada6f76f7e) -->
+<!---  (https://www.matweb.com/search/datasheet.aspx?matguid=9aebe83845c04c1db5126fada6f76f7e) --->
+<!--- https://aip.scitation.org/doi/full/10.1063/1.3607294 --->
 
 Annealed copper shear modulus (46 GPa) and Poisson's ratio (0.343) from https://www.matweb.com/.
 
 Hugoniot elastic limit and tensile strength are dependence on temperature, strain rate, propagation distance, etc. {cite}`Zaretsky2013`. These are nominal values for demonstration purposes only.
 For an HEL of 0.2 GPa, $\sigma_{vm}=0.0956$ GPa.
+
+Dynamic spall strength from https://aip.scitation.org/doi/full/10.1063/1.3607294
 
 ```
 mat1:
@@ -70,7 +79,7 @@ mat1:
         gmod   : 46.0E9
         ys     : 0.0956E9
     frac:
-        pfrac  : 1.9E9
+        pfrac  : 1.35E9
 ```
 
 ## Stainless steel 304
@@ -128,4 +137,28 @@ mat1:
 ### Fused quartz
 
 
+
+## Forsterite
+
+A tabular EOS is available from https://github.com/ststewart/aneos-forsterite-2019
+
+## Olivine/Dunite
+
+These olivine parameters were developed in {cite}`Marinova2011`.
+```
+mat1:
+    eos:
+        name   : 'Olivine'
+        type   : 'TIL'
+        rhoref : 3500.0
+        E0     : 550.0E6
+        EIV    : 4.5E6
+        ECV    : 14.5E6
+        AA     : 131.0E9
+        BB     : 49.0E9
+        a      : 0.5
+        b      : 1.4
+        alpha  : 5.0
+        beta   : 5.0
+```
 

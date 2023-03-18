@@ -389,13 +389,15 @@ title="Print to PDF"
 <h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">#</a></h2>
 <ul class="simple">
 <li><p>Planar, cylindrical, spherical geometries</p></li>
-<li><p>Fixed (symmetric, zero particle velocity) and free (zero presure) boundary conditions</p></li>
+<li><p>Fixed (symmetric, zero particle velocity) and free (zero pressure) boundary conditions</p></li>
 <li><p>Von Mises shear strength</p></li>
 <li><p>Initial gaps, dynamic fracture, void closure on contact</p></li>
+<li><p>Gravitational acceleraiton (needs more testing)</p></li>
 <li><p>EOS</p>
 <ul>
 <li><p>Ideal gas</p></li>
 <li><p>Mie-Grueneisen</p></li>
+<li><p>Tillotson EOS (needs more testing)</p></li>
 <li><p>Tabular EOS</p></li>
 </ul>
 </li>
@@ -415,9 +417,8 @@ Binary output files using pickle with units</p></li>
 <ul class="simple">
 <li><p>Full Wilkins convergence loop for time step to void closure</p></li>
 <li><p>Variable mesh spacing</p></li>
-<li><p>Tillotson EOS</p></li>
-<li><p>Gravity</p></li>
-<li><p>More strength models</p></li>
+<li><p>More strength models (will port commonly used Collins et al. MAPS 2004 with various additions)</p></li>
+<li><p>Material interface separation criteria</p></li>
 <li><p>Restart from binary</p></li>
 <li><p>Absorbing boundary condition</p></li>
 <li><p>Numba performance enhancements (this code is about 10x slower than fortran)</p></li>
