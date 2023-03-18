@@ -53,7 +53,8 @@ Boundaries
 * <b>readinput_borg</b> function: reads formatted ascii problem initialization file that is compatible with modified fortran KO. Populates the RunClass object.
 * <b>readinput_yaml</b> function: reads yaml formatted configuration file into a dictionary object (named config) and then populates the main RunClass with simulation parameters (object named run). The input parameter units are converted to code units using pint. Tabular EOS are converted to code units. 
 * <b>run</b> function: primary wrapper function for I/O and calling main hydro time steps
-* <b>OutputClass</b>: This class holds the data arrays for binary snapshot output using pickle. Create a new OutputClass object to load data from the binary pickle file. The OutputClass data arrays contains only mesh-centered values (odd j), with position and velocity interpolated from the mesh edges (even j). Interior void spaces are included as an empty mesh center.
+* <b>OutputClass</b>: This class holds the data arrays for binary snapshot output using pickle. The OutputClass data arrays contains only mesh-centered values (odd j), with position and velocity interpolated from the mesh edges (even j). Interior void spaces are included as an empty mesh center. 
+* <b>DebugClass</b>: This class holds all the domain variables for each node. Used for learning and debugging.
 
 ### Customizing the binary snapshots
 The default values in OutputClass can be customized by editing the arrays in the class and DomainClass.binaryoutputpint function. Several DomainClass variables are not included in the default binary snapshot. For pandas compatibility, all arrays in the OutputClass must be the same length (all oddj).

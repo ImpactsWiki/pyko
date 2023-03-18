@@ -94,7 +94,7 @@ const thebe_selector_output = ".output, .cell_output"
         
       
       
-      <img src="_static/impacts-wiki.jpg" class="logo" alt="logo">
+      <img src="_static/pyko-logo.png" class="logo" alt="logo">
       
       
       <h1 class="site-logo" id="site-title">pyKO</h1>
@@ -388,15 +388,34 @@ title="Print to PDF"
 <section id="features">
 <h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">#</a></h2>
 <ul class="simple">
-<li><p>Planar, cylindrical, spherical geometries</p></li>
-<li><p>Fixed (symmetric, zero particle velocity) and free (zero pressure) boundary conditions</p></li>
-<li><p>Von Mises shear strength</p></li>
-<li><p>Initial gaps, dynamic fracture, void closure on contact</p></li>
+<li><p>Geometries</p>
+<ul>
+<li><p>Planar, cylindrical, or spherical</p></li>
+</ul>
+</li>
+<li><p>Boundary conditions</p>
+<ul>
+<li><p>Fixed: symmetric, zero particle velocity</p></li>
+<li><p>Free: zero pressure</p></li>
+</ul>
+</li>
+<li><p>Elastic-plastic model</p>
+<ul>
+<li><p>Von Mises</p></li>
+</ul>
+</li>
+<li><p>Interfaces</p>
+<ul>
+<li><p>Initial gaps</p></li>
+<li><p>Dynamic fracture</p></li>
+<li><p>Void closure on contact</p></li>
+</ul>
+</li>
 <li><p>Gravitational acceleration (needs more testing)</p></li>
-<li><p>EOS</p>
+<li><p>Equations of state</p>
 <ul>
 <li><p>Ideal gas</p></li>
-<li><p>Mie-Grueneisen</p></li>
+<li><p>Mie-Grüneisen</p></li>
 <li><p>Tillotson (needs more testing)</p></li>
 <li><p>Tabular/SESAME, with tools for tabulated ANEOS</p></li>
 </ul>
@@ -455,7 +474,7 @@ Debug output in binary format with all node variables</p></li>
 <h3>Test cases in repository<a class="headerlink" href="#test-cases-in-repository" title="Permalink to this headline">#</a></h3>
 <p>Test cases are included as Jupyter Notebooks, for training and validation.<br>
 The ANEOS models used here are for TESTING ONLY; they are not research-level EOS models.<br>
-Each test has fortran-style ascii input file and new pyKO yaml configuration file.<p></p>
+Some tests have both a fortran-KO ascii input file and pyKO yaml configuration file for comparison between fortran and python implementations of KO.<p></p>
 <ul class="simple">
 <li><p>Test 1: Two Mie-Grueneisen plates planar impact, comparison to fortran KO</p></li>
 <li><p>Test 1b: Three plates</p></li>

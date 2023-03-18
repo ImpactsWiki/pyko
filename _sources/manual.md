@@ -6,14 +6,21 @@ This code was developed from the book <a href="https://link.springer.com/book/10
 
 ## Features
 
-* Planar, cylindrical, spherical geometries
-* Fixed (symmetric, zero particle velocity) and free (zero pressure) boundary conditions
-* Von Mises shear strength
-* Initial gaps, dynamic fracture, void closure on contact
+* Geometries
+    * Planar, cylindrical, or spherical
+* Boundary conditions
+    * Fixed: symmetric, zero particle velocity
+    * Free: zero pressure
+* Elastic-plastic model
+    * Von Mises
+* Interfaces
+    * Initial gaps
+    * Dynamic fracture
+    * Void closure on contact
 * Gravitational acceleration (needs more testing)
-* EOS
+* Equations of state
     * Ideal gas
-    * Mie-Grueneisen
+    * Mie-Gr&uuml;neisen
     * Tillotson (needs more testing)
     * Tabular/SESAME, with tools for tabulated ANEOS
 * Input and output
@@ -60,7 +67,7 @@ Required python packages for test cases and visualization examples:<p>
 ### Test cases in repository
 Test cases are included as Jupyter Notebooks, for training and validation.<br>
 The ANEOS models used here are for TESTING ONLY; they are not research-level EOS models.<br>
-Each test has fortran-style ascii input file and new pyKO yaml configuration file.<p>
+Some tests have both a fortran-KO ascii input file and pyKO yaml configuration file for comparison between fortran and python implementations of KO.<p>
 
 * Test 1: Two Mie-Grueneisen plates planar impact, comparison to fortran KO
 * Test 1b: Three plates
