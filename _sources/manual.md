@@ -14,8 +14,8 @@ This code was developed from the book <a href="https://link.springer.com/book/10
 * EOS
     * Ideal gas
     * Mie-Grueneisen
-    * Tillotson EOS (needs more testing)
-    * Tabular EOS
+    * Tillotson (needs more testing)
+    * Tabular/SESAME, with features for tabulated ANEOS
 * Input and output
     * For testing and comparison to fortran KO:<br>
       Fixed formatting ascii input and output files
