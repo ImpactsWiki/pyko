@@ -1,0 +1,18 @@
+jGeometry:                     Mbar  cm/us   g/cc          g/cc    cm/us unitless                Megabar Megbar Megbar Mbar-cc/K-g                                                
+   iEOS  Nodes Length xstart    P_0    U_0  Rho_0    E_0 Rho_00       Co       s1       s2  gamma Yeld,Y   mu,G  pfrac     Cv    a_p    a_e    p_e    p_s  rho_0               
+      2    200    2.0    0.0 100.0  0.0000 10.000 250.00  0.00000  0.000     0.00     0.00   1.40 0.0000  .000      0. 25.000    0.00   0.00   0.00   0.00   0.00
+      2    300    3.0    2.0 1.0000 0.0000 1.0000 2.5000  0.00000  0.000     0.00     0.00   1.40 0.0000  .000      0. 2.5       0.00   0.00   0.00   0.00   0.00
+       
+Boundary Conditions:                                                                                                                                             
+   iend    P_0    U_0  Rho_0    E_0    V_0                                                                                                                        
+     -4 0.0000     .0  0.000  0.000    1.0                                                                                                                                  
+      4 0.0000     .0  0.000  0.000    1.0                                                                                                                                      
+
+tstop (micro seconds):
+.40
+geometry d=1.0 planar; 2.0 cylindrical; 3.0 spherical This needs to be a float (not int)
+1.0
+Do not erase this statement
+
+     -4 0.0000     .0 10.000  0.000    1.0                                                                                                                                  
+      4 0.0000     .0 1.0000  0.000    1.0                                                    

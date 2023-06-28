@@ -1,0 +1,17 @@
+name: pyko-env
+channels:
+  - pyviz
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - numpy=1.25.0
+  - matplotlib=3.7.1
+  - ipympl=0.9.3
+  - hvplot=0.8.4
+  - jupyterlab=3.6.3
+  - pint
+  - yaml
+  - pandas
+  - scipy
+  - ffmpeg

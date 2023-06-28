@@ -1,0 +1,24 @@
+jGeometry:                     Mbar  cm/us   g/cc          g/cc    cm/us unitless                Megabar Megbar Megbar Mbar-cc/K-g                                                
+   iEOS  Nodes Length xstart    P_0    U_0  Rho_0    E_0 Rho_00       Co       s1       s2  gamma Yeld,Y   mu,G  pfrac     Cv    a_p    a_e    p_e    p_s  rho_0               
+      7    200    2.0    0.0 2.311e-6 0.0500 2.7 0.004344 0.00000  0.000     0.00     0.00   2.0 6.e-3  .248  1.0e9 1.458e-5  0.00   0.00   0.00   0.00   0.00
+      7    300    3.0    2.0 2.311e-6 0.0000 2.7 0.004344 0.00000  0.000     0.00     0.00   2.0 6.e-3  .248  1.0e9 1.458e-5  0.00   0.00   0.00   0.00   0.00
+       
+Boundary Conditions:                                                                                                                                             
+   iend    P_0    U_0  Rho_0    E_0    V_0                                                                                                                        
+     -1  1.e-6   .0  2.7 0.000    1.0                                                                                                                                  
+      1  1.e-6   .0  2.7 0.000    1.0                                                                                                                                      
+
+tstop (micro seconds):
+10.0
+geometry d=1.0 planar; 2.0 cylindrical; 3.0 spherical This needs to be a float (not int)
+1.0
+sesame table directory; include final /
+../aneos-Al/
+../aneos-Al/
+Do not erase this statement
+
+Al SESAME ANEOS
+      RHO          T           P          PC           E           S           V           U       RHO/RHOO  #IT  STATE
+    kg/m**3        K          GPa        GPa          J/kg      J/kg-K       km/sec      km/sec
+  2.7000D+03  2.9803D+02  2.6225D-04 -1.4799D+00  2.8024D+05  1.2518D+03  5.1985D+00  0.0000D+00  1.0000D+00  0  INITIAL
+

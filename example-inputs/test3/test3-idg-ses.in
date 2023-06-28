@@ -1,0 +1,18 @@
+Units:                         Mbar  cm/us   g/cc  eu/cc   g/cc    cm/us      [-]             [-]   Mbar   Mbar   Mbar Mbar-cc/K-g            
+   iEOS  Nodes Length xstart    P_0    U_0  Rho_0    E_0 Rho_00       Co       s1       s2  gamma Yeld,Y   mu,G  pfrac     Cv    a_p    a_e    p_e    p_s  rho_0
+      7    200    2.0    0.0 1.0e-5   0.00 1.1307e-2 2.5e-5 0.0    0.000     0.00     0.00   1.40   0.00  0.000    0.0 8.39e-8  0.00   0.00   0.00   0.00   0.00
+      7    300    3.0    2.0 1.0e-6   0.00 1.1307e-3 2.5e-6 0.0    0.000     0.00     0.00   1.40   0.00  0.000    0.0 8.39e-9  0.00   0.00   0.00   0.00   0.00
+
+Boundary Conditions:
+   iend    P_0    U_0  Rho_0    E_0    V_0
+     -4 0.0000     .0 1.13e-2 0.000    1.0
+      4 0.0000     .0 1.13e-3 0.000    1.0
+
+tstop (micro seconds):
+20.
+geometry d=1.0 planar; 2.0 cylindrical; 3.0 spherical This needs to be a float (not int)
+1.0
+sesame table directory; include final /
+../aneos-N2/
+../aneos-N2/
+Do not erase this statement

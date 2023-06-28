@@ -1,0 +1,65 @@
+* VERSION v0.1 MATERIAL PARAMETERS FOR N2 IDEAL GAS
+*         ANEOS INPUT FILE: 10 characters per column for Jupyter notebook compatibility
+*         EOS#      string for EOS name           .....Hugoniot initial........ long
+*                                                 T(eV)           Rho(g/cc)     flag
+* Reference solid Hugoniot at STP initial density and temperature
+ANEOS1    -1        'N2 Ideal Gas'                THUG=0.02568    RHUG=0.0011307
+*
+* N2 diatomic cp/cv=1.4
+*IDG      nelem     type      rho0      temp0(K)  press0    opacity   cp/cv-1   Unused
+*         V01       V02       V03       V04       V05       V06       V07       V08
+ANEOS2    2         -2        0.0011307 298       1.0e6     0.0       0.4       0. 
+*
+*IDG      Unused    Unused    Cv        ------------Unused-------------------------
+*         V09       V10       V11       V12       V13       V14       V15       V16
+ANEOS3    0.        0.0       0.        0.        0.        0.        0.        0.
+*
+*IDG      --------------------------------Unused-----------------------------------
+*         V17       V18       V19       V20       V21       V22       V23       V24
+ANEOS4    0.0       0.0       0.0       0.0       0.0       0.0       0.0       0.0
+*
+*         Elements in material (number must = nelem)
+*         Z         Atomic Fraction
+ANEOS8    7         0.5
+ANEOS8    7         0.5
+*
+*****   END of input for ANEOS
+*
+*   See accompanying Jupyter Notebook for documentation of ANEOS model development.
+*
+*   ANEOS thermal model adjustment parameters (V44-V46) described in Stewart (2019):
+*   https://github.com/ststewart/aneos-forsterite-2019/blob/master/EOS-docs/Stewart-2019-ANEOS_Modifications.pdf
+*   
+*   Molecular gas parameters from Melosh & Collins iSALE Dellen version (2018)
+*
+*   Explanation of new input parameters for molecular clusters (Melosh MAPS 2007):
+*
+*   There are 8 new input parameters that appear on line ANEOS6 and ANEOS7 in the space
+*   Sam Thompson originally alloted for extensions.  You must use the LONG 
+*   input format to access this new data.
+*
+*   Atoms is the number of atoms in the molecular cluster.  If Atoms = 0 or 1
+*          no molecular clusters are added.  The current code can treat both
+*          Atoms = 2 (diatomic) or Atoms = 3 (triatomic) clusters.
+*
+*   Ebind is the binding energy of the molecules in eV.
+*
+*   RotDOF is the number of rotational degrees of freedom in the molecule.  It is 2 for.
+*          a diatomic molecule.  Larger values increase the heat capacity of the molecular gas.
+*
+*   Rbond is the bond length of the clusters in cm.  This is needed to compute
+*         the moment of inertia (hence rotational energy level spacing) of the molecules.
+*
+*   VibDOF is the number of vibrational degrees of freedom.  It is 1 for diatomic molecules,
+*          but larger values apply to polyatomic molecules.
+*
+*  Theta_vib is the effective "debye" temperature of the molecule.  k * Theta_vib is the average
+*          spacing of vibrational energy levels.
+*
+*   flag = 0 uses the standard ANEOS cold pressure equation of state.
+*        = 1 substitues a Lennard-Jones cold potential for Pc when eta < 1.
+*
+*   Pc exp is the exponent of the density ratio in the Lennard-Jones potential
+*          for expanded states only. It has no effect on the compressed pressure.
+*          use this parameter to move the critical point.
+
