@@ -35,7 +35,5 @@ The KO code is available in multiple programming languages, with different featu
 
 ## Tutorial
 
-John Borg has posted a video tutorial for the fortran version of the code at <a href="https://www.eng.mu.edu/shockphysics/Workshops/">https://www.eng.mu.edu/shockphysics/Workshops/</a>
-
-
+John Borg has posted a video tutorial for the fortran version of the code at <a href="https://www.eng.mu.edu/shockphysics/KO/">https://www.eng.mu.edu/shockphysics/KO/</a>
 
