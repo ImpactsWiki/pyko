@@ -9,6 +9,12 @@ pyKO is a 1-D elastic-plastic, 2nd order, Lagrangian hydrocode<br>
 Based on Mark Wilkins, Computer Simulation of Dynamic Phenomena, Springer-Verlag, 1999<br>
 Adapted from John Borg's Fortran KO code v11 (https://www.eng.mu.edu/shockphysics/KO/)
 
+# Citation DOI
+
+[![DOI](https://zenodo.org/badge/602649996.svg)](https://zenodo.org/badge/latestdoi/602649996)
+
+Stewart, S. T. pyKO code v0.6.0, doi:10.5281/zenodo.8092348, 2023.
+
 # User manual
 
 https://impactswiki.github.io/pyko/
