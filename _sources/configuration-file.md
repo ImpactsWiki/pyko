@@ -83,7 +83,7 @@ mat1:
     eos: 
         name   : 'Aluminum'
         type   : 'SES'
-        path    : '../aneos-Al/'
+        path    : '../aneos-Al-demo/'
         filestd : 'NEW-SESAME-STD.TXT'
         fileext : 'NEW-SESAME-EXT.TXT'
     str:

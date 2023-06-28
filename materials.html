@@ -433,13 +433,14 @@ For an HEL of 0.2 GPa, <span class="math notranslate nohighlight">\(\sigma_{vm}=
 <h2>Quartz<a class="headerlink" href="#quartz" title="Permalink to this headline">#</a></h2>
 <div class="section" id="alpha-quartz">
 <h3>alpha quartz<a class="headerlink" href="#alpha-quartz" title="Permalink to this headline">#</a></h3>
+<p><span class="math notranslate nohighlight">\(\alpha\)</span>-quartz is not well represented by a simple material model. These values provide a coarse representation for teaching.</p>
 <p>Wackerle (1962) HEL strongly dependent on orientation. Nominal <span class="math notranslate nohighlight">\(\sigma_{HEL}=10\)</span> GPa.</p>
 <p><span class="math notranslate nohighlight">\(\nu=0.08\)</span> <a class="reference external" href="https://agupubs.onlinelibrary.wiley.com/doi/full/10.1002/2017JB014606">https://agupubs.onlinelibrary.wiley.com/doi/full/10.1002/2017JB014606</a></p>
 <p><span class="math notranslate nohighlight">\(\sigma_{vm}  = \frac{(1-2\nu) \sigma_{HEL}}{(1-\nu)} = 9.3\)</span> GPa.</p>
 <p>Shear modulus <a class="reference external" href="http://www-odp.tamu.edu/publications/204_SR/103/103_t1.htm">http://www-odp.tamu.edu/publications/204_SR/103/103_t1.htm</a>
 <a class="reference external" href="https://link.springer.com/article/10.1007/s00269-014-0711-z">https://link.springer.com/article/10.1007/s00269-014-0711-z</a></p>
 <p>Dynamic tensile strength approximately 1 GPa <a class="reference external" href="https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2022GL100468">https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2022GL100468</a></p>
-<p>#(1-2.*.085)/(1-.085)*10</p>
+<!--- #(1-2.*.085)/(1-.085)*10 --->
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mat1</span><span class="p">:</span>
     <span class="n">eos</span><span class="p">:</span>
         <span class="n">name</span>   <span class="p">:</span> <span class="s1">&#39;Quartz&#39;</span>

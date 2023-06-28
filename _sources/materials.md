@@ -114,6 +114,8 @@ mat1:
 
 ### alpha quartz
 
+$\alpha$-quartz is not well represented by a simple material model. These values provide a coarse representation for teaching.
+
 Wackerle (1962) HEL strongly dependent on orientation. Nominal $\sigma_{HEL}=10$ GPa. 
 
 $\nu=0.08$ https://agupubs.onlinelibrary.wiley.com/doi/full/10.1002/2017JB014606
@@ -125,7 +127,7 @@ https://link.springer.com/article/10.1007/s00269-014-0711-z
 
 Dynamic tensile strength approximately 1 GPa https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2022GL100468
 
-#(1-2.*.085)/(1-.085)*10
+<!--- #(1-2.*.085)/(1-.085)*10 --->
 
 ```
 mat1:

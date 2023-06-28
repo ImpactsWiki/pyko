@@ -1,6 +1,6 @@
 # User manual
 
-pyKO is a one-dimensional Lagrangian elastic-plastic hydrocode written in python.
+pyKO is a one-dimensional Lagrangian elastic-plastic hydrocode written in python. The code uses the Von Neumann finite difference scheme with second order accuracy. 
 
 This code was developed from the book <a href="https://link.springer.com/book/10.1007/978-3-662-03885-7">Computer Simulation of Dynamic Phenomena by Mark Wilkins</a> (Springer-Verlag, 1999) and the <a href="https://www.eng.mu.edu/shockphysics/KO/">fortran KO code v11 by John Borg</a>.
 
