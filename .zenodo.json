@@ -1,0 +1,18 @@
+{
+   "creators":[
+      {
+         "orcid":"0000-0001-9606-1593",
+         "affiliation":"U. California Davis",
+         "name":"Stewart, Sarah T."
+      }
+   ],
+   "license":"GPL-3.0",
+   "title":"pyKO",
+   "keywords":[
+      "hydrocode",
+      "elastic-plastic",
+      "equations-of-state",
+      "gravity",
+      "KO code"
+   ]
+}

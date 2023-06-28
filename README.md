@@ -13,6 +13,8 @@ Adapted from John Borg's Fortran KO code v11 (https://www.eng.mu.edu/shockphysic
 
 https://impactswiki.github.io/pyko/
 
+KO code is available in fortran, c, python and matlab. See manual for links.
+
 # Report bugs
 
 https://github.com/ImpactsWiki/pyko/issues
