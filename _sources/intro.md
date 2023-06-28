@@ -39,3 +39,7 @@ John Borg has posted a video tutorial for the fortran version of the code at <a 
 
 ## Citing the KO hydrocode
 
+[![DOI](https://zenodo.org/badge/602649996.svg)](https://zenodo.org/badge/latestdoi/602649996)
+
+Stewart, S. T. pyKO code v0.6.0, doi:10.5281/zenodo.8092348, 2023.
+
