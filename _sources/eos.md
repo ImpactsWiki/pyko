@@ -13,10 +13,11 @@ kernelspec:
 (page:eos)=
 # Equations of state
 
-The following equation of state (EOS) models are supported:
+The following equation of state (EOS) models are implemented:
 * [](eos:idg)
 * [](eos:mgr)
 * [](eos:ses)
+* [](eos:til)
 
 (eos:idg)=
 ## Ideal gas law
@@ -123,6 +124,10 @@ Stewart Group ANEOS tables (https://github.com/ststewart?tab=repositories) have 
 * NEW-SESAME-EXT.TXT: SESAME-style table with extra variables from ANEOS. Contains the standard 201 table and non-standard 301-extra-variables EOS table. The 301 table has: density grid values, temperature grid values, sp. entropy(T,rho), sound speed(T,rho), sp. heat capacity(T,rho), KPA flag(T,rho). 2-D arrays list all densities, looping over each temperature. 301 table units: g/cm<sup>3</sup>, K, MJ/K/kg, cm/s, MJ/K/kg, integer flag. The KPA flag is an ANEOS output with phase information.
 
 To use a tabular EOS, specify the path, std and ext file names and the units for the file (in the units section). To use a different tabular format, customize the readses function to interface with the eos_tables.py module.
+
+Initialization of materials with a tabular EOS requires some care by the user. There are some functions provided to aid in the initial density and internal energy settings. See the tutorial notebooks for examples. Initialization near zero pressure is tricky.
+
+EOS table interpolation is bilinear with simple search criteria for finding positions in the table. Future development is needed for EOS tables with discontinuities/degeneracies (e.g., with multiple solid phases).
 ```
 mat1:
     init:
@@ -136,10 +141,6 @@ mat1:
         path    : '../aneos-forsterite-2019/'
         filestd : 'NEW-SESAME-STD.TXT'
         fileext : 'NEW-SESAME-EXT.TXT'
-```
-
-```{margin} Table interpolation
-Future documentation will discuss pros and cons of different interpolation schemes.
 ```
 
 

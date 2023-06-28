@@ -146,8 +146,6 @@ Specify the inner (ibc) and outer (obc) boundary conditions as either FIXED or F
 
 Specify the problem geometry: planar, cylindrical or spherical. Cylindrical and spherical problems must have positive values for the spatial domain.
 
-Gravitational acceleration is not implemented yet but coming soon.
-
 ```{code-block} python
 # --------------------------------------------------------------------
 # DOMAIN PARAMETERS
@@ -163,7 +161,6 @@ boundaries:
 geometry   : 'PLA'
 #
 # gravitational acceleration; negative means force toward negative position x
-# gravity is not implemented yet
 gravity    : 0.0
 #
 ```
@@ -194,6 +191,7 @@ units:
     temperature : 'K'
     energy      : 'J'
     sp_energy   : 'J/kg'
+    sp_entropy  : 'J/kg/K'
     sp_heat_cap : 'J/kg/K'
     gravity     : 'm/s^2'
     s2          : 'second/meter'

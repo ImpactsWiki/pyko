@@ -17,12 +17,13 @@ This code was developed from the book <a href="https://link.springer.com/book/10
     * Initial gaps
     * Dynamic fracture
     * Void closure on contact
-* Gravitational acceleration (needs more testing)
+* Gravitational acceleration
+    * Initialization of isothermal layers only
 * Equations of state
     * Ideal gas
     * Mie-Gr&uuml;neisen
     * Tillotson (needs more testing)
-    * Tabular/SESAME, with tools for tabulated ANEOS
+    * Tabular/SESAME, with tools for tabulated ANEOS; interpolation schemes are currently very simple
 * Input and output
     * For testing and comparison to fortran KO:<br>
       Fixed formatting ascii input and output files
@@ -51,29 +52,37 @@ This code was developed from the book <a href="https://link.springer.com/book/10
 
 ## Required packages
 
-* Python (developed in 3.9.16)
-* Numpy (1.24.2)
-* Pint (0.20.1)
+See environment.yml and requirements.txt files in GitHub.
+
+Tested with:
+
+* Python (developed in 3.9; runs in 3.11)
+* Numpy (1.24.2; 1.25.0)
+* Pint (0.20.1;0.22)
 * Yaml (6.0)
 * Pickle (4.0)
 
-Required python packages for test cases and visualization examples:<p>
+Python packages for input examples and visualization in Jupyter notebooks:
 
-* JupyterLab (3.5.0)
-* Pandas (1.4.2)
-* Hvplot (0.8.2)
-* Matplotlib (3.7.0)
+* JupyterLab (3.5.0; 3.6.3) (hvplot not compatible with 4.0)
+* Pandas (1.4.2; 2.0.2)
+* Hvplot (0.8.2; 0.8.4)
+* Matplotlib (3.7.0; 3.7.1)
+* ipympl (0.9.3)
 * Scipy (1.9.1) (needed for `sodshock.py`)
+* ffmpeg (6.0.0)
 
-### Test cases in repository
-Test cases are included as Jupyter Notebooks, for training and validation.<br>
-The ANEOS models used here are for TESTING ONLY; they are not research-level EOS models.<br>
-Some tests have both a fortran-KO ascii input file and pyKO yaml configuration file for comparison between fortran and python implementations of KO.<p>
+### Example input files in repository
+Example input files are included with Jupyter Notebooks, for training and visualization.
 
 * Test 1: Two Mie-Grueneisen plates planar impact, comparison to fortran KO
-* Test 1b: Three plates
+* Test 1b: Three MGR plates
 * Test 2: Sod shock tube test for ideal gases, comparison to analytic solution and fortran KO
 * Test 3: EOS table ideal gas Sod shock tube test, comparison to analytic solutoin
 * Test 4: EOS table planar plate impact, comparison to Mie-Grueneisen fortran KO
-* Test 5: EOS table expansion of shocked water into free space
-
+* Test 6: MGR plates with gaps, example of closing gaps
+* Test 6b: SES plates with gaps, example of closing gaps
+* Test 9: Spall test with MGR plates
+* Test 9b: Spall test with TIL and MGR plates
+* Test 12: Gravity Al target and impactor
+* Test 12b: Gravity Forsterite target and impactor

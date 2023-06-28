@@ -12,7 +12,7 @@ kernelspec:
 
 
 (page:strength)=
-# Material strength
+# Material strength and fracture
 
 ## Von Mises strength
 
@@ -44,15 +44,18 @@ mat1:
 
 ## Fracture and void space
 
-Dynamic fracture is implemented but not stable nor validated at this time.
+Dynamic fracture is implemented.
 
 Fracture requires the Mie-Grueneisen EOS or a tabular EOS with a tension region.
+
+pfrac is the fracture stress. nrhomin is the maximum distension (rhomin/rhoref). The default value for nrhomin is 0.8.
 
 Example configuration file entry (mks):
 ```
 mat1:
     frac:
-        pfrac  : 1.0E9
+        pfrac   : 1.0E9
+        nrhomin : 0.8
 ```
 
 The code has the ability to close void spaces when surfaces come into contact. 

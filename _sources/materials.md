@@ -121,21 +121,63 @@ $\nu=0.08$ https://agupubs.onlinelibrary.wiley.com/doi/full/10.1002/2017JB014606
 $\sigma_{vm}  = \frac{(1-2\nu) \sigma_{HEL}}{(1-\nu)} = 9.3$ GPa.
 
 Shear modulus http://www-odp.tamu.edu/publications/204_SR/103/103_t1.htm
+https://link.springer.com/article/10.1007/s00269-014-0711-z
 
 Dynamic tensile strength approximately 1 GPa https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2022GL100468
 
+#(1-2.*.085)/(1-.085)*10
+
 ```
 mat1:
+    eos:
+        name   : 'Quartz'
+        type   : 'MGR'
+        rhoref : 2648.0
+        c0     : 620.0
+        s1     : 1.74
+        s2     : 0.0
+        gamma0 : 0.84
+        cv     : 740.0
     str:
         type   : 'VM'
-        gmod   : 44.0E9
+        gmod   : 44.4E9
         ys     : 9.3E9
     frac:
         pfrac  : 1.0E9
+        nrhomin: 0.9
 ```
 
 ### Fused quartz
 
+The following US-up relationship for fused silica shock-compressed to 44–72 GPa was determined using the results from this study: US = 0.62(7) + 1.74(2)uP. {cite}`Berryman2019`
+
+Poisson's ratio is 0.17
+https://www.heraeus.com/en/hca/fused_silica_quartz_knowledge_base_1/properties_1/properties_hca.html#tabs-608478-6
+
+Wackerle 1962, FS HEL about 9.5 GPa. Ys = (1-2*.17)/(1-.17)*9.5E9; assume spall is Ys/10.
+
+Gamma0 from SESAME. https://sgp.fas.org/othergov/doe/lanl/lib-www/la-pubs/00296704.pdf
+
+Shear modulus and heat capacity from www.accuratus.com
+
+```
+mat1:
+    eos:
+        name   : 'Fused Silica'
+        type   : 'MGR'
+        rhoref : 2201.0
+        c0     : 620.0
+        s1     : 1.74
+        s2     : 0.0
+        gamma0 : 0.65
+        cv     : 740.0
+    str:
+        type   : 'VM'
+        gmod   : 31.0E9
+        ys     : 7.55E9
+    frac:
+        pfrac  : 0.755E9
+```
 
 
 ## Forsterite
@@ -161,4 +203,39 @@ mat1:
         alpha  : 5.0
         beta   : 5.0
 ```
+
+
+## Lithium Flouride (LiF)
+
+Hugoniot from {cite}`Hawreliak2023`. Grueneisen parameter from {cite}`Duffy1997`. Heat capacity from Wikipedia.
+
+Poisson's ratio is 0.27.
+
+
+```
+mat1:
+    eos:
+        name   : 'LiF'
+        type   : 'MGR'
+        rhoref : 2640.0
+        c0     : 5144.0
+        s1     : 1.355
+        s2     : 0.0
+        gamma0 : 1.6
+        cv     : 1507.0
+    str:
+        type   : 'VM'
+        gmod   : 55.14E9
+        ys     : 0.2E9
+    frac:
+        pfrac  : 0.02E9
+```
+
+https://www.crystran.co.uk/optical-materials/lithium-fluoride-lif
+
+Specific Heat Capacity :	1562 J Kg-1 K-1
+Dielectric Constant :	0.1
+Youngs Modulus (E) :	64.97 GPa (2)
+Shear Modulus (G) :	55.14 GPa (2)
+Bulk Modulus (K) :	62.03 GPa (2)
 

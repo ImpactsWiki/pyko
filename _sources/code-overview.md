@@ -20,40 +20,46 @@ Mapping the Wilkins notation to the python time array indices:
     * <i>checkinput</i> function: prints the simulation parameters for user inspection
 * <b>DomainClass</b>: This class holds the primary (time,length) arrays for the hydrocode calculation.
     * <i>makegrid</i> function: initializes the hydro arrays in the DomainClass object based on RunClass information, filling the t(2) and t(3) positions
-    * <i>advancetime</i> function: advances the hydro arrays one time step
+    * <i>advancetime</i> function: advances the hydro arrays one time step. This is the core function that follows Wilkin's appendix B,
     * <i>shiftdata</i> function: at the beginning of a time step, the time indices t(2) and t(3) are shifted to positions t(0) and t(1)
     * <i>createinteriorboundary</i> function: inserts a pair of free surfaces and void cell in the spatial domain
     * <i>closeinteriorboundary</i> function: removes a pair of free surfaces and void cell in the spatial domain
     * <i>checkforcontact</i> function: if interior free surface(s) is(are) present, check for contact during the current time step
+    * <i>createinteriorfracture</i> function: creates new fracture plane
     * <i>writefirstoutput</i> function: creates ascii or binary output file and writes the problem configuration at time zero
     * <i>appendoutput</i> function: appends ascii snapshot data to output file
     * <i>binaryoutputpint</i> function: appends binary snapshot data (OutputClass object) to output file using pickle and pint
-    
+* <b>BCClass</b>: Class to hold boundary condition parameters
+* <b>GravityClass</b>: Class to hold gravity parameters
+    * Gravitational equilibration only works for isothermal single layer with fixed left boundary condition.
+    * Users can expand the <i>initgravity</i> function for more capabilities.
+    * Note total energy conservation checks do not include gravitational potential energy at this time.
+
 ## Material properties and boundary conditions
 
 Equations of state
 * <b>IDGClass</b>: ideal gas material parameters
 * <b>MGRClass</b>: Mie-Grueneisen material parameters and functions
+* <b>TILClass</b>: Tillotson material parameters and functions
 * <b>SESClass</b>: Class to hold tabular EOS and associated functions; requires the eos_table.py module.
     * <i>readtable</i> function: Reads in Stewart group style NEW-SESAME-STD.TXT and NEW-SESAME-EXT.TXT tables.
     * <i>sesp</i>: Main run-time function for bilinear interpolation on spatial domain vector to extract table P and T from rho and U.
     * <i>onept(rho,u)</i>: Bilinear interpolation to extract table one point P and T from rho and U. Used to help define initial conditions.
     * <i>onepu(rho,t)</i>: Bilinear interpolation to extract table one point P and U from rho and T. Used to help define initial conditions.
+    * Several other functions for search and manipulation of tables. See source code.
 
 Strength
 * <b>HydroClass</b>: Class to indicate hydrodynamic material
 * <b>VonMisesClass</b>: Class to hold strength parameters
 * <b>FractureClass</b>: Class to hold fracture parameters
 
-Boundaries
-* <b>BCClass</b>: Class to hold boundary condition parameters
-
-
 ## Input and output functions and classes
 * <b>readinput_borg</b> function: reads formatted ascii problem initialization file that is compatible with modified fortran KO. Populates the RunClass object.
 * <b>readinput_yaml</b> function: reads yaml formatted configuration file into a dictionary object (named config) and then populates the main RunClass with simulation parameters (object named run). The input parameter units are converted to code units using pint. Tabular EOS are converted to code units. 
 * <b>run</b> function: primary wrapper function for I/O and calling main hydro time steps
 * <b>OutputClass</b>: This class holds the data arrays for binary snapshot output using pickle. The OutputClass data arrays contains only mesh-centered values (odd j), with position and velocity interpolated from the mesh edges (even j). Interior void spaces are included as an empty mesh center. 
+    * Binary output is provided in the user-defined units of the input file.
+    * Ascii output is written in code units at this time as it is primarily for debugging.
 * <b>DebugClass</b>: This class holds all the domain variables for each node. Used for learning and debugging.
 
 ### Customizing the binary snapshots
