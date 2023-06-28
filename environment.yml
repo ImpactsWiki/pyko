@@ -10,6 +10,8 @@ dependencies:
   - ipympl=0.9.3
   - hvplot=0.8.4
   - jupyterlab=3.6.3
+  - selenium=3.141.0
+  - pscript=0.7.5
   - pint
   - yaml
   - pandas

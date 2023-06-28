@@ -13,3 +13,5 @@ pint=0.22=pyhd8ed1ab_1
 python=3.11.4=h47c9636_0_cpython
 scipy=1.11.0=py311h93d07a4_0
 yaml=0.2.5=h3422bc3_2
+selenium==3.141.0
+pscript==0.7.5
