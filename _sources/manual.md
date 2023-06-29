@@ -70,16 +70,18 @@ Python packages for input examples and visualization in Jupyter notebooks:
 * Matplotlib (3.7.0; 3.7.1)
 * ipympl (0.9.3)
 * Scipy (1.9.1) (needed for `sodshock.py`)
-* ffmpeg (6.0.0)
+* ffmpeg (6.0.0) for movie (test 4)
+* selenium (3.141.0) for x-t plot (test 1b)
+* pscript (0.7.5) for x-t plot (test 1b)
 
 ### Example input files in repository
 Example input files are included with Jupyter Notebooks, for training and visualization.
 
 * Test 1: Two Mie-Grueneisen plates planar impact, comparison to fortran KO
-* Test 1b: Three MGR plates
+* Test 1b: Three MGR plates; includes x-t diagram example
 * Test 2: Sod shock tube test for ideal gases, comparison to analytic solution and fortran KO
 * Test 3: EOS table ideal gas Sod shock tube test, comparison to analytic solutoin
-* Test 4: EOS table planar plate impact, comparison to Mie-Grueneisen fortran KO
+* Test 4: EOS table planar plate impact, comparison to Mie-Grueneisen fortran KO, includes movie visualization examples
 * Test 6: MGR plates with gaps, example of closing gaps
 * Test 6b: SES plates with gaps, example of closing gaps
 * Test 9: Spall test with MGR plates
