@@ -1,5 +1,9 @@
 # CHANGELOG pyKO example inputs
 
+## 2023-07-05
+* Added Test8 notebook for a lab experiment on ice and two tabular water EOS that were not generated with ANEOS: the 5PHASE EOS and AQUA EOS. 
+  See those eos directories for how to convert a table into a format compatible with pyKO.
+
 ## 2023-07-03
 * Added Test13 notebooks to compare Tillotson, Mie Grueneisen, and tabular EOS. Examples for Al and Fe. Now including temperature calculations.
 * Added Test14 notebook to compare Hosono, iSALE, and Asphaug implementations of Tillotson. Cross check of calculated sound speeds.
