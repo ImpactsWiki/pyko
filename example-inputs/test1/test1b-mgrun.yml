@@ -45,7 +45,7 @@ mat1:
         c0     : 5200.0
         s1     : 1.5
         gamma0 : 2.0
-        cv     : 1.0E6
+        cv     : 896.0
     str:
         type   : 'VM'
         gmod   : 24.8E9
@@ -71,7 +71,7 @@ mat2:
         c0     : 3900.0
         s1     : 1.49
         gamma0 : 1.99
-        cv     : 1.0E6
+        cv     : 385.0
     str:
         type   : 'VM'
         gmod   : 47.7E9
@@ -97,7 +97,7 @@ mat3:
         c0     : 5200.0
         s1     : 1.5
         gamma0 : 2.0
-        cv     : 1.0E6
+        cv     : 896.0
     str:
         type   : 'VM'
         gmod   : 24.8E9
