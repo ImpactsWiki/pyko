@@ -38,7 +38,8 @@ mat1:
         kmod   : 10.0E9
         cs0    : 3305.0
     frac:
-        pfrac  : 17.0E6
+        pfrac   : 17.0E6
+        nrhomin : 0.9
 ```
 
 ## Aluminum 6061
@@ -57,7 +58,8 @@ mat1:
         gmod   : 26.0E9
         ys     : 207.0E6
     frac:
-        pfrac  : 276.0E6
+        pfrac   : 276.0E6
+        nrhomin : 0.9
 ```
 
 ## Copper
@@ -79,7 +81,8 @@ mat1:
         gmod   : 46.0E9
         ys     : 0.0956E9
     frac:
-        pfrac  : 1.35E9
+        pfrac   : 1.35E9
+        nrhomin : 0.9
 ```
 
 ## Stainless steel 304
@@ -99,7 +102,6 @@ mat1:
         rhoref : 7870.0
         c0     : 4580.0
         s1     : 1.49
-        s2     : 0.0
         gamma0 : 2.2
         cv     : 502.416
     str:
@@ -107,7 +109,8 @@ mat1:
         gmod   : 78.0E9
         ys     : 0.2E9
     frac:
-        pfrac  : 1.0E9
+        pfrac   : 1.0E9
+        nrhomin : 0.9
 ```
 
 ## Quartz
@@ -137,7 +140,6 @@ mat1:
         rhoref : 2648.0
         c0     : 620.0
         s1     : 1.74
-        s2     : 0.0
         gamma0 : 0.84
         cv     : 740.0
     str:
@@ -170,7 +172,6 @@ mat1:
         rhoref : 2201.0
         c0     : 620.0
         s1     : 1.74
-        s2     : 0.0
         gamma0 : 0.65
         cv     : 740.0
     str:
@@ -178,7 +179,8 @@ mat1:
         gmod   : 31.0E9
         ys     : 7.55E9
     frac:
-        pfrac  : 0.755E9
+        pfrac   : 0.755E9
+        nrhomin : 0.9
 ```
 
 
@@ -204,6 +206,7 @@ mat1:
         b      : 1.4
         alpha  : 5.0
         beta   : 5.0
+        cv     : 860.0
 ```
 
 
@@ -230,7 +233,8 @@ mat1:
         gmod   : 55.14E9
         ys     : 0.2E9
     frac:
-        pfrac  : 0.02E9
+        pfrac   : 0.02E9
+        nrhomin : 0.9
 ```
 
 https://www.crystran.co.uk/optical-materials/lithium-fluoride-lif

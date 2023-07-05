@@ -7,7 +7,8 @@
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Material strength and fracture &#8212; pyKO</title>
   
   
@@ -339,9 +340,9 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <div class="tex2jax_ignore mathjax_ignore section" id="material-strength-and-fracture">
+  <section class="tex2jax_ignore mathjax_ignore" id="material-strength-and-fracture">
 <span id="page-strength"></span><h1>Material strength and fracture<a class="headerlink" href="#material-strength-and-fracture" title="Permalink to this headline">#</a></h1>
-<div class="section" id="von-mises-strength">
+<section id="von-mises-strength">
 <h2>Von Mises strength<a class="headerlink" href="#von-mises-strength" title="Permalink to this headline">#</a></h2>
 <p>A <a href="https://en.wikipedia.org/wiki/Von_Mises_yield_criterion">Von Mises material</a> yields when the second invariant of deviatoric stress
 <span class="math notranslate nohighlight">\(J_{2}\)</span> reaches a critical value (input parameter ys=yield stress=<span class="math notranslate nohighlight">\(\sigma_{vm}\)</span>). Under uniaxial stress, the material yields when the principal stress exceeds the yield stress, <span class="math notranslate nohighlight">\(\sigma_1 &gt; \sigma_{vm}\)</span>. Planar shock waves are uniaxial strain, and the Hugoniot Elastic Limit <span class="math notranslate nohighlight">\(\sigma_{HEL} = (1-\nu) \sigma_{vm} / (1-2\nu)\)</span>.</p>
@@ -354,8 +355,8 @@ document.write(`
         <span class="n">ys</span>     <span class="p">:</span> <span class="mf">0.12E9</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="hydrodynamic-material">
+</section>
+<section id="hydrodynamic-material">
 <h2>Hydrodynamic material<a class="headerlink" href="#hydrodynamic-material" title="Permalink to this headline">#</a></h2>
 <p>A hydrodynamic material (shear modulus <span class="math notranslate nohighlight">\(G=0\)</span>) is indicated with this configuration file entry:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mat1</span><span class="p">:</span>
@@ -363,8 +364,8 @@ document.write(`
         <span class="nb">type</span>   <span class="p">:</span> <span class="s1">&#39;HYDRO&#39;</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="fracture-and-void-space">
+</section>
+<section id="fracture-and-void-space">
 <h2>Fracture and void space<a class="headerlink" href="#fracture-and-void-space" title="Permalink to this headline">#</a></h2>
 <p>Dynamic fracture is implemented.</p>
 <p>Fracture requires the Mie-Grueneisen EOS or a tabular EOS with a tension region.</p>
@@ -379,8 +380,8 @@ document.write(`
 <p>The code has the ability to close void spaces when surfaces come into contact.
 The current implementation of void closure uses a simplified calculation compared to Wilkins book for the time step for contact.
 The full convergence loop for contact time should be implemented in the future.</p>
-</div>
-</div>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

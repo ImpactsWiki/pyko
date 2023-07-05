@@ -7,7 +7,8 @@
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Code overview &#8212; pyKO</title>
   
   
@@ -342,9 +343,9 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <div class="tex2jax_ignore mathjax_ignore section" id="code-overview">
+  <section class="tex2jax_ignore mathjax_ignore" id="code-overview">
 <h1>Code overview<a class="headerlink" href="#code-overview" title="Permalink to this headline">#</a></h1>
-<div class="section" id="time-and-spatial-domains">
+<section id="time-and-spatial-domains">
 <h2>Time and spatial domains<a class="headerlink" href="#time-and-spatial-domains" title="Permalink to this headline">#</a></h2>
 <p>The KO code uses a 2nd order time centered finite difference method. The central calculation involves 4 half time steps and nj spatial nodes. The spatial domain is comprised of mesh edges (even j nodes), where position and velocity are defined, and mesh centers (odd j nodes), where thermodynamic parameters are defined. The main hydro arrays have size (nt,nj) with nt(=4) time indices and nj(=number of nodes) spatial indices.</p>
 <p>In Wilkins notation, delta_t<sup>n</sup> = t<sup>n+1/2</sup> - t<sup>n-1/2</sup> is used with the pressure field to advance the Lagrangian nodes from time t<sup>n-1/2</sup> to t<sup>n+1/2</sup>.
@@ -357,8 +358,8 @@ The position of mesh edges are advanced delta_t<sup>n+1/2</sup> = t<sup>n+1</sup
 <li><p>t(3) = n+1</p></li>
 <li><p>True time step = t(3)-t(1)</p></li>
 </ul>
-</div>
-<div class="section" id="principal-classes">
+</section>
+<section id="principal-classes">
 <h2>Principal classes<a class="headerlink" href="#principal-classes" title="Permalink to this headline">#</a></h2>
 <ul class="simple">
 <li><p><b>RunClass</b>: This class holds all of the simulation parameters. The configuration file parameters are read into this class.</p>
@@ -389,8 +390,8 @@ The position of mesh edges are advanced delta_t<sup>n+1/2</sup> = t<sup>n+1</sup
 </ul>
 </li>
 </ul>
-</div>
-<div class="section" id="material-properties-and-boundary-conditions">
+</section>
+<section id="material-properties-and-boundary-conditions">
 <h2>Material properties and boundary conditions<a class="headerlink" href="#material-properties-and-boundary-conditions" title="Permalink to this headline">#</a></h2>
 <p>Equations of state</p>
 <ul class="simple">
@@ -413,8 +414,8 @@ The position of mesh edges are advanced delta_t<sup>n+1/2</sup> = t<sup>n+1</sup
 <li><p><b>VonMisesClass</b>: Class to hold strength parameters</p></li>
 <li><p><b>FractureClass</b>: Class to hold fracture parameters</p></li>
 </ul>
-</div>
-<div class="section" id="input-and-output-functions-and-classes">
+</section>
+<section id="input-and-output-functions-and-classes">
 <h2>Input and output functions and classes<a class="headerlink" href="#input-and-output-functions-and-classes" title="Permalink to this headline">#</a></h2>
 <ul class="simple">
 <li><p><b>readinput_borg</b> function: reads formatted ascii problem initialization file that is compatible with modified fortran KO. Populates the RunClass object.</p></li>
@@ -428,7 +429,7 @@ The position of mesh edges are advanced delta_t<sup>n+1/2</sup> = t<sup>n+1</sup
 </li>
 <li><p><b>DebugClass</b>: This class holds all the domain variables for each node. Used for learning and debugging.</p></li>
 </ul>
-<div class="section" id="customizing-the-binary-snapshots">
+<section id="customizing-the-binary-snapshots">
 <h3>Customizing the binary snapshots<a class="headerlink" href="#customizing-the-binary-snapshots" title="Permalink to this headline">#</a></h3>
 <p>The default values in OutputClass can be customized by editing the arrays in the class and DomainClass.binaryoutputpint function. Several DomainClass variables are not included in the default binary snapshot. For pandas compatibility, all arrays in the OutputClass must be the same length (all oddj).</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">OutputClass</span><span class="p">:</span>
@@ -472,9 +473,9 @@ The position of mesh edges are advanced delta_t<sup>n+1/2</sup> = t<sup>n+1</sup
         <span class="c1">#self.alocal   = np.zeros(0) # intermediate variable for AV</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="units">
+</section>
+</section>
+<section id="units">
 <h2>Units<a class="headerlink" href="#units" title="Permalink to this headline">#</a></h2>
 <p>pyKO uses the <a href="https://pint.readthedocs.io/en/stable/">pint package</a> to convert user-specified input units to a self-consistent set of internal code units. The data in the binary output files are converted from code units to the same user-specified input units. The example input files use mks units.</p>
 <p>The pint package is also used to convert any tabular EOS files into code units. Refer to the configuration file section on <a class="reference internal" href="configuration-file.html#config-units"><span class="std std-ref">Units</span></a>.</p>
@@ -495,8 +496,8 @@ The position of mesh edges are advanced delta_t<sup>n+1/2</sup> = t<sup>n+1</sup
     <span class="n">cv_perv0</span>        <span class="p">:</span> <span class="s1">&#39;eu/cm^3/K&#39;</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {

@@ -29,6 +29,7 @@ Report bugs in the python code on GitHub at https://github.com/ImpactsWiki/pyko/
 
 The KO code is available in multiple programming languages, with different features implemented in each version:
 * <a href="https://github.com/ImpactsWiki/pyko">Python version by S. T. Stewart.</a> This site is the manual for the python version.
+    * <a href="https://github.com/ImpactsWiki/pyko">See pyKO CHANGELOG.</a>
 * <a href="https://www.eng.mu.edu/shockphysics/Workshops/">Fortran version (currently at v13) by John Borg</a>. v11 is included in the pyKO repository as it is used in the testing/tutorial examples.
 * <a href="https://github.com/Yatagarasu50469/KO-Hydrocode">C version by David Helminiak</a>
 * Matlab version by <a href="https://www.westpoint.edu/civil-and-mechanical-engineering/profile/nathaniel_helminiak-phd-eit">Nathan Helminiak</a> is included in the pyKO GitHub repository. 
@@ -41,5 +42,5 @@ John Borg has posted a video tutorial for the fortran version of the code at <a 
 
 [![DOI](https://zenodo.org/badge/602649996.svg)](https://zenodo.org/badge/latestdoi/602649996)
 
-Stewart, S. T. pyKO code v0.6.0, doi:10.5281/zenodo.8092348, 2023.
+Stewart, S. T. pyKO code v0.6.1, doi:10.5281/zenodo.8092348, 2023.
 

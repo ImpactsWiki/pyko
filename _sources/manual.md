@@ -21,14 +21,11 @@ This code was developed from the book <a href="https://link.springer.com/book/10
     * Initialization of isothermal layers only
 * Equations of state
     * Ideal gas
-    * Mie-Gr&uuml;neisen
-    * Tillotson (needs more testing)
+    * Mie-Gr&uuml;neisen with temperature
+    * Tillotson with temperature
     * Tabular/SESAME, with tools for tabulated ANEOS; interpolation schemes are currently very simple
 * Input and output
-    * For testing and comparison to fortran KO:<br>
-      Fixed formatting ascii input and output files
-    * Preferred I/O:<br>
-      Yaml configuration (input) files with unit conversion using pint<br>
+    * Yaml configuration (input) files with unit conversion using pint<br>
       Binary output files using pickle with units
     * Customizable outputs: <br>
       User-defined cell data output in binary format<br>
@@ -88,3 +85,6 @@ Example input files are included with Jupyter Notebooks, for training and visual
 * Test 9b: Spall test with TIL and MGR plates
 * Test 12: Gravity Al target and impactor
 * Test 12b: Gravity Forsterite target and impactor
+* Test 13: Compare MGR/TIL/SES Al plate impact
+* Test 13b: Compare MGR/TIL/SES Fe plate impact
+* Test 14: Compare different Tillotson EOS functions; compare MGR/TIL/SES Fe Hugoniots and cold curves

@@ -152,7 +152,6 @@ Specify the problem geometry: planar, cylindrical or spherical. Cylindrical and 
 #
 # 'FIXED' or 'FREE'
 # ibc = inner boundary condition (at minimum x); obc = outer boundary condition (at maximum x)
-# fracture and interior gaps are not implemented yet
 boundaries: 
     ibc    : 'FREE'
     obc    : 'FREE'

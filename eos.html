@@ -7,7 +7,8 @@
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Equations of state &#8212; pyKO</title>
   
   
@@ -325,10 +326,10 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eos-idg">Ideal gas law</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mie-gruneisen-eos">Mie-Grüneisen EOS</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tabular-eos">Tabular EOS</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tillotson-eos">Tillotson EOS</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eos-idg">Ideal gas law (IDG)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mie-gruneisen-eos-mgr">Mie-Grüneisen EOS (MGR)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tabular-eos-ses">Tabular EOS (SES)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tillotson-eos-til">Tillotson EOS (TIL)</a></li>
 </ul>
             </nav>
         </div>
@@ -340,18 +341,29 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <div class="tex2jax_ignore mathjax_ignore section" id="equations-of-state">
+  <section class="tex2jax_ignore mathjax_ignore" id="equations-of-state">
 <span id="page-eos"></span><h1>Equations of state<a class="headerlink" href="#equations-of-state" title="Permalink to this headline">#</a></h1>
-<p>The following equation of state (EOS) models are implemented:</p>
+<p>The following pressure-volume-energy-temperature equations of state (EOS) models are implemented in pyKO:</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#eos-idg"><span class="std std-ref">Ideal gas law</span></a></p></li>
-<li><p><a class="reference internal" href="#eos-mgr"><span class="std std-ref">Mie-Grüneisen EOS</span></a></p></li>
-<li><p><a class="reference internal" href="#eos-ses"><span class="std std-ref">Tabular EOS</span></a></p></li>
-<li><p><a class="reference internal" href="#eos-til"><span class="std std-ref">Tillotson EOS</span></a></p></li>
+<li><p><a class="reference internal" href="#eos-idg"><span class="std std-ref">Ideal gas law (IDG)</span></a></p></li>
+<li><p><a class="reference internal" href="#eos-mgr"><span class="std std-ref">Mie-Grüneisen EOS (MGR)</span></a></p></li>
+<li><p><a class="reference internal" href="#eos-ses"><span class="std std-ref">Tabular EOS (SES)</span></a></p></li>
+<li><p><a class="reference internal" href="#eos-til"><span class="std std-ref">Tillotson EOS (TIL)</span></a></p></li>
 </ul>
-<div class="section" id="eos-idg">
-<span id="ideal-gas-law"></span><h2>Ideal gas law<a class="headerlink" href="#eos-idg" title="Permalink to this headline">#</a></h2>
-<p>The ideal gas is defined by the initial conditions, the ratio of specific heat capacities, <span class="math notranslate nohighlight">\(\gamma\)</span>, and the specific heat capacity at constant volume <span class="math notranslate nohighlight">\(c_v\)</span>. The specific heat capacity is used to determine temperature assuming <span class="math notranslate nohighlight">\(T=E/cv\)</span>. <span class="math notranslate nohighlight">\(cv\)</span> must be a non-zero value. The initial conditions must specify the initial density, pressure, energy and particle velocity.</p>
+<section id="eos-idg">
+<span id="ideal-gas-law-idg"></span><h2>Ideal gas law (IDG)<a class="headerlink" href="#eos-idg" title="Permalink to this headline">#</a></h2>
+<p>The ideal gas is defined by the initial conditions, the ratio of specific heat capacities (<span class="math notranslate nohighlight">\(\gamma\)</span>), and the specific heat capacity at constant volume (<span class="math notranslate nohighlight">\(c_v\)</span>).  The initial conditions must specify the initial density, pressure, specific internal energy and particle velocity. The speed of sound is</p>
+<div class="math notranslate nohighlight">
+\[
+c_s = \left( \frac{P}{\rho} \right)^{1/2}.
+\]</div>
+<p>The ideal gas form for the sound speed is used in the Wilkins artificial viscosity formulation. The material EOS sound speeds are used to determine the time steps.</p>
+<p>The specific heat capacity is assumed to be constant and used to determine temperature by</p>
+<div class="math notranslate nohighlight">
+\[
+T = \frac{E}{c_v}.
+\]</div>
+<p>The initial temperature is determined from <span class="math notranslate nohighlight">\(E_0\)</span> and <span class="math notranslate nohighlight">\(c_v\)</span>.</p>
 <p>Example configuration file entry (mks):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mat1</span><span class="p">:</span>
     <span class="n">init</span><span class="p">:</span>
@@ -362,18 +374,17 @@ document.write(`
     <span class="n">eos</span><span class="p">:</span> 
         <span class="n">name</span>   <span class="p">:</span> <span class="s1">&#39;IDG 1&#39;</span>
         <span class="nb">type</span>   <span class="p">:</span> <span class="s1">&#39;IDG&#39;</span>
-        <span class="n">gamma0</span> <span class="p">:</span> <span class="mf">1.4</span>
+        <span class="n">gamma</span>  <span class="p">:</span> <span class="mf">1.4</span>
         <span class="n">cv</span>     <span class="p">:</span> <span class="mf">2.5E8</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="mie-gruneisen-eos">
-<span id="eos-mgr"></span><h2>Mie-Grüneisen EOS<a class="headerlink" href="#mie-gruneisen-eos" title="Permalink to this headline">#</a></h2>
-<p>The Mie-Grüneisen model uses a reference curve, usually the principal Hugoniot, and a thermal parameter to describe a pressure-volume-energy EOS surface (e.g., see Chapter 5 in <span id="id1">[<a class="reference internal" href="references.html#id3" title="Jerry W. Forbes. Shock Wave Compression of Condensed Matter. Springer Berlin Heidelberg, Berlin, Heidelberg, 2012. ISBN 978-3-642-32534-2. URL: http://link.springer.com/10.1007/978-3-642-32535-9, doi:10.1007/978-3-642-32535-9.">Forbes, 2012</a>]</span>).</p>
-<p>The material model requires a reference density, Hugoniot parameters, and the Grüneisen gamma.
-The principal Hugoniot is described by a quadratic equation: <span class="math notranslate nohighlight">\(U_S = c_0 + s_1 u_p + s_2 u_p^2\)</span>. The specific heat capacity is used to determine temperature assuming <span class="math notranslate nohighlight">\(T=E/cv\)</span>. <span class="math notranslate nohighlight">\(cv\)</span> must be a non-zero value.</p>
-<p>The initial conditions must specify the initial density, pressure, energy and particle velocity.</p>
-<p>Example configuration file entry (mks):</p>
+</section>
+<section id="mie-gruneisen-eos-mgr">
+<span id="eos-mgr"></span><h2>Mie-Grüneisen EOS (MGR)<a class="headerlink" href="#mie-gruneisen-eos-mgr" title="Permalink to this headline">#</a></h2>
+<p>The Mie-Grüneisen model uses a reference curve, usually the principal Hugoniot, and a thermal parameter to describe a pressure-volume-energy EOS surface (e.g., see Chapter 5 in <span id="id1">[<a class="reference internal" href="references.html#id5" title="Jerry W. Forbes. Shock Wave Compression of Condensed Matter. Springer Berlin Heidelberg, Berlin, Heidelberg, 2012. ISBN 978-3-642-32534-2. URL: http://link.springer.com/10.1007/978-3-642-32535-9, doi:10.1007/978-3-642-32535-9.">Forbes, 2012</a>]</span> and <a href="https://impactswiki.net/impact-tools-book/im/manual.html">notes for impedance matching</a>).</p>
+<p>The MGR material model requires a reference density (<span class="math notranslate nohighlight">\(\rho_0\)</span>), linear <span class="math notranslate nohighlight">\(U_S-u_p\)</span> Hugoniot parameters (<span class="math notranslate nohighlight">\(c,s\)</span>), the reference state Grüneisen gamma (<span class="math notranslate nohighlight">\(\gamma_0\)</span>), initial temperature (<span class="math notranslate nohighlight">\(T_0\)</span>), and specific heat capacity (<span class="math notranslate nohighlight">\(c_v\)</span>). The Wilkins implementation of the MGR EOS only uses a linear Hugoniot and constant <span class="math notranslate nohighlight">\(\gamma/V\)</span>. <span class="math notranslate nohighlight">\(e_0\)</span> is calculated from the initial temperature and specific heat capacity. The pressure and energy equations are 4th order polynomials in strain and are only valid for a small range of shock pressures (typically 10’s GPa).</p>
+<p>Required initial conditions: density, pressure, energy, temperature and particle velocity. To do: allow either energy or temperature for input.</p>
+<p>Example configuration file entry (mks). Note input keys <span class="math notranslate nohighlight">\(c0 = c\)</span> and <span class="math notranslate nohighlight">\(s1=s\)</span> in the equations below.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mat1</span><span class="p">:</span>
     <span class="n">init</span><span class="p">:</span>
         <span class="n">up0</span>    <span class="p">:</span> <span class="mf">0.0</span>
@@ -386,7 +397,6 @@ The principal Hugoniot is described by a quadratic equation: <span class="math n
         <span class="n">rhoref</span> <span class="p">:</span> <span class="mf">8930.0</span>
         <span class="n">c0</span>     <span class="p">:</span> <span class="mf">3900.0</span>
         <span class="n">s1</span>     <span class="p">:</span> <span class="mf">1.49</span>
-        <span class="n">s2</span>     <span class="p">:</span> <span class="mf">0.0</span>
         <span class="n">gamma0</span> <span class="p">:</span> <span class="mf">1.99</span>
         <span class="n">cv</span>     <span class="p">:</span> <span class="mf">1.0E6</span>
 </pre></div>
@@ -418,16 +428,71 @@ E_H(V)=E_0+\left[\frac{P_0+P_H(V)}{2}\right]\left[V_0-V\right].
 \[\begin{split}
 P(V,E) &amp; =  P_H(V)+\frac{\gamma(V)}{V}\left[E(V)-E_0\right] - \left[P_0+P_H(V)\right]\frac{\gamma(V)}{2V}[V_0-V]  \\
        &amp; =  \frac{\gamma(V)}{V}\left[E(V)-E_0\right] + P_H(V)\left\{ 1- \frac{\gamma(V)}{2V}\left[V_0-V\right] \right\}
-        - \frac{P_0\gamma(V)}{2V}\left[V_0-V\right],\label{eq5} (5)
+        - \frac{P_0\gamma(V)}{2V}\left[V_0-V\right],
 \end{split}\]</div>
 <p>and the last term is dropped when <span class="math notranslate nohighlight">\(P_0=0\)</span>.</p>
-</div>
-<div class="section" id="tabular-eos">
-<span id="eos-ses"></span><h2>Tabular EOS<a class="headerlink" href="#tabular-eos" title="Permalink to this headline">#</a></h2>
+<p>The MGR EOS model sound speed was not calculated in <span id="id2">[<a class="reference internal" href="references.html#id3" title="Mark L Wilkins. Computer simulation of dynamic phenomena. Springer Science &amp; Business Media, 1999.">Wilkins, 1999</a>]</span> (he used the ideal gas equation for sound speed with a minimum of the reference sound speed). The adiabatic sound speed <span class="math notranslate nohighlight">\(c_s\)</span> is calculated here from the adiabatic bulk modulus <span class="math notranslate nohighlight">\(K_s\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+c_s^2 = \frac{K_s}{\rho} = - V^2 \frac{dP}{dV},
+\]</div>
+<p>where specific volume <span class="math notranslate nohighlight">\(V=1/\rho\)</span>. <span class="math notranslate nohighlight">\(P\)</span> is a function of specific volume <span class="math notranslate nohighlight">\(V\)</span> and specific internal energy <span class="math notranslate nohighlight">\(E\)</span>; expand the total derivative</p>
+<div class="math notranslate nohighlight">
+\[
+c_s^2 = - V^2 \left[ \left. \frac{\partial P}{\partial V} \right|_E \frac{\partial V}{\partial V} + \left. \frac{\partial P}{\partial E} \right|_V \frac{\partial E}{\partial V} \right].
+\]</div>
+<p>Along an isentrope (adiabat), <span class="math notranslate nohighlight">\(dS=0\)</span>. From the reversible form of the first law of thermodynamics,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+dE = TdS - PdV = -P dV, \\
+\left. \frac{\partial E}{\partial V} \right|_S = -P.
+\end{split}\]</div>
+<p>Substitute density for specific volume,</p>
+<div class="math notranslate nohighlight">
+\[
+\partial V = \partial \left( \frac{1}{\rho} \right) = - \frac{1}{\rho^2} \partial \rho.
+\]</div>
+<p>Then,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+c_s^2 = - \frac{1}{\rho^2} \left[ - \rho^2 \left. \frac{\partial P}{\partial \rho} \right|_E - P \left. \frac{\partial P}{\partial E} \right|_V \right] \\
+c_s^2 = \left. \frac{\partial P}{\partial \rho} \right|_E + \frac{P}{\rho^2} \left. \frac{\partial P}{\partial E} \right|_V
+\end{split}\]</div>
+<p>Wilkins uses the following expansion for <span class="math notranslate nohighlight">\(P(V,E)\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+P(V,E) = P_0 + \frac{\gamma_0}{V_0} [E - E_0]\\
+P(V,E) = \rho_0 c^2 \left\{ x + \left[ 2s - \frac{\gamma_0}{2} \right] x^2 + s [3s - \gamma_0] x^3 \right\} + \frac{\gamma_0}{V_0} E \\
+P(V,E) = k_1 x + k_2 x^2 + k_3 x^3 + \frac{\gamma_0}{V_0} E \\
+\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(U_s = c + s u_p\)</span>, <span class="math notranslate nohighlight">\(E\)</span> is specific internal energy, <span class="math notranslate nohighlight">\(x=1-V/V_0\)</span> is strain.</p>
+<p>Temperature is determined from</p>
+<div class="math notranslate nohighlight">
+\[
+T(V,E) = \frac{1}{c_v} [ E(V)-E_{T_0}(V) ]
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(E_{T_0}(V)\)</span> is the specific internal energy along the initial temperature <span class="math notranslate nohighlight">\(T_0\)</span> isotherm:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+E_{T_0}(V) = \epsilon_{00} + \epsilon_{01} x + \epsilon_{02} x^2 + \epsilon_{03} x^3 + \epsilon_{04} x^4,\\
+\epsilon_{00} = -3R T_0 = E_0,\\
+\epsilon_{01} = \gamma_0 \epsilon_{00}\\
+\epsilon_{02} = [1/2][c^2 + \gamma_0^2 \epsilon_{00}]\\
+\epsilon_{03} = [1/6][4sc^2 + \gamma_0^3 \epsilon_{00}]\\
+\epsilon_{04} = [1/24][18s^2c^2 - 2\gamma_0 s c^2 + \gamma_0^4 \epsilon_{00}]
+\end{split}\]</div>
+<p>Finally, the pressure along the initial temperature isotherm is</p>
+<div class="math notranslate nohighlight">
+\[
+P_{T_0}(V) = - \left. \frac{\partial E}{\partial V} \right|_{T=T_0}
+\]</div>
+</section>
+<section id="tabular-eos-ses">
+<span id="eos-ses"></span><h2>Tabular EOS (SES)<a class="headerlink" href="#tabular-eos-ses" title="Permalink to this headline">#</a></h2>
 <p>A tabular EOS contains the thermodynamic variables for the material over a rectangular grid of two independent variables, typically density and temperature. The pressure-volume-energy relationships are interpolated during problem execution to solve the energy conservation equation. pyKO uses bilinear interpolation on the density-temperature grid, but other tabular EOS schemes are easy to implement.</p>
 <p>The SESClass.readses function assumes STD and EXT formats compatible with the eos_table.py module from the Stewart group.</p>
 <ul class="simple">
-<li><p>SESAME standard 201+301 format. This table format specficiation is described in <span id="id2">Lyon <em>et al.</em> [<a class="reference internal" href="references.html#id2" title="Stanford P. Lyon, James D. Johnson, and Group T-1. SESAME: The Los Alamos Laboratory Equation of State Database. Technical Report, Los Alamos LAUR-92-3407, 1992.">1992</a>]</span> (<a href="https://github.com/ststewart/aneos-forsterite-2019/blob/master/EOS-docs/Lyon-Johnson-1992-SESAME-database.pdf">PDF file</a>).</p></li>
+<li><p>SESAME standard 201+301 format. This table format specficiation is described in <span id="id3">Lyon <em>et al.</em> [<a class="reference internal" href="references.html#id4" title="Stanford P. Lyon, James D. Johnson, and Group T-1. SESAME: The Los Alamos Laboratory Equation of State Database. Technical Report, Los Alamos LAUR-92-3407, 1992.">1992</a>]</span> (<a href="https://github.com/ststewart/aneos-forsterite-2019/blob/master/EOS-docs/Lyon-Johnson-1992-SESAME-database.pdf">PDF file</a>).</p></li>
 </ul>
 <p>The units in the tabular EOS must be specified in the pyKO configuration file (see <a class="reference internal" href="configuration-file.html#config-units"><span class="std std-ref">Units</span></a>).</p>
 <p>Stewart Group ANEOS tables (<a class="github reference external" href="https://github.com/ststewart?tab=repositories">ststewart</a>) have the following format:</p>
@@ -452,11 +517,53 @@ P(V,E) &amp; =  P_H(V)+\frac{\gamma(V)}{V}\left[E(V)-E_0\right] - \left[P_0+P_H(
         <span class="n">fileext</span> <span class="p">:</span> <span class="s1">&#39;NEW-SESAME-EXT.TXT&#39;</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="tillotson-eos">
-<span id="eos-til"></span><h2>Tillotson EOS<a class="headerlink" href="#tillotson-eos" title="Permalink to this headline">#</a></h2>
-<p>The Tillotson EOS requires 10 parameters: rho0, E0, EIV, ECV, AA, BB, a, b, alpha, beta
-The units are kg/m<span class="math notranslate nohighlight">\(^3\)</span>, J/kg, J/kg, J/kg, Pa, Pa, and a, b, alpha, and beta are dimensionless.</p>
+</section>
+<section id="tillotson-eos-til">
+<span id="eos-til"></span><h2>Tillotson EOS (TIL)<a class="headerlink" href="#tillotson-eos-til" title="Permalink to this headline">#</a></h2>
+<p>The equation of state model by <span id="id4">[<a class="reference internal" href="references.html#id14" title="J. H. Tillotson. Metallic Equations of State for Hypervelocity Impact. Technical Report, General Atomic Report No. GA-3216, San Diego, CA, 1962.">Tillotson, 1962</a>]</span> can span a larger pressure-volume space compared to the MGR model. The EOS is divided into compressed and expanded forms with an interpolated region in between. See <span id="id5">[<a class="reference internal" href="references.html#id13" title="Aaron L. Brundage. Implementation of tillotson equation of state for hypervelocity impact of metals, geologic materials, and liquids. Procedia Engineering, 58:461–470, 2013. URL: http://dx.doi.org/10.1016/j.proeng.2013.05.053, doi:10.1016/j.proeng.2013.05.053.">Brundage, 2013</a>]</span> and <span id="id6">[<a class="reference internal" href="references.html#id2" title="Henry J. Melosh. Impact Cratering: A Geologic Process. Oxford University Press, 1987.">Melosh, 1987</a>]</span> (Appendix A) for more details about the Tillotson EOS.</p>
+<p>The Tillotson EOS requires 11 parameters: <span class="math notranslate nohighlight">\(\rho_0\)</span>, <span class="math notranslate nohighlight">\(E_0\)</span>, <span class="math notranslate nohighlight">\(E_{IV}\)</span>, <span class="math notranslate nohighlight">\(E_{CV}\)</span>, <span class="math notranslate nohighlight">\(A\)</span>, <span class="math notranslate nohighlight">\(B\)</span>, <span class="math notranslate nohighlight">\(a\)</span>, <span class="math notranslate nohighlight">\(b\)</span>, <span class="math notranslate nohighlight">\(\alpha\)</span>, <span class="math notranslate nohighlight">\(\beta\)</span>, <span class="math notranslate nohighlight">\(c_v\)</span>
+The mks units are kg/m<span class="math notranslate nohighlight">\(^3\)</span>, J/kg, J/kg, J/kg, Pa, Pa, and <span class="math notranslate nohighlight">\(a\)</span>, <span class="math notranslate nohighlight">\(b\)</span>, <span class="math notranslate nohighlight">\(\alpha\)</span>, and <span class="math notranslate nohighlight">\(\beta\)</span> are dimensionless. <span class="math notranslate nohighlight">\(c_v\)</span> is J/K/kg.</p>
+<p>There are 4 regions in the Tillotson EOS: 1-compressed, 2-interpolated, 3-expanded, 4-low energy expansion.</p>
+<p>For compressed states (region 1), where <span class="math notranslate nohighlight">\(\rho \ge \rho_0\)</span> and <span class="math notranslate nohighlight">\(0&lt;E&lt;E_{IV}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+P_1(\rho,E) = \left[ a + \frac{b}{ \frac{E}{E_0 \eta^2} + 1 } \right] \rho E + A \mu + B \mu^2
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\eta=\rho/\rho_0\)</span> and <span class="math notranslate nohighlight">\(\mu=\eta - 1\)</span>.</p>
+<p>For expanded states (region 3), where <span class="math notranslate nohighlight">\(\rho \le \rho_0\)</span> and <span class="math notranslate nohighlight">\(E&gt;E_{CV}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+P_3(\rho,E) = a \rho E + \left\{ \frac{ b \rho E }{ \frac{E}{E_0 \eta^2} + 1 } + A \mu e^{- \beta [ [ \rho_0 / \rho]-1 ]} \right\}  e^{- \alpha [[ \rho_0 / \rho ] - 1 ]^2}
+\]</div>
+<p>For intermediate states, these equations are interpolated (region 2). When <span class="math notranslate nohighlight">\(\rho &lt; \rho_0\)</span> and <span class="math notranslate nohighlight">\(E_{IV}&lt;E&lt;E_{CV}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+P_2(\rho,E) = \frac{ [E-E_{IV}] P_3 + [E_{CV}-E] P_1 } {E_{CV}-E_{IV}}
+\]</div>
+<p><span id="id7">[<a class="reference internal" href="references.html#id13" title="Aaron L. Brundage. Implementation of tillotson equation of state for hypervelocity impact of metals, geologic materials, and liquids. Procedia Engineering, 58:461–470, 2013. URL: http://dx.doi.org/10.1016/j.proeng.2013.05.053, doi:10.1016/j.proeng.2013.05.053.">Brundage, 2013</a>]</span> identifies a cold expanded state (region 4) where <span class="math notranslate nohighlight">\(\rho_0 &lt; \rho &lt; \rho_{IV}\)</span> and <span class="math notranslate nohighlight">\(E \le E_{IV}\)</span>. In this case, the equation for <span class="math notranslate nohighlight">\(P_1\)</span> is used with <span class="math notranslate nohighlight">\(B=0\)</span>. Here we have not calculated the <span class="math notranslate nohighlight">\(\rho_{IV}\)</span> and the fourth region is entered when <span class="math notranslate nohighlight">\(\rho &gt; \rho_0\)</span> and <span class="math notranslate nohighlight">\(E \le E_{IV}\)</span>.</p>
+<p>The initial temperature isotherm is given by</p>
+<div class="math notranslate nohighlight">
+\[
+E(\rho,T_0) = E_c(\rho) + E_{T0}
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(E_{T0}=c_v T_0\)</span> and the cold curve is calculated with a fourth-order Runge-Jutta integration of</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{dE_c}{d\rho} = \frac{P_1(\rho,E_c)}{\rho^2}
+\]</div>
+<p>with initial conditions: <span class="math notranslate nohighlight">\(\rho=\rho_0\)</span> and <span class="math notranslate nohighlight">\(E_c=0\)</span>. The temperature is determined relative to this cold curve in the same manner as for the MGR EOS:</p>
+<div class="math notranslate nohighlight">
+\[
+T(\rho) = T_0 + \frac{ E(\rho) - E_c(\rho) } {c_v}
+\]</div>
+<p>The Grueneisen gamma is <span class="math notranslate nohighlight">\(\gamma_0 = a+b\)</span>, where <span class="math notranslate nohighlight">\(a\)</span> is the high compression limit (usually 0.5; or 2/3 for a Fermi electron gas). The linear shock velocity coefficients are related to the Tillotson parameters by</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+c = [A/\rho_0]^{1/2}\\
+s = \{ 1 + B/A + [a+b]/2 \} / 2
+\end{split}\]</div>
+<p>Thus <span class="math notranslate nohighlight">\(A\)</span> is the bulk modulus at zero pressure. The sound speed is calculated by taking the derivative of pressure with respect to volume as described in the MGR EOS section above.</p>
+<p><span class="math notranslate nohighlight">\(E_{IV}\)</span> and <span class="math notranslate nohighlight">\(E_{CV}\)</span> are the incipient and complete vaporization energy. <span class="math notranslate nohighlight">\(E_0\)</span> is not the initial specific internal energy; it is a value often close to <span class="math notranslate nohighlight">\(E_{IV}\)</span>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># parameters: [rho0, E0, EIV, ECV, AA, BB, a, b, alpha, beta]</span>
 <span class="c1"># units:    [kg/m3, J/kg, J/kg, J/kg, Pa, Pa, [-]x4]</span>
 <span class="c1"># these olivine parameters are from Marinova et al. 2011 Icarus </span>
@@ -465,13 +572,14 @@ The units are kg/m<span class="math notranslate nohighlight">\(^3\)</span>, J/kg
 <span class="c1"># basalttill = [2650.0, 4.87E8, 4.72E6, 18.2E6, 5.3E10, 5.3E10, 0.6, 0.6, 5., 5.]</span>
 </pre></div>
 </div>
-<p>Example configuration file entry (mks) from <span id="id3">[<a class="reference internal" href="references.html#id13" title="Margarita M. Marinova, Oded Aharonson, and Erik Asphaug. Geophysical consequences of planetary-scale impacts into a Mars-like planet. Icarus, 211(2):960–985, feb 2011. URL: https://linkinghub.elsevier.com/retrieve/pii/S0019103510004227, doi:10.1016/j.icarus.2010.10.032.">Marinova <em>et al.</em>, 2011</a>]</span>:</p>
+<p>Example configuration file entry (mks) from <span id="id8">[<a class="reference internal" href="references.html#id15" title="Margarita M. Marinova, Oded Aharonson, and Erik Asphaug. Geophysical consequences of planetary-scale impacts into a Mars-like planet. Icarus, 211(2):960–985, feb 2011. URL: https://linkinghub.elsevier.com/retrieve/pii/S0019103510004227, doi:10.1016/j.icarus.2010.10.032.">Marinova <em>et al.</em>, 2011</a>]</span>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mat1</span><span class="p">:</span>
     <span class="n">init</span><span class="p">:</span>
         <span class="n">up0</span>    <span class="p">:</span> <span class="mf">0.0</span>
         <span class="n">rho0</span>   <span class="p">:</span> <span class="mf">3500.0</span>
         <span class="n">p0</span>     <span class="p">:</span> <span class="mf">0.0</span>
         <span class="n">e0</span>     <span class="p">:</span> <span class="mf">0.0</span>
+        <span class="n">t0</span>     <span class="p">:</span> <span class="mf">298.0</span>
     <span class="n">eos</span><span class="p">:</span>
         <span class="n">name</span>   <span class="p">:</span> <span class="s1">&#39;Olivine&#39;</span>
         <span class="nb">type</span>   <span class="p">:</span> <span class="s1">&#39;TIL&#39;</span>
@@ -485,10 +593,11 @@ The units are kg/m<span class="math notranslate nohighlight">\(^3\)</span>, J/kg
         <span class="n">b</span>      <span class="p">:</span> <span class="mf">1.4</span>
         <span class="n">alpha</span>  <span class="p">:</span> <span class="mf">5.0</span>
         <span class="n">beta</span>   <span class="p">:</span> <span class="mf">5.0</span>
+        <span class="n">cv</span>     <span class="p">:</span> <span class="mf">830.0</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {
@@ -557,10 +666,10 @@ The units are kg/m<span class="math notranslate nohighlight">\(^3\)</span>, J/kg
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eos-idg">Ideal gas law</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mie-gruneisen-eos">Mie-Grüneisen EOS</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tabular-eos">Tabular EOS</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tillotson-eos">Tillotson EOS</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eos-idg">Ideal gas law (IDG)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mie-gruneisen-eos-mgr">Mie-Grüneisen EOS (MGR)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tabular-eos-ses">Tabular EOS (SES)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tillotson-eos-til">Tillotson EOS (TIL)</a></li>
 </ul>
   </nav></div>
 

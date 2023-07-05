@@ -13,16 +13,30 @@ kernelspec:
 (page:eos)=
 # Equations of state
 
-The following equation of state (EOS) models are implemented:
+The following pressure-volume-energy-temperature equations of state (EOS) models are implemented in pyKO:
 * [](eos:idg)
 * [](eos:mgr)
 * [](eos:ses)
 * [](eos:til)
 
 (eos:idg)=
-## Ideal gas law
+## Ideal gas law (IDG)
 
-The ideal gas is defined by the initial conditions, the ratio of specific heat capacities, $\gamma$, and the specific heat capacity at constant volume $c_v$. The specific heat capacity is used to determine temperature assuming $T=E/cv$. $cv$ must be a non-zero value. The initial conditions must specify the initial density, pressure, energy and particle velocity.
+The ideal gas is defined by the initial conditions, the ratio of specific heat capacities ($\gamma$), and the specific heat capacity at constant volume ($c_v$).  The initial conditions must specify the initial density, pressure, specific internal energy and particle velocity. The speed of sound is
+
+$$
+c_s = \left( \frac{P}{\rho} \right)^{1/2}.
+$$
+
+The ideal gas form for the sound speed is used in the Wilkins artificial viscosity formulation. The material EOS sound speeds are used to determine the time steps.
+
+The specific heat capacity is assumed to be constant and used to determine temperature by
+
+$$
+T = \frac{E}{c_v}.
+$$ 
+
+The initial temperature is determined from $E_0$ and $c_v$.
 
 Example configuration file entry (mks):
 ```
@@ -35,21 +49,20 @@ mat1:
     eos: 
         name   : 'IDG 1'
         type   : 'IDG'
-        gamma0 : 1.4
+        gamma  : 1.4
         cv     : 2.5E8
 ```
 
 (eos:mgr)=
-## Mie-Gr&uuml;neisen EOS
+## Mie-Gr&uuml;neisen EOS (MGR)
 
-The Mie-Gr&uuml;neisen model uses a reference curve, usually the principal Hugoniot, and a thermal parameter to describe a pressure-volume-energy EOS surface (e.g., see Chapter 5 in {cite}`Forbes2012`). 
+The Mie-Gr&uuml;neisen model uses a reference curve, usually the principal Hugoniot, and a thermal parameter to describe a pressure-volume-energy EOS surface (e.g., see Chapter 5 in {cite}`Forbes2012` and <a href="https://impactswiki.net/impact-tools-book/im/manual.html">notes for impedance matching</a>). 
 
-The material model requires a reference density, Hugoniot parameters, and the Gr&uuml;neisen gamma.
-The principal Hugoniot is described by a quadratic equation: $U_S = c_0 + s_1 u_p + s_2 u_p^2$. The specific heat capacity is used to determine temperature assuming $T=E/cv$. $cv$ must be a non-zero value.
+The MGR material model requires a reference density ($\rho_0$), linear $U_S-u_p$ Hugoniot parameters ($c,s$), the reference state Gr&uuml;neisen gamma ($\gamma_0$), initial temperature ($T_0$), and specific heat capacity ($c_v$). The Wilkins implementation of the MGR EOS only uses a linear Hugoniot and constant $\gamma/V$. $e_0$ is calculated from the initial temperature and specific heat capacity. The pressure and energy equations are 4th order polynomials in strain and are only valid for a small range of shock pressures (typically 10's GPa).
 
-The initial conditions must specify the initial density, pressure, energy and particle velocity.
+Required initial conditions: density, pressure, energy, temperature and particle velocity. To do: allow either energy or temperature for input.
 
-Example configuration file entry (mks):
+Example configuration file entry (mks). Note input keys $c0 = c$ and $s1=s$ in the equations below.
 ```
 mat1:
     init:
@@ -63,7 +76,6 @@ mat1:
         rhoref : 8930.0
         c0     : 3900.0
         s1     : 1.49
-        s2     : 0.0
         gamma0 : 1.99
         cv     : 1.0E6
 ```
@@ -101,13 +113,78 @@ Combining these two equations defines the Mie-Gr&uuml;neisen equation of state s
 $$
 P(V,E) & =  P_H(V)+\frac{\gamma(V)}{V}\left[E(V)-E_0\right] - \left[P_0+P_H(V)\right]\frac{\gamma(V)}{2V}[V_0-V]  \\
        & =  \frac{\gamma(V)}{V}\left[E(V)-E_0\right] + P_H(V)\left\{ 1- \frac{\gamma(V)}{2V}\left[V_0-V\right] \right\}
-        - \frac{P_0\gamma(V)}{2V}\left[V_0-V\right],\label{eq5} (5)
+        - \frac{P_0\gamma(V)}{2V}\left[V_0-V\right],
 $$
 
 and the last term is dropped when $P_0=0$. 
 
+The MGR EOS model sound speed was not calculated in {cite}`Wilkins1999` (he used the ideal gas equation for sound speed with a minimum of the reference sound speed). The adiabatic sound speed $c_s$ is calculated here from the adiabatic bulk modulus $K_s$:
+
+$$
+c_s^2 = \frac{K_s}{\rho} = - V^2 \frac{dP}{dV},
+$$
+
+where specific volume $V=1/\rho$. $P$ is a function of specific volume $V$ and specific internal energy $E$; expand the total derivative
+
+$$
+c_s^2 = - V^2 \left[ \left. \frac{\partial P}{\partial V} \right|_E \frac{\partial V}{\partial V} + \left. \frac{\partial P}{\partial E} \right|_V \frac{\partial E}{\partial V} \right].
+$$
+
+Along an isentrope (adiabat), $dS=0$. From the reversible form of the first law of thermodynamics,
+
+$$
+dE = TdS - PdV = -P dV, \\
+\left. \frac{\partial E}{\partial V} \right|_S = -P.
+$$
+
+Substitute density for specific volume,
+
+$$
+\partial V = \partial \left( \frac{1}{\rho} \right) = - \frac{1}{\rho^2} \partial \rho.
+$$
+
+Then,
+
+$$
+c_s^2 = - \frac{1}{\rho^2} \left[ - \rho^2 \left. \frac{\partial P}{\partial \rho} \right|_E - P \left. \frac{\partial P}{\partial E} \right|_V \right] \\
+c_s^2 = \left. \frac{\partial P}{\partial \rho} \right|_E + \frac{P}{\rho^2} \left. \frac{\partial P}{\partial E} \right|_V
+$$
+
+Wilkins uses the following expansion for $P(V,E)$:
+
+$$
+P(V,E) = P_0 + \frac{\gamma_0}{V_0} [E - E_0]\\
+P(V,E) = \rho_0 c^2 \left\{ x + \left[ 2s - \frac{\gamma_0}{2} \right] x^2 + s [3s - \gamma_0] x^3 \right\} + \frac{\gamma_0}{V_0} E \\
+P(V,E) = k_1 x + k_2 x^2 + k_3 x^3 + \frac{\gamma_0}{V_0} E \\
+$$
+
+where $U_s = c + s u_p$, $E$ is specific internal energy, $x=1-V/V_0$ is strain.
+
+Temperature is determined from 
+
+$$
+T(V,E) = \frac{1}{c_v} [ E(V)-E_{T_0}(V) ]
+$$
+
+where $E_{T_0}(V)$ is the specific internal energy along the initial temperature $T_0$ isotherm:
+
+$$
+E_{T_0}(V) = \epsilon_{00} + \epsilon_{01} x + \epsilon_{02} x^2 + \epsilon_{03} x^3 + \epsilon_{04} x^4,\\
+\epsilon_{00} = -3R T_0 = E_0,\\
+\epsilon_{01} = \gamma_0 \epsilon_{00}\\
+\epsilon_{02} = [1/2][c^2 + \gamma_0^2 \epsilon_{00}]\\
+\epsilon_{03} = [1/6][4sc^2 + \gamma_0^3 \epsilon_{00}]\\
+\epsilon_{04} = [1/24][18s^2c^2 - 2\gamma_0 s c^2 + \gamma_0^4 \epsilon_{00}]
+$$
+
+Finally, the pressure along the initial temperature isotherm is
+
+$$
+P_{T_0}(V) = - \left. \frac{\partial E}{\partial V} \right|_{T=T_0}
+$$
+
 (eos:ses)=
-## Tabular EOS
+## Tabular EOS (SES)
 
 A tabular EOS contains the thermodynamic variables for the material over a rectangular grid of two independent variables, typically density and temperature. The pressure-volume-energy relationships are interpolated during problem execution to solve the energy conservation equation. pyKO uses bilinear interpolation on the density-temperature grid, but other tabular EOS schemes are easy to implement.
 
@@ -145,11 +222,65 @@ mat1:
 
 
 (eos:til)=
-## Tillotson EOS
+## Tillotson EOS (TIL)
 
-The Tillotson EOS requires 10 parameters: rho0, E0, EIV, ECV, AA, BB, a, b, alpha, beta
-The units are kg/m$^3$, J/kg, J/kg, J/kg, Pa, Pa, and a, b, alpha, and beta are dimensionless.
+The equation of state model by {cite}`Tillotson1962` can span a larger pressure-volume space compared to the MGR model. The EOS is divided into compressed and expanded forms with an interpolated region in between. See {cite}`Brundage2013` and {cite}`Melosh1987` (Appendix A) for more details about the Tillotson EOS.
 
+The Tillotson EOS requires 11 parameters: $\rho_0$, $E_0$, $E_{IV}$, $E_{CV}$, $A$, $B$, $a$, $b$, $\alpha$, $\beta$, $c_v$
+The mks units are kg/m$^3$, J/kg, J/kg, J/kg, Pa, Pa, and $a$, $b$, $\alpha$, and $\beta$ are dimensionless. $c_v$ is J/K/kg.
+
+There are 4 regions in the Tillotson EOS: 1-compressed, 2-interpolated, 3-expanded, 4-low energy expansion.
+
+For compressed states (region 1), where $\rho \ge \rho_0$ and $0<E<E_{IV}$:
+
+$$
+P_1(\rho,E) = \left[ a + \frac{b}{ \frac{E}{E_0 \eta^2} + 1 } \right] \rho E + A \mu + B \mu^2
+$$
+
+where $\eta=\rho/\rho_0$ and $\mu=\eta - 1$.
+
+For expanded states (region 3), where $\rho \le \rho_0$ and $E>E_{CV}$:
+
+$$
+P_3(\rho,E) = a \rho E + \left\{ \frac{ b \rho E }{ \frac{E}{E_0 \eta^2} + 1 } + A \mu e^{- \beta [ [ \rho_0 / \rho]-1 ]} \right\}  e^{- \alpha [[ \rho_0 / \rho ] - 1 ]^2}
+$$
+
+For intermediate states, these equations are interpolated (region 2). When $\rho < \rho_0$ and $E_{IV}<E<E_{CV}$:
+
+$$
+P_2(\rho,E) = \frac{ [E-E_{IV}] P_3 + [E_{CV}-E] P_1 } {E_{CV}-E_{IV}}
+$$
+
+{cite}`Brundage2013` identifies a cold expanded state (region 4) where $\rho_0 < \rho < \rho_{IV}$ and $E \le E_{IV}$. In this case, the equation for $P_1$ is used with $B=0$. Here we have not calculated the $\rho_{IV}$ and the fourth region is entered when $\rho > \rho_0$ and $E \le E_{IV}$.
+
+The initial temperature isotherm is given by
+
+$$
+E(\rho,T_0) = E_c(\rho) + E_{T0}
+$$
+
+where $E_{T0}=c_v T_0$ and the cold curve is calculated with a fourth-order Runge-Jutta integration of
+
+$$
+\frac{dE_c}{d\rho} = \frac{P_1(\rho,E_c)}{\rho^2}
+$$
+
+with initial conditions: $\rho=\rho_0$ and $E_c=0$. The temperature is determined relative to this cold curve in the same manner as for the MGR EOS:
+
+$$
+T(\rho) = T_0 + \frac{ E(\rho) - E_c(\rho) } {c_v}
+$$
+
+The Grueneisen gamma is $\gamma_0 = a+b$, where $a$ is the high compression limit (usually 0.5; or 2/3 for a Fermi electron gas). The linear shock velocity coefficients are related to the Tillotson parameters by
+
+$$
+c = [A/\rho_0]^{1/2}\\
+s = \{ 1 + B/A + [a+b]/2 \} / 2
+$$
+
+Thus $A$ is the bulk modulus at zero pressure. The sound speed is calculated by taking the derivative of pressure with respect to volume as described in the MGR EOS section above.
+
+$E_{IV}$ and $E_{CV}$ are the incipient and complete vaporization energy. $E_0$ is not the initial specific internal energy; it is a value often close to $E_{IV}$.
 
 
 ```
@@ -169,6 +300,7 @@ mat1:
         rho0   : 3500.0
         p0     : 0.0
         e0     : 0.0
+        t0     : 298.0
     eos:
         name   : 'Olivine'
         type   : 'TIL'
@@ -182,5 +314,6 @@ mat1:
         b      : 1.4
         alpha  : 5.0
         beta   : 5.0
+        cv     : 830.0
 ```
 

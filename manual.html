@@ -7,7 +7,8 @@
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>User manual &#8212; pyKO</title>
   
   
@@ -343,11 +344,11 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <div class="tex2jax_ignore mathjax_ignore section" id="user-manual">
+  <section class="tex2jax_ignore mathjax_ignore" id="user-manual">
 <h1>User manual<a class="headerlink" href="#user-manual" title="Permalink to this headline">#</a></h1>
 <p>pyKO is a one-dimensional Lagrangian elastic-plastic hydrocode written in python. The code uses the Von Neumann finite difference scheme with second order accuracy.</p>
 <p>This code was developed from the book <a href="https://link.springer.com/book/10.1007/978-3-662-03885-7">Computer Simulation of Dynamic Phenomena by Mark Wilkins</a> (Springer-Verlag, 1999) and the <a href="https://www.eng.mu.edu/shockphysics/KO/">fortran KO code v11 by John Borg</a>.</p>
-<div class="section" id="features">
+<section id="features">
 <h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">#</a></h2>
 <ul class="simple">
 <li><p>Geometries</p>
@@ -381,17 +382,14 @@ document.write(`
 <li><p>Equations of state</p>
 <ul>
 <li><p>Ideal gas</p></li>
-<li><p>Mie-Grüneisen</p></li>
-<li><p>Tillotson (needs more testing)</p></li>
+<li><p>Mie-Grüneisen with temperature</p></li>
+<li><p>Tillotson with temperature</p></li>
 <li><p>Tabular/SESAME, with tools for tabulated ANEOS; interpolation schemes are currently very simple</p></li>
 </ul>
 </li>
 <li><p>Input and output</p>
 <ul>
-<li><p>For testing and comparison to fortran KO:<br>
-Fixed formatting ascii input and output files</p></li>
-<li><p>Preferred I/O:<br>
-Yaml configuration (input) files with unit conversion using pint<br>
+<li><p>Yaml configuration (input) files with unit conversion using pint<br>
 Binary output files using pickle with units</p></li>
 <li><p>Customizable outputs: <br>
 User-defined cell data output in binary format<br>
@@ -399,7 +397,7 @@ Debug output in binary format with all node variables</p></li>
 </ul>
 </li>
 </ul>
-<div class="section" id="wish-list">
+<section id="wish-list">
 <h3>Wish list<a class="headerlink" href="#wish-list" title="Permalink to this headline">#</a></h3>
 <ul class="simple">
 <li><p>Full Wilkins convergence loop for time step to void closure</p></li>
@@ -411,16 +409,16 @@ Debug output in binary format with all node variables</p></li>
 <li><p>Numba performance enhancements (this code is about 10x slower than fortran)</p></li>
 <li><p>Thermal diffusion</p></li>
 </ul>
-</div>
-</div>
-<div class="section" id="pyko-source-files">
+</section>
+</section>
+<section id="pyko-source-files">
 <h2>pyKO source files<a class="headerlink" href="#pyko-source-files" title="Permalink to this headline">#</a></h2>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">pyko.py</span></code>: primary hydrocode and I/O functions</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">eos_table.py</span></code>: module for EOS functions with ANEOS and Tillotson</p></li>
 </ul>
-</div>
-<div class="section" id="required-packages">
+</section>
+<section id="required-packages">
 <h2>Required packages<a class="headerlink" href="#required-packages" title="Permalink to this headline">#</a></h2>
 <p>See environment.yml and requirements.txt files in GitHub.</p>
 <p>Tested with:</p>
@@ -443,7 +441,7 @@ Debug output in binary format with all node variables</p></li>
 <li><p>selenium (3.141.0) for x-t plot (test 1b)</p></li>
 <li><p>pscript (0.7.5) for x-t plot (test 1b)</p></li>
 </ul>
-<div class="section" id="example-input-files-in-repository">
+<section id="example-input-files-in-repository">
 <h3>Example input files in repository<a class="headerlink" href="#example-input-files-in-repository" title="Permalink to this headline">#</a></h3>
 <p>Example input files are included with Jupyter Notebooks, for training and visualization.</p>
 <ul class="simple">
@@ -458,10 +456,13 @@ Debug output in binary format with all node variables</p></li>
 <li><p>Test 9b: Spall test with TIL and MGR plates</p></li>
 <li><p>Test 12: Gravity Al target and impactor</p></li>
 <li><p>Test 12b: Gravity Forsterite target and impactor</p></li>
+<li><p>Test 13: Compare MGR/TIL/SES Al plate impact</p></li>
+<li><p>Test 13b: Compare MGR/TIL/SES Fe plate impact</p></li>
+<li><p>Test 14: Compare different Tillotson EOS functions; compare MGR/TIL/SES Fe Hugoniots and cold curves</p></li>
 </ul>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {
