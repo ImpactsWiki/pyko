@@ -194,6 +194,7 @@ The SESClass.readses function assumes STD and EXT formats compatible with the eo
 
 The units in the tabular EOS must be specified in the pyKO configuration file (see [](config:units)).
 
+### ANEOS tables
 Stewart Group ANEOS tables (https://github.com/ststewart?tab=repositories) have the following format:
 
 * NEW-SESAME-STD.TXT: Standard length SESAME file with 201 table and 301 table (density, temperature, pressure, sp. internal energy, Helmholtz free energy). 301 table units: g/cm<sup>3</sup>, K, GPa, MJ/kg, MJ/kg.
@@ -201,6 +202,10 @@ Stewart Group ANEOS tables (https://github.com/ststewart?tab=repositories) have 
 * NEW-SESAME-EXT.TXT: SESAME-style table with extra variables from ANEOS. Contains the standard 201 table and non-standard 301-extra-variables EOS table. The 301 table has: density grid values, temperature grid values, sp. entropy(T,rho), sound speed(T,rho), sp. heat capacity(T,rho), KPA flag(T,rho). 2-D arrays list all densities, looping over each temperature. 301 table units: g/cm<sup>3</sup>, K, MJ/K/kg, cm/s, MJ/K/kg, integer flag. The KPA flag is an ANEOS output with phase information.
 
 * See ANEOS developments and documentation in this directory: https://github.com/ststewart/aneos-forsterite-2019/tree/master/EOS-docs
+
+### Non-ANEOS tables
+Example scripts for converting tabular EOS files into a format compatile with pyKO are provided in the eos example folders 'sesext-5phase-h2o' and 'sesext-aqua-h2o'.
+
 
 To use a tabular EOS, specify the path, std and ext file names and the units for the file (in the units section). To use a different tabular format, customize the readses function to interface with the eos_tables.py module.
 

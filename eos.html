@@ -328,7 +328,11 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eos-idg">Ideal gas law (IDG)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mie-gruneisen-eos-mgr">Mie-Grüneisen EOS (MGR)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tabular-eos-ses">Tabular EOS (SES)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tabular-eos-ses">Tabular EOS (SES)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#aneos-tables">ANEOS tables</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#non-aneos-tables">Non-ANEOS tables</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tillotson-eos-til">Tillotson EOS (TIL)</a></li>
 </ul>
             </nav>
@@ -495,12 +499,18 @@ P_{T_0}(V) = - \left. \frac{\partial E}{\partial V} \right|_{T=T_0}
 <li><p>SESAME standard 201+301 format. This table format specficiation is described in <span id="id3">Lyon <em>et al.</em> [<a class="reference internal" href="references.html#id4" title="Stanford P. Lyon, James D. Johnson, and Group T-1. SESAME: The Los Alamos Laboratory Equation of State Database. Technical Report, Los Alamos LAUR-92-3407, 1992.">1992</a>]</span> (<a href="https://github.com/ststewart/aneos-forsterite-2019/blob/master/EOS-docs/Lyon-Johnson-1992-SESAME-database.pdf">PDF file</a>).</p></li>
 </ul>
 <p>The units in the tabular EOS must be specified in the pyKO configuration file (see <a class="reference internal" href="configuration-file.html#config-units"><span class="std std-ref">Units</span></a>).</p>
+<section id="aneos-tables">
+<h3>ANEOS tables<a class="headerlink" href="#aneos-tables" title="Permalink to this headline">#</a></h3>
 <p>Stewart Group ANEOS tables (<a class="github reference external" href="https://github.com/ststewart?tab=repositories">ststewart</a>) have the following format:</p>
 <ul class="simple">
 <li><p>NEW-SESAME-STD.TXT: Standard length SESAME file with 201 table and 301 table (density, temperature, pressure, sp. internal energy, Helmholtz free energy). 301 table units: g/cm<sup>3</sup>, K, GPa, MJ/kg, MJ/kg.</p></li>
 <li><p>NEW-SESAME-EXT.TXT: SESAME-style table with extra variables from ANEOS. Contains the standard 201 table and non-standard 301-extra-variables EOS table. The 301 table has: density grid values, temperature grid values, sp. entropy(T,rho), sound speed(T,rho), sp. heat capacity(T,rho), KPA flag(T,rho). 2-D arrays list all densities, looping over each temperature. 301 table units: g/cm<sup>3</sup>, K, MJ/K/kg, cm/s, MJ/K/kg, integer flag. The KPA flag is an ANEOS output with phase information.</p></li>
 <li><p>See ANEOS developments and documentation in this directory: <a class="github reference external" href="https://github.com/ststewart/aneos-forsterite-2019/tree/master/EOS-docs">ststewart/aneos-forsterite-2019</a></p></li>
 </ul>
+</section>
+<section id="non-aneos-tables">
+<h3>Non-ANEOS tables<a class="headerlink" href="#non-aneos-tables" title="Permalink to this headline">#</a></h3>
+<p>Example scripts for converting tabular EOS files into a format compatile with pyKO are provided in the eos example folders ‘sesext-5phase-h2o’ and ‘sesext-aqua-h2o’.</p>
 <p>To use a tabular EOS, specify the path, std and ext file names and the units for the file (in the units section). To use a different tabular format, customize the readses function to interface with the eos_tables.py module.</p>
 <p>Initialization of materials with a tabular EOS requires some care by the user. There are some functions provided to aid in the initial density and internal energy settings. See the tutorial notebooks for examples. Initialization near zero pressure is tricky.</p>
 <p>EOS table interpolation is bilinear with simple search criteria for finding positions in the table. Future development is needed for EOS tables with discontinuities/degeneracies (e.g., with multiple solid phases).</p>
@@ -518,6 +528,7 @@ P_{T_0}(V) = - \left. \frac{\partial E}{\partial V} \right|_{T=T_0}
         <span class="n">fileext</span> <span class="p">:</span> <span class="s1">&#39;NEW-SESAME-EXT.TXT&#39;</span>
 </pre></div>
 </div>
+</section>
 </section>
 <section id="tillotson-eos-til">
 <span id="eos-til"></span><h2>Tillotson EOS (TIL)<a class="headerlink" href="#tillotson-eos-til" title="Permalink to this headline">#</a></h2>
@@ -669,7 +680,11 @@ s = \{ 1 + B/A + [a+b]/2 \} / 2
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eos-idg">Ideal gas law (IDG)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mie-gruneisen-eos-mgr">Mie-Grüneisen EOS (MGR)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tabular-eos-ses">Tabular EOS (SES)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tabular-eos-ses">Tabular EOS (SES)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#aneos-tables">ANEOS tables</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#non-aneos-tables">Non-ANEOS tables</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tillotson-eos-til">Tillotson EOS (TIL)</a></li>
 </ul>
   </nav></div>
