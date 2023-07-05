@@ -76,7 +76,6 @@ mat2:
 #
 # 'FIXED' or 'FREE'
 # ibc = inner boundary condition (at minimum x); obc = outer boundary condition (at maximum x)
-# fracture and interior gaps are not implemented yet
 boundaries: 
     ibc    : 'FIXED'
     obc    : 'FIXED'
@@ -85,7 +84,6 @@ boundaries:
 geometry   : 'PLA'
 #
 # gravitational acceleration; negative means force toward negative position x
-# gravity is not implemented yet
 gravity    : 0.0
 #
 # --------------------------------------------------------------------

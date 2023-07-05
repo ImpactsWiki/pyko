@@ -40,7 +40,7 @@ mat1:
     eos: 
         name   : 'IDG 1'
         type   : 'IDG'
-        gamma0 : 1.4
+        gamma  : 1.4
         cv     : 2.5E8
     str:
         type   : 'HYDRO'
@@ -60,7 +60,7 @@ mat2:
     eos:
         name   : 'IDG 2'
         type   : 'IDG'
-        gamma0 : 1.4
+        gamma  : 1.4
         cv     : 2.5E8
     str:
         type   : 'HYDRO'

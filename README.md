@@ -13,7 +13,7 @@ Adapted from John Borg's Fortran KO code v11 (https://www.eng.mu.edu/shockphysic
 
 [![DOI](https://zenodo.org/badge/602649996.svg)](https://zenodo.org/badge/latestdoi/602649996)
 
-Stewart, S. T. pyKO code v0.6.0, doi:10.5281/zenodo.8092348, 2023.
+Stewart, S. T. pyKO code v0.6.1, doi:10.5281/zenodo.8092348, 2023.
 
 # User manual
 
@@ -40,5 +40,4 @@ Example tabular EOS models are in the eos directory.
 
 # THIS IS A BETA RELEASE
 
-v0.6 is the first public release. The code needs user testing and development.
-
+v0.6.x is the first public release. The code needs user testing and development.

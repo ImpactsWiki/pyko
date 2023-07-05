@@ -62,13 +62,13 @@ mat2:
         rho0   : 8930.0
         p0     : 0.0
         e0     : 0.0
+        t0     : 298.0
     eos:
         name   : 'Cu-1'
         type   : 'MGR'
         rhoref : 8930.0
         c0     : 3900.0
         s1     : 1.49
-        s2     : 0.0
         gamma0 : 1.99
         cv     : 1.0E6
     str:
@@ -89,13 +89,13 @@ mat3:
         rho0   : 8930.0
         p0     : 0.0
         e0     : 0.0
+        t0     : 298.0
     eos:
         name   : 'Cu-2'
         type   : 'MGR'
         rhoref : 8930.0
         c0     : 3900.0
         s1     : 1.49
-        s2     : 0.0
         gamma0 : 1.99
         cv     : 1.0E6
     str:

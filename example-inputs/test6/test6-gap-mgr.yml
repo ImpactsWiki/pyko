@@ -37,13 +37,13 @@ mat1:
         rho0   : 2700.0
         p0     : 0.0
         e0     : 0.0
+        t0     : 298.0
     eos: 
         name   : 'Al test'
         type   : 'MGR'
         rhoref : 2700.0
         c0     : 5200.0
         s1     : 1.5
-        s2     : 0.0
         gamma0 : 2.0
         cv     : 1.0E6
     str:
@@ -64,13 +64,13 @@ mat2:
         rho0   : 8930.0
         p0     : 0.0
         e0     : 0.0
+        t0     : 298.0
     eos:
         name   : 'Cu test'
         type   : 'MGR'
         rhoref : 8930.0
         c0     : 3900.0
         s1     : 1.49
-        s2     : 0.0
         gamma0 : 1.99
         cv     : 1.0E6
     str:
@@ -95,13 +95,13 @@ mat3:
         rho0   : 8930.0
         p0     : 0.0
         e0     : 0.0
+        t0     : 298.0
     eos:
         name   : 'Cu test'
         type   : 'MGR'
         rhoref : 8930.0
         c0     : 3900.0
         s1     : 1.49
-        s2     : 0.0
         gamma0 : 1.99
         cv     : 1.0E6
     str:

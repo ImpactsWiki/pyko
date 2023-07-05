@@ -18,8 +18,12 @@ Created on Wed Jan 25 08:05:24 2023
 LICENSE
 GNU General Public License v3.0
 
+CHANGELOG
+see CHANGELOG.md in GitHub repo
+
 VERSIONS
-    6/27/23: v0.6 first public release for beta testing
+    2023-07-04: v0.6.1 - added temperatures to TIL and MGR EOS models. Bug fixes.
+    2023-06-27: v0.6 first public release for beta testing
 """
 ############################################################## 
 # IMPORT PYTHON MODULES
@@ -52,7 +56,7 @@ with warnings.catch_warnings():
     Q_([])
 #
 # GLOBAL VARIABLE
-__version__ = 'v0.6-release-2023-06-27' 
+__version__ = 'v0.6.1-2023-07-04' 
 #
 ############################################################## 
 # KO CODE UNITS FROM WILKINS BOOK
@@ -188,21 +192,59 @@ class TILClass:
         self.alpha = 0. # alpha constant [-]
         self.beta  = 0. # beta constant [-]    a+b=Gruneisen gamma at rho0
         self.cs    = 0. # cm/s, sound speed(U,rho)
-        self.region= 0  # region flag: 1-condensed, 2-interpolated, 3-expanded
+        self.cv    = 0. # specific heat capacity MJ/K/kg
+        self.region= 0  # region flag: 1-condensed, 2-interpolated, 3-expanded, 4-low energy exapansion
         # Initial state parameters
         self.rho0   = 0.  # initial state density, g/cm3
         self.p0     = 0.  # initial state pressure, Mbar
         self.up0    = 0.  # initial state particle velocity, cm/us=10 km/s
         self.iev0   = 0.  # initial state internal energy per original volume, 1e12 ergs/cm3 = 100 GJ/m3
         self.v0     = 0.  # initial state specific volume, cm3/g
+        self.t0     = 0.  # initial state temperature, K
         self.params = np.zeros(0) # numpy array of parameters to pass to Tillotson EOS functions
+        self.ecold  = etab.EOScurve() # reference cold curve for temperature estimate
     def fillparams(self):
         self.params = np.asarray([self.rhoref,self.E0,self.EIV,self.ECV, \
-                           self.AA,self.BB,self.a,self.b,self.alpha,self.beta])
+                           self.AA,self.BB,self.a,self.b,self.alpha,self.beta,self.cv])
+        return
+    def calcecold(self):
+        """ Calculate the internal energy of the cold curve. Passed to Tillotson EOS function with params for temperature. """
+        # start by compressing a factor of 3 with 1000 steps
+        nsteps = 100
+        self.ecold.rho = np.arange(nsteps)/nsteps*(3.*self.rho0)+self.rho0 # rho is rho0 to 3*rho0
+        self.ecold.U = np.zeros(nsteps) # initial energy is zero by definition
+        self.ecold.P = np.zeros(nsteps) # initial pressure is zero by definition
+        self.ecold.T = np.zeros(nsteps)+self.t0 # initial temperature is T0 by definition
+        h = self.ecold.rho[1]-self.ecold.rho[0]
+        x0 = self.ecold.rho[0]
+        y  = 0.0
+        for i in range(1, nsteps):
+            #"Apply Runge Kutta Formulas to find next value of y"
+            # Rundage 2015: dE/drho = P(rho,E)/rho^2
+            # etab.Till_P returns [pout,flag,csout,tout]
+            k1 = h * etab.Till_P(x0,y,self.params,self.ecold,calctemp=False)[0]/x0/x0
+            k2 = h * etab.Till_P(x0 + 0.5 * h,y + 0.5 * k1,self.params,self.ecold,calctemp=False)[0]/(x0 + 0.5 * h)/(x0 + 0.5 * h)
+            k3 = h * etab.Till_P(x0 + 0.5 * h,y + 0.5 * k2,self.params,self.ecold,calctemp=False)[0]/(x0 + 0.5 * h)/(x0 + 0.5 * h)
+            k4 = h * etab.Till_P(x0 + h,y + k3,self.params,self.ecold,calctemp=False)[0]/(x0+h)/(x0+h)
+            #k1 = h * dydx(x0, y)
+            #k2 = h * dydx(x0 + 0.5 * h, y + 0.5 * k1)
+            #k3 = h * dydx(x0 + 0.5 * h, y + 0.5 * k2)
+            #k4 = h * dydx(x0 + h, y + k3)
+
+            # Update next value of y
+            y = y + (1.0 / 6.0)*(k1 + 2 * k2 + 2 * k3 + k4)
+            
+            # Update next value of x
+            x0 = x0 + h
+            
+            # update structure arrays
+            self.ecold.rho[i] = x0
+            self.ecold.U[i]   = y
+            self.ecold.P[i]   = etab.Till_P(x0,y,self.params,self.ecold,calctemp=False)[0]
         return
     def __str__(self):
         """ Print the Tillotson EOS parameters """
-        return f'\n{self.name} Tillotson EOS parameters: \n' + \
+        return f'\n{self.name} Tillotson EOS parameters [code units]: \n' + \
                f'   rhoref: {self.rho0} \n' + \
                f'   a:      {self.a} \n' + \
                f'   b:      {self.b} \n' + \
@@ -213,21 +255,25 @@ class TILClass:
                f'   beta:   {self.beta} \n' + \
                f'   Eiv:    {self.EIV} \n' + \
                f'   Ecv:    {self.ECV} \n' + \
+               f'   cv:     {self.cv} \n' + \
                 '   initial state: \n' + \
                f'      rho0:    {self.rho0} \n' + \
                f'      p0:      {self.p0} \n' + \
                f'      iev0:    {self.iev0} \n' + \
+               f'      t0:      {self.t0} \n' + \
                f'      up0:     {self.up0} \n' 
 #
 class MGRClass:
     """ Mie-Grueneisen EOS: Material Parameters 
-        and initial state of the homogeneous material layer """
+        and initial state of the homogeneous material layer.
+        Wilkins MGR model assumes a linear Us=c+s*up Hugoniot, gamma/V is constant and cv = 3R.
+    """
     def __init__(self):
         self.name   = ''  # name of the material, string 
         self.rhoref = 0.  # reference density for EOS g/cm3
         self.c0     = 0.  # bulk sound speed, cm/us=10 km/s, intercept for linear Us=c0+s1+up
         self.s1     = 0.  # linear Hugoniot slope, dimless 
-        self.s2     = 0.  # quadratic Hugoniot coefficient, [us/cm]
+        #self.s2     = 0.  # quadratic Hugoniot coefficient, [us/cm] # NOT COMPATIBLE WITH OTHER PARTS OF MGR MODEL
         self.gamma0 = 0.  # Thermodynamic grueneisen parameter, dimless 
         self.cv     = 0.  # Heat capacity at constant volume, (Mbar cm3)/(K g)
         self.rho0   = 0.  # initial state density, g/cm3
@@ -235,6 +281,8 @@ class MGRClass:
         self.up0    = 0.  # initial state particle velocity, cm/us=10 km/s
         self.iev0   = 0.  # initial state internal energy per original volume, 1e12 ergs/cm3 = 100 GJ/m3
         self.v0     = 0.  # initial state specific volume, cm3/g
+        self.t0     = 298.15 # initial state temperature assumed to be 25C=298.15 K
+        self.cv     = 0.  # constant specific heat capacity, code units should be 1.12 ergs/K/g = eu/K/g
         self.coefs  = np.zeros(4) # k1,k2,k3,k4 in Wilkins Section 3.7
                                   # coefs for MG EOS from Wilkins
                                   # x = 1 - vr
@@ -242,24 +290,60 @@ class MGRClass:
                                   # alternative formula in Appendix B
                                   # eta = 1/vr = rho/rho0
                                   # P = a(eta-1)+b(eta-1)^2+c(eta-1)^3+d*eta*E
+        self.ecoefs = np.zeros(5) # e0,e1,e2,e3,e4 in Wilkins Section 3.7
+        self.ecold  = etab.EOScurve() # reference cold curve for temperature estimate
     def calccoefs(self):
-        # this form in Wilkins assumes gamma_0/V_0 = constant
+        # this form in Wilkins assumes gamma_0/V_0 = constant and linear Us=c+s1*up
         # right now no treatment of porosity
         if self.rho0 != self.rhoref:
-            # DEBUG: later add porosity
             sys.exit("FATAL ERROR: Mie-Grueneisen model must have rho0=rhoref.")
         self.coefs[0] = self.rhoref*self.c0*self.c0 # k1
         self.coefs[1] = self.coefs[0]*(2.*self.s1-self.gamma0/2.) # k2
         self.coefs[2] = self.coefs[0]*self.s1*(3.*self.s1-self.gamma0) # k3
-        self.coefs[3] = self.gamma0 # k4     
+        self.coefs[3] = self.gamma0 # k4
         #                   
+    def calcecoefs(self):
+        # energy expansion used to calculate temperature with MGR EOS
+        # Wilkins MGR model assumes a linear Us=c+s*up Hugoniot, gamma/V is constant and cv = 3nR
+        # Wilkins Eq 3.54
+        # eps_0 = eps_00 + eps_01*x + eps_02*x^2 + eps_03*x^3 + eps_04*x^4
+        # x = 1-vr (vr is relative volume so unitless)
+        # units are set by the leading term eps_00 = -3*R*T0 = -900R in Wilkins for T0=300 K and cv=3R
+        #  --> eps_00 = -cv*T0 in units of eu/g
+        # Wilkins R is in units of gas constant/atomic weight = eu/K/g*(n=# atoms per formula unit)
+        # E = eps/V0 is energy per original volume cm3
+        # E/rho_0 is energy per unit mass = eu/g
+        # T = (1/(3R))*(E/rho_0 - eps_0) = (1/cv)*(E/rho_0 - eps_0)
+        # Here, we input the heat capacity rather than assume cv = 3R
+        # cv is converted to eu/K/original volume [code units] during input
+        # so here needs to be converted to eu/K/g by diving by rho0
+        self.ecoefs[0] = -self.cv*self.t0/self.rho0
+        self.ecoefs[1] = self.gamma0*self.ecoefs[0]
+        self.ecoefs[2] = 0.5*(self.c0*self.c0 + self.gamma0*self.gamma0*self.ecoefs[0])
+        self.ecoefs[3] = (1./6.)*(4.*self.s1*self.c0*self.c0 + np.power(self.gamma0,3) * self.ecoefs[0])
+        self.ecoefs[4] = (1./24.)*(18.*self.s1*self.s1*self.c0*self.c0 - 2.*self.gamma0*self.s1*self.c0*self.c0 + np.power(self.gamma0,4)*self.ecoefs[0])
+        #
+    def calcecold(self):
+        """ Calculate the internal energy and pressure of the cold curve. Not used in pyKO - e(V,T0) is calculated on the fly in the code.
+            This function is used to calculate the cold curve for EOS fitting and comparisons. 
+            Must calculate ecoefs before calling this function. """
+        # start by compressing a factor of 2 with 100 steps
+        nsteps = 100
+        self.ecold.rho = np.arange(nsteps)/nsteps*(2.*self.rho0)+self.rho0 # rho is rho0 to 3*rho0
+        self.ecold.U = np.zeros(nsteps) # initial energy is self.ecoefs[0] by definition
+        self.ecold.P = np.zeros(nsteps) # initial pressure is zero by definition
+        self.ecold.T = np.zeros(nsteps)+self.t0 # temperature is T0 by definition
+        strain = 1.0 - self.rho0/self.ecold.rho
+        self.ecold.U = self.ecoefs[0] + self.ecoefs[1]*strain + self.ecoefs[2]*np.power(strain,2) + \
+                       self.ecoefs[3]*np.power(strain,3) + self.ecoefs[4]*np.power(strain,4)
+        self.ecold.P = self.rho0*(self.ecoefs[1]+2*self.ecoefs[2]*strain+3*self.ecoefs[3]*strain*strain+4*self.ecoefs[4]*np.power(strain,3))
+        #
     def __str__(self):
         """ Print the Mie Gruneisen material parameters """
-        return f'\nClass Mie Grueneisen Material Model: {self.name} \n' + \
+        return f'\nClass Mie Grueneisen Material Model [code units]: {self.name} \n' + \
                f'   rhoref: {self.rhoref} \n' + \
                f'   c0:     {self.c0} \n' + \
                f'   s1:     {self.s1} \n' + \
-               f'   s2:     {self.s2} \n' + \
                f'   gamma0: {self.gamma0} \n' + \
                f'   cv:     {self.cv} \n' + \
                 '   initial state: \n' + \
@@ -267,7 +351,8 @@ class MGRClass:
                f'      p0:      {self.p0} \n' + \
                f'      iev0:    {self.iev0} \n' + \
                f'      up0:     {self.up0} \n' + \
-               f'   k1,k2,k3,k4= {self.coefs[0]},{self.coefs[1]},{self.coefs[2]},{self.coefs[3]} \n'
+               f'   k1,k2,k3,k4= {self.coefs[0]},{self.coefs[1]},{self.coefs[2]},{self.coefs[3]} \n' + \
+               f'   e0,e1,e2,e3,e4= {self.ecoefs[0]},{self.ecoefs[1]},{self.ecoefs[2]},{self.ecoefs[3]},{self.ecoefs[4]} \n'
         #
 class IDGClass:
     """ Ideal Gas EOS: Material Parameters 
@@ -285,7 +370,7 @@ class IDGClass:
         #                        
     def __str__(self):
         """ Print the Ideal Gas material parameters """
-        return f'\nClass Ideal Gas: {self.name} \n' + \
+        return f'\nClass Ideal Gas [code units]: {self.name} \n' + \
                f'   gamma0: {self.gamma0} \n' + \
                f'   cv: {self.cv} \n' + \
                 '   initial state: \n' + \
@@ -446,7 +531,9 @@ class SESClass:
     def sesp(self,rho,u,p,t,s,eps):
         """ Linear interpolation to extract table P and T from rho and U. 
             Input rho, u, p, t must be in the same units as the table.
-            Returns pnew, tnew arrays. """
+            Returns pnew, tnew arrays. 
+            Temperature calculation is not stable in tension resions. This function needs work.
+        """
         pnew = np.copy(p) # This routine only calculates cells with nonzero strain.
         tnew = np.copy(t) # copy current P & T values to populate cells with no change.
         snew = np.copy(s) # This routine only calculates cells with nonzero strain.
@@ -458,6 +545,17 @@ class SESClass:
             # https://x-engineer.org/bilinear-interpolation/
             rindex = npwhere(self.EOS.rho > rho[ij])[0][0]
             tindex = npwhere(self.EOS.U[:,rindex] > u[ij])[0][0]
+            if tindex == 0:
+                # this is a kludge that needs attention
+                tindex = npwhere(self.EOS.U[:,rindex-1] > u[ij])[0][0]+1
+            #    print(u[ij],rho[ij],rindex)
+            #    print(self.EOS.U[:,rindex])
+            #    stop
+            #if tindex == 0:
+            #    # probably in tension region; look for tension region solution
+            #    temptind = npwhere(self.EOS.P[:,rindex] < 0.)[0]
+            #    tindex = npwhere(self.EOS.U[temptind,rindex] > u[ij])[0][0]
+            #    print(tindex,u[ij])
             P11 = self.EOS.P[tindex-1,rindex-1]
             P21 = self.EOS.P[tindex,rindex-1]
             P12 = self.EOS.P[tindex-1,rindex]
@@ -487,6 +585,8 @@ class SESClass:
             sij = s1 * (u2-u[ij])/(u2-u1) + s2 * (u[ij]-u1)/(u2-u1)
             snew[ij] = sij
             if False:
+                print(self.EOS.U[0:10,rindex])
+                print(self.EOS.P[0:50,rindex])
                 print('bilinear = ',rindex,tindex,'\n',\
                       r1,rho[ij],r2,'\n',\
                       u1,u[ij],u2,'\n', \
@@ -494,6 +594,7 @@ class SESClass:
                       t1,tnew[ij],t2,'\n',\
                       s1,snew[ij],s2)
                 print('')
+                stop
         return pnew,tnew,snew
     def sescs(self,rho,u):
         """ Linear interpolation to extract table cs from rho and U. 
@@ -674,7 +775,7 @@ class SESClass:
         #
     def __str__(self):
         """ Print overview of SESAME Table EOS material parameters """
-        return f'\nClass SESAME: {self.name} \n' + \
+        return f'\nClass SESAME [code units]: {self.name} \n' + \
                f'   eos_table module version {etab.__version__} \n' + \
                f'   table path: {self.path} \n' + \
                f'   file names: {self.sesstd} {self.sesext} \n' + \
@@ -702,10 +803,33 @@ class VonMisesClass:
         self.gmod  = 0. # shear modulus, Mbar
         self.ys    = 0. # von Mises yield stress, Mbar
     def __str__(self):
-        """ Print Von Mises material parameters """
+        """ Print Von Mises material parameters [code units] """
         return f'\n{self.name} Von Mises parameters: \n' + \
-            f'   Shear modulus [Mbar]: {self.gmod} \n' + \
-            f'   Yield stress [Mbar]: {self.ys}' 
+            f'   Shear modulus: {self.gmod} \n' + \
+            f'   Yield stress: {self.ys}' 
+    #
+class SteinbergGuinanClass:
+    """ Strength class for Steinberg-Guinan Yield Model as implemented in Wilkins book """
+    def __init__(self):
+        self.name  = '' # name of the material, string 
+        self.Y0    = 0.0 # 
+        self.Ymax  = 0.0 #
+        self.beta  = 0.0
+        self.n     = 0.0
+        self.b     = 0.0
+        self.h     = 0.0
+        self.Tm0   = 0.0
+        self.mu0   = 0.0
+    def __str__(self):
+        """ Print Steinberg-Guinan material parameters """
+        return f'\n{self.name} Steinberg-Guinan parameters [code units]: \n' + \
+            f'   Yield stress: {self.Y0} \n' + \
+            f'   Max yield stress: {self.Ymax} \n' + \
+            f'   b: {self.b} \n' + \
+            f'   n: {self.n} \n' + \
+            f'   h: {self.h} \n' + \
+            f'   Melt temperature: {self.Tm0} \n' + \
+            f'   Shear modulus: {self.mu0} \n'
     #
 class FractureClass:
     """ Fracture strength class. Fracture requires -P > pfrac and rho < rhomin*rhoref. """
@@ -715,7 +839,7 @@ class FractureClass:
         self.nrhomin   = 0.8  # normalized maximum distension factor; fracture requires rho < (nrhomin*rhoref); usually 0.8-0.95
     def __str__(self):
         """ Fracture parameters """
-        return f'\n{self.name} Fracture parameters: \n' + \
+        return f'\n{self.name} Fracture parameters [code units]: \n' + \
             f'   Fracture pressure: {self.pfrac} \n' + \
             f'   Fracture maximum distension (rhomin/rhoref): {self.nrhomin}'
     #        
@@ -730,8 +854,8 @@ class BCClass:
         self.vrbc    = 0. # relative volume in ghost cell, dimless    
     def __str__(self):
         """ Print boundary condition parameters """
-        return f'\nClass Boundary Condition: {self.name} \n' + \
-            f'   Pressure [Mbar]: {self.pbc} ' # \n' + \
+        return f'\nClass Boundary Condition [code units]: {self.name} \n' + \
+            f'   Pressure: {self.pbc} ' # \n' + \
             #f'   Particle velocity [cm/us]: {self.upbc} \n' + \
             #f'   Reference density [g/cm3]: {self.rrefbc} \n' + \
             #f'   Internal energy [Mbar]: {self.iebc} \n' + \
@@ -746,9 +870,9 @@ class GravityClass:
         self.refpres = np.zeros(0) # reference pressure at reference position
     def __str__(self):
         """ Print boundary condition parameters """
-        return f'\nClass Gravity: \n' + \
-            f'   Gravitational acc [cm/us/us]: {self.gravity} \n' + \
-            f'   Reference position [cm/us]: {self.refpos} ' # \n' + \
+        return f'\nClass Gravity [code units]: \n' + \
+            f'   Gravitational acceleration: {self.gravity} \n' + \
+            f'   Reference position: {self.refpos} ' # \n' + \
             #f'   Reference density [g/cm3]: {self.rrefbc} \n' + \
             #f'   Internal energy [Mbar]: {self.iebc} \n' + \
             #f'   Relative volume [-]: {self.vrbc}'
@@ -925,7 +1049,7 @@ class DomainClass:
         self.sigmao   = np.zeros(j) # total tangential stress sigma_theta, only evaluated at n=1 current time
         self.alocal   = np.zeros(j) # intermediate variable for AV
         self.rholocal = np.zeros(j) # intermediate variable for AV
-        self.phase    = np.zeros(j) # phase identification
+        self.phase    = np.zeros(j) # phase identification; KPA for ANEOS; region 1-4 for Tillotson
         self.bcpres   = np.zeros(j) # interior boundary pressures
     #
     def makegrid(self,run,verbose=False):
@@ -1044,6 +1168,7 @@ class DomainClass:
             # check if next layer overlaps
             if (run.ixstart[imat+1] < run.ixstart[imat]+run.ilength[imat]):
                 print('FATAL ERROR: materials overlap.')
+                print(run.ixstart[imat+1],run.ixstart[imat]+run.ilength[imat])
                 sys.exit("FATAL ERROR: Next layer overlaps with current layer! imat="+str(imat)) 
             # check for gap
             if (run.ixstart[imat+1] > run.ixstart[imat]+run.ilength[imat]):
@@ -1523,6 +1648,11 @@ class DomainClass:
             ioddimat = tmp[tmp %2 == 1] # select only odd indices for zone values
             ########### MIE GRUNEISEN EOS #################
             if (run.ieosid[imat] == 'MGR'):
+                # use derivative of MGR EOS to calculate sound speed below for time step
+                # leave original Wilkins formulation here for now - used for artificial viscosity
+                #
+                # original Wilkins formulation uses ideal gas sound speed
+                # and limits to cs>c0
                 # use c0 value if greater than a
                 icheck = npwhere(self.alocal[ioddimat] < run.ieos[imat].c0)[0]
                 self.alocal[ioddimat[icheck]] = run.ieos[imat].c0
@@ -1542,7 +1672,8 @@ class DomainClass:
         iavon = ioddj[npwhere(((self.up[n+1,ioddj+1] < self.up[n+1,ioddj-1]) & \
                                 ( (self.vr[n+2,ioddj] - self.vr[n,ioddj]) < 0. ) ))[0]]
         if len(iavon)>0:
-            # calculate sound speed
+            # calculate sound speed -- do we want to recalculate sound speed here?
+            # this original AV formulation assumes this form
             # pressure not defined yet at n+1; using n
             # sound speed for ideal gas using P[n] and rho[n+1]
             # make sure pressure is positive in the sqrt
@@ -1640,6 +1771,15 @@ class DomainClass:
                         run.ieos[imat].coefs[1]*np.square(strain[ispos]) + \
                         run.ieos[imat].coefs[2]*nppower(strain[ispos],3) + \
                         run.ieos[imat].coefs[3]*self.iev0[n+1,ioddimat[ispos]]
+                # ------------ update temperature on interior odd j ---------------------
+                # self.temp[n+2,ioddimat] = self.iev0[n+2,ioddimat]/run.ieos[imat].cv
+                # calculate temperature using Wilkins Eq 3.54-3.59
+                # eps0 has modified code units of eu/K/g
+                # cv is stored in code units of eu/K/(original volume cm3)
+                eps0 = run.ieos[imat].ecoefs[0] + run.ieos[imat].ecoefs[1]*strain + run.ieos[imat].ecoefs[2]*np.power(strain,2) + \
+                       run.ieos[imat].ecoefs[3]*np.power(strain,3) + run.ieos[imat].ecoefs[4]*np.power(strain,4)
+                self.temp[n+2,ioddimat] = (self.iev0[n+2,ioddimat]/self.rho0[ioddimat] - eps0)/(run.ieos[imat].cv/self.rho0[ioddimat])
+                self.temp[n+1,ioddimat] = (self.temp[n,ioddimat]+self.temp[n+2,ioddimat])/2.
             ########### IDEAL GAS EOS #################
             if (run.ieosid[imat] == 'IDG'):
                 # use Ideal Gas EOS
@@ -1672,7 +1812,7 @@ class DomainClass:
                 # ------------ update pressure on interior odd j ---------------------
                 self.pres[n+2,ioddimat] = (run.ieos[imat].gamma0-1.)*self.iev0[n+2,ioddimat]/self.vr[n+2,ioddimat]
                 self.pres[n+1,ioddimat] = (self.pres[n,ioddimat]+self.pres[n+2,ioddimat])/2.
-                # ------------ update pressure on interior odd j ---------------------
+                # ------------ update temperature on interior odd j ---------------------
                 self.temp[n+2,ioddimat] = self.iev0[n+2,ioddimat]/run.ieos[imat].cv
                 self.temp[n+1,ioddimat] = (self.temp[n,ioddimat]+self.temp[n+2,ioddimat])/2.
             ########### SESAME TABLE EOS #################
@@ -1750,7 +1890,7 @@ class DomainClass:
         #       # END SESAME TABLE OPTION
             ########### TILLOTSON EOS #################
             if (run.ieosid[imat] == 'TIL'):
-                # use TILLOTSON EOS; no temperature implemented at this time
+                # use TILLOTSON EOS
                 # dV from conservation of momentum above
                 # dE = -(P+q)dV + dZ from conservation of energy
                 # The EOS provides hydrostatic P-V-E relationship to solve new E,P
@@ -1783,9 +1923,10 @@ class DomainClass:
                 dV = (self.vr[n+2,ioddimat]-self.vr[n,ioddimat])
                 enew = self.iev0[n,ioddimat] - (pnew1+qbar)*dV + self.deltaz[ioddimat]
                 for iii in range(len(ioddimat)):
-                    # Till_P(rho,E) inputs and outputs a single point
+                    # TillEOS P(rho,E) inputs and outputs a single point
+                    # divide enew by rho0 because eos U are in eu/g
                     pnew1[iii] = etab.Till_P(self.rho0[ioddimat[iii]]/self.vr[n+2,ioddimat[iii]], \
-                                             enew[iii],run.ieos[imat].params)[0]
+                                             enew[iii]/self.rho0[ioddimat[iii]],run.ieos[imat].params,run.ieos[imat].ecold,calctemp=False)[0]
                 while (etest > 1.e-7) and (ecount < 5):
                     # start with P[n], rho[n+2]
                     # calculate total internal energy E
@@ -1794,16 +1935,24 @@ class DomainClass:
                     #
                     # ------------ update pressure on interior odd j ---------------------
                     for iii in range(len(ioddimat)):
-                        # Till_P(rho,E) inputs and outputs a single point
-                        # returns [pout,flag,csout]
+                        # TillEOS P(rho,E) inputs and outputs a single point
+                        # returns [pout,flag,csout,tout]
+                        # divide enew by rho0 because eos U are in eu/g
                         Till_out = etab.Till_P(self.rho0[ioddimat[iii]]/self.vr[n+2,ioddimat[iii]], \
-                                                 enew[iii],run.ieos[imat].params)
+                                                 enew[iii]/self.rho0[ioddimat[iii]],run.ieos[imat].params,run.ieos[imat].ecold,calctemp=True)
                         pnew2[iii] = Till_out[0]
                         self.phase[ioddimat[iii]] = Till_out[1]
                         self.alocal[ioddimat[iii]] = Till_out[2]
+                        self.temp[n+2,ioddimat[iii]] = Till_out[3]
+                        #print('Till_out: ',Till_out)
                     # check if the table pressure satisfies the conservation equation
                     enew2 = self.iev0[n,ioddimat] - (pnew1+qbar)*dV + self.deltaz[ioddimat]
-                    etest = max(npabs((enew2-enew)/enew))
+                    etest = np.zeros(len(enew2))
+                    nzind = np.where(enew > 0)[0]
+                    if len(nzind > 0):
+                        etest = max(npabs((enew2[nzind]-enew[nzind])/enew[nzind]))
+                    else:
+                        etest = 0.0
                     if etest > 1.e-7:
                         pnew1 = np.copy(pnew2)
                     #if np.mod(self.stepn, 100) == 0:
@@ -1814,7 +1963,6 @@ class DomainClass:
                 # put the converged values for e and p in the main data object
                 self.iev0[n+2,ioddimat]=enew2
                 self.pres[n+2,ioddimat]=pnew2
-                self.temp[n+2,ioddimat]=0.
                 #print(etest)
                 # calculate energy and pressure averages E[n+1], P[n+1]
                 self.iev0[n+1,ioddimat]=0.5*(self.iev0[n,ioddimat]+self.iev0[n+2,ioddimat])
@@ -1822,8 +1970,8 @@ class DomainClass:
                 # ------------ update temperature on interior odd j ---------------------
                 # Now EOS returns T(E,rho) after P-V-E convergence
                 # temperature for n+2 time using updated E[n+2]
-                #self.temp[n+2,ioddimat] = self.iev0[n+2,ioddimat]/run.ieos[imat].cv
-                self.temp[n+1,ioddimat] = 0.
+                self.temp[n+1,ioddimat] = 0.5*(self.temp[n,ioddimat]+self.temp[n+2,ioddimat])
+                #                                 self.iev0[n+1,ioddimat],run.ieos[imat].params,run.ieos[imat].ecold)[3]
                 # ------------ update entropy on interior odd j ---------------------
                 # Now EOS returns S(E,rho) after P-V-E convergence
                 # entropy for n+2 time using updated E[n+2]
@@ -1846,7 +1994,8 @@ class DomainClass:
         #
         for imat in np.arange(run.nmat):
             # Do not check for fractures if the material is not Von Mises material. DEBUG stsm check fracture conditions
-            if (run.istrid[imat] == 'VM'):
+            #if (run.istrid[imat] == 'VM'):
+            if False:
                 # select interior array points for this material
                 tmp = npwhere((self.matid == imat) & (self.ibc == 0))[0]
                 ioddimat = tmp[tmp %2 == 1] # select only odd indices for zone values
@@ -1855,9 +2004,15 @@ class DomainClass:
                 if len(ispall) > 0:
                     #print('ispall = ',self.ibc[ioddimat[ispall]])
                     for icheck in ispall:
-                        if True:
+                        jend = max(np.where(self.matid == imat)[0]) 
+                        #print('icheck,jend=',ioddimat[icheck],jend)
+                        if (ioddimat[icheck] < jend-1) & (self.temp[n+2,ioddimat[icheck]] < 2200.):
+                            nextibc = max(self.ibc)+1
+                            print('SPALL imat, ioddimat[icheck], nextibc = ',imat, ioddimat[icheck], nextibc)
+                            self.createinteriorfracture(run,imat,ioddimat[icheck],nextibc)
+                        if False:
                             # check if right next to an existing fracture
-                            lookindex = np.append(ioddimat[icheck],[np.min(ioddimat[icheck])-6,np.min(ioddimat[icheck])-4,np.min(ioddimat[icheck])-2,np.max(ioddimat[icheck])+2, np.max(ioddimat[icheck])+4, np.max(ioddimat[icheck])+6])
+                            lookindex = np.append(ioddimat[icheck],[np.min(ioddimat[icheck])-4,np.min(ioddimat[icheck])-4,np.min(ioddimat[icheck])-2,np.max(ioddimat[icheck])+2, np.max(ioddimat[icheck])+4, np.max(ioddimat[icheck])+4])
                             tmp = np.where(self.ibc[lookindex] != 0)[0]
                             if (len(tmp)==0):
                                 imax = icheck
@@ -1902,22 +2057,45 @@ class DomainClass:
             ioddimat = tmp[tmp %2 == 1] # select only odd indices for zone values
             ########### MIE GRUNEISEN EOS #################
             if (run.ieosid[imat] == 'MGR'):
+                # USE ONE OF THE FOLLOWING TWO OPTIONS
+                # ---
+                if 1:
+                    # use derivative of MGR EOS to calculate sound speed ONLY FOR TIME STEPS AT THIS TIME
+                    # leaving the original alocal for artificial viscosity above
+                    # investigate effects of changing sound speed calc for AV later
+                    # STS: someone needs to check my math here, this is new code v0.6.1
+                    # this sound speed is output so can see sound speed in the MGR model
+                    # if AV sound speed value needs to be stored, make a new output variable
+                    strain = 1.-self.vr[n,ioddimat]
+                    csmgr_determ = self.pres[n,ioddimat]*run.ieos[imat].gamma0*self.rho0[ioddimat]* \
+                             self.vr[n,ioddimat]*self.vr[n,ioddimat]/self.rho0[ioddimat]/self.rho0[ioddimat]
+                    csmgr_drterm = (run.ieos[imat].coefs[0]+2.*run.ieos[imat].coefs[1]*strain+3.*run.ieos[imat].coefs[2]*strain*strain)* \
+                             self.vr[n,ioddimat]*self.vr[n,ioddimat]/self.rho0[ioddimat]
+                    csmgrpos = np.where((csmgr_determ + csmgr_drterm)> 0)[0]
+                    csmgrneg = np.where((csmgr_determ + csmgr_drterm)<=0)[0]
+                    self.alocal[ioddimat[csmgrpos]] = np.sqrt(csmgr_determ[csmgrpos] + csmgr_drterm[csmgrpos])
+                    self.alocal[ioddimat[csmgrneg]] = run.ieos[imat].c0
+                # ---
+                # original Wilkins formulation uses ideal gas sound speed
+                # and limits to cs>c0
                 # use c0 value if greater than a
-                icheck = npwhere(self.alocal[ioddimat] < run.ieos[imat].c0)[0]
-                self.alocal[ioddimat[icheck]] = run.ieos[imat].c0
+                if 0:
+                    icheck = npwhere(self.alocal[ioddimat] < run.ieos[imat].c0)[0]
+                    self.alocal[ioddimat[icheck]] = run.ieos[imat].c0
             ########### SESAME EOS #################
             if (run.ieosid[imat] == 'SES'):
                 # use SES value if greater than a
                 # interpolate for cs in the table using rho and specific internal energy 
                 sescs = run.ieos[imat].sescs(self.rho[ioddimat],self.iev0[n,ioddimat]/self.rho0[ioddimat])
-#                icheck = npwhere(self.alocal[ioddimat] < sescs)[0]
-#                self.alocal[ioddimat[icheck]] = sescs[icheck]
+                # OK for sound speed to fall below reference state value with SES EOS
+                #icheck = npwhere(self.alocal[ioddimat] < sescs)[0]
+                #self.alocal[ioddimat[icheck]] = sescs[icheck]
                 self.alocal[ioddimat] = sescs
             ########### Tillotson EOS #################
             if (run.ieosid[imat] == 'TIL'):
                 for iii in ioddimat:
                     self.alocal[iii] = etab.Till_P(self.rho0[iii]/self.vr[n+2,iii], \
-                                            self.iev0[n,iii]/self.rho0[iii],run.ieos[imat].params)[2]
+                                            self.iev0[n,iii]/self.rho0[iii],run.ieos[imat].params,run.ieos[imat].ecold,calctemp=False)[2]
         a = self.alocal[ioddj]
         # ----------------------------- END SOUND SPEED CALC ------------------
         igood = npwhere(np.square(a)+np.square(b) != 0.)[0]
@@ -2799,25 +2977,27 @@ def readinput_yaml(run,verbose=False):
             run.ieos[imat].c0 = c0.to(config['codeunits']['velocity']).magnitude
             # s1 dimless
             run.ieos[imat].s1 = config[matlist[imat]]['eos']['s1'] # dimless
-            # s2 units time/length
-            s2 = Q_(np.asarray(config[matlist[imat]]['eos']['s2'],dtype='float'),config['units']['s2'])
-            run.ieos[imat].s2 = s2.to(config['codeunits']['s2']).magnitude
+            # no s2 in v0.6.1
             # gamma dimless
             run.ieos[imat].gamma0 = config[matlist[imat]]['eos']['gamma0'] 
             # specific heat capacity cv
             # convert input specific heat capacity to code units and then additional normalization by rho0 in code units
-            # KO code units for cvv0 = eu/cm3/K
+            # KO code units for cvv0 = eu/K/cm3
             spcv = Q_(np.asarray(config[matlist[imat]]['eos']['cv'],dtype='float'),config['units']['sp_heat_cap'])
             cv   = spcv.to(config['codeunits']['sp_heat_cap'])*rho0.to(config['codeunits']['density'])
             run.ieos[imat].cv = cv.magnitude
-            # function to calculate the coefficients for the strain form for the Mie Grueneisen EOS
-            # page 63 in Wilkins book
+            # set the initial temperature in the input file v0.6.1
+            T0 = Q_(np.asarray(config[matlist[imat]]['init']['t0'],dtype='float'),config['units']['temperature'])
+            run.ieos[imat].t0 = T0.to(config['codeunits']['temperature']).magnitude
+            # function to calculate the coefficients for the strain form for the Mie Grueneisen EOS pressure
+            # page 63 in Wilkins book Eq. 3.58
             # P = k1*x + k2*x^2 + k3*x^3 + k4*E [megabar]; x = 1 - relvolume; k2=0 for x<0; k4 = gamma0
             run.ieos[imat].calccoefs() # calculate k1-k4
-            # set the initial temperature
-            run.ieos[imat].t0 = iev0.magnitude/cv.magnitude # K
+            # function to calculate the coefficients for the strain form for the Mie Grueneisen EOS internal energy
+            # page 61 in Wilkins book Eq. 3.54
+            run.ieos[imat].calcecoefs() # calculate eps_00 to eps_04
             # put temperature in the master intialization array
-            run.itempstart = np.append(run.itempstart,iev0.magnitude/cv.magnitude)
+            run.itempstart = np.append(run.itempstart,run.ieos[imat].t0)
         if config[matlist[imat]]['eos']['type'] == 'IDG':
             run.ieosid.append('IDG')
             matnew = IDGClass()
@@ -2828,7 +3008,7 @@ def readinput_yaml(run,verbose=False):
             run.ieos[imat].up0    = up0.to(config['codeunits']['velocity']).magnitude
             run.ieos[imat].rho0   = rho0.to(config['codeunits']['density']).magnitude
             run.ieos[imat].iev0   = iev0.magnitude
-            run.ieos[imat].gamma0 = config[matlist[imat]]['eos']['gamma0']
+            run.ieos[imat].gamma0 = config[matlist[imat]]['eos']['gamma']
             # specific heat capacity cv
             # convert input specific heat capacity to code units and then additional normalization by rho0 in code units
             # KO code units for cvv0 = eu/cm3/K
@@ -2908,12 +3088,24 @@ def readinput_yaml(run,verbose=False):
             ECV = Q_(np.asarray(config[matlist[imat]]['eos']['ECV'],dtype='float'),config['units']['sp_energy'])
             run.ieos[imat].ECV = ECV.to(config['codeunits']['sp_energy']).magnitude*run.ieos[imat].rho0
             # set the initial temperature (K)
-            # no temperature defined for original Tillotson with E=0 at P=0
-            run.ieos[imat].t0 = 0. 
+            # initial temperature corresponds to E=0 at P=0 in the Ivanov/Brundage 2015 estimation for T
+            #print(config[matlist[imat]]['eos'])
+            T0 = Q_(np.asarray(config[matlist[imat]]['init']['t0'],dtype='float'),config['units']['temperature'])
+            run.ieos[imat].t0 = T0.to(config['codeunits']['temperature']).magnitude
             # put temperature in the master intialization array (K)
             run.itempstart = np.append(run.itempstart,run.ieos[imat].t0)
+            # specific heat capacity cv
+            # Tillotson EOS expects energy per unit mass
+            # do not convert to per initial volume code normalization
+            # cv is only used for temperature calculation in Till_P function
+            spcv = Q_(np.asarray(config[matlist[imat]]['eos']['cv'],dtype='float'),config['units']['sp_heat_cap'])
+            cv   = spcv.to(config['codeunits']['sp_heat_cap'])
+            run.ieos[imat].cv = cv.magnitude
             # create the parameter array for Tillotson EOS functions
             run.ieos[imat].fillparams()
+            print('TIL in code units = ',run.ieos[imat].params)
+            # calculate the cold curve for temperature estimate (crude; only valid over small range)
+            run.ieos[imat].calcecold()
         # -----------------------------------------------------------------------
         # Fill in strength model parameters for each material
         if config[matlist[imat]]['str']['type'] == 'HYDRO':
@@ -3170,8 +3362,8 @@ if __name__ == "__main__":
     
     # The fortan code uses an initial time step of 0.001 microseconds; set as input here for code comparison
     # otherwise pyKO has an initialization section that estimates a good first time step
-    filein = './test12/test12-gravity.yml'
-    run(fin=filein,userdtstart=0.001,verbose=True)
+    filein = './inputs/test13/test13-compare-eos.yml'
+    run(fin=filein,verbose=True)
 #    
 ############################################################## 
 ############################################################## 

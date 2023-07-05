@@ -1,5 +1,9 @@
 # CHANGELOG pyKO example inputs
 
+## 2023-07-03
+* Added Test13 notebooks to compare Tillotson, Mie Grueneisen, and tabular EOS. Examples for Al and Fe. Now including temperature calculations.
+* Added Test14 notebook to compare Hosono, iSALE, and Asphaug implementations of Tillotson. Cross check of calculated sound speeds.
+
 ## 2023-06-28
 * Added x-t diagram to test1b jupyter notebook
 

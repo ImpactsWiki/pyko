@@ -5,9 +5,10 @@ Classes and functions for accessing and manipulating tabulated EOS data.
 # IMPORT PYTHON MODULES
 import numpy as np
 #
-#
 # GLOBAL VARIABLE
-__version__ = 'v1.1.4' # 6/24/2023 added load STD NOTENSION table
+__version__ = 'v1.1.5' # 7/1/2023 added temperatures to MGR and TIL-iSALE EOS; 
+#                        fixed logic for iSALE Tillotson; problems with SESAME interpolation near zero pressure and tension
+#__version__ = 'v1.1.4' # 6/24/2023 added load STD NOTENSION table
 #__version__ = 'v1.1.3' # 2/15/2023 added write SESAME EXT table function
 #__version__ = 'v1.1.1' # 2/11/2023 minor print statement removals
 #__version__ = 'v1.1' # 2/6/2023 STS adding ideal gas compatibility
@@ -1497,28 +1498,94 @@ class TillotsonClass:
         self.b     = 0. # b constant [-]
         self.alpha = 0. # alpha constant [-]
         self.beta  = 0. # beta constant [-]    a+b=Gruneisen gamma at rho0
-        self.ND    = 0 # integer; number of density points in grid
-        self.NU    = 0 # integer; number of sp. internal energy points in grid
+        self.cv    = 0. # constant specific heat capacity MJ/K/kg
+        self.t0    = 298. # K
+        self.params = [] # for passing the parameter list to subroutines
+        self.ND    = 0  # integer; number of density points in grid
+        self.NU    = 0  # integer; number of sp. internal energy points in grid
         self.rho   = np.zeros(self.ND)          # g/cm3, density values
         self.U     = np.zeros(self.NU)          # MJ/kg, sp. internal energy values
         self.P     = np.zeros(self.ND*self.NU)  # GPA, pressure(U,rho)
         self.cs    = np.zeros(self.ND*self.NU)  # km/s, sound speed(U,rho)
         self.region= np.zeros(self.ND*self.NU)  # region flag: 1-condensed, 2-interpolated, 3-expanded
-        # self.T add later
-        self.units = 'Units: g/cm3, MJ/kg, GPa, cm/s. 2D arrays are (NU,ND).'
+        self.T     = np.zeros(self.ND*self.NU)  # K temperature
+        self.units = 'Units: g/cm3, MJ/kg, GPa, cm/s, K. 2D arrays are (NU,ND).'
         self.MODELNAME = ''
-        self.hug = EOShugoniot()
+        self.hug   = EOShugoniot()
+        self.ecold = EOScurve() # energy as a function of density (rho>rho0) with initial condition of E=0 at rho0
+    def assignparams(self,tilleos):
+        # index numbers for material parameters in the tilleos array
+        r0 = 0 
+        E0 = 1
+        EIV = 2
+        ECV=3
+        AA=4
+        BB=5
+        a=6
+        b=7
+        alpha=8
+        beta=9
+        cv=10 
+        self.params = tilleos # in MKS
+        self.rho0  = tilleos[r0]/1.e3 # reference density g/m3
+        self.E0    = tilleos[E0]/1.e6 # E0 constant MJ/kg
+        self.EIV   = tilleos[EIV]/1.e6 # specific internal energy of incipient vaporization MJ/kg
+        self.ECV   = tilleos[ECV]/1.e6 # specific internal energy of complete vaporization MJ/kg
+        self.AA    = tilleos[AA]/1.e9 # Bulk modulus K0 GPa
+        self.BB    = tilleos[BB]/1.e9 # B constant GPa
+        self.a     = tilleos[a] # a constant [-]
+        self.b     = tilleos[b] # b constant [-]
+        self.alpha = tilleos[alpha] # alpha constant [-]
+        self.beta  = tilleos[beta] # beta constant [-]    a+b=Gruneisen gamma at rho0
+        self.cv    = tilleos[cv]/1.e6 # constant specific heat capacity MJ/K/kg 
+    def calcecold(self):
+        """ Calculate the internal energy of the cold curve. Passed to Tillotson EOS function with params for temperature. """
+        # start by compressing a factor of 3 with 1000 steps
+        # Use params in mks units
+        nsteps = 100
+        self.ecold.rho = np.arange(nsteps)/nsteps*(2.*self.params[0])+self.params[0] # rho is rho0 to 3*rho0
+        self.ecold.U = np.zeros(nsteps) # initial energy is zero by definition
+        self.ecold.P = np.zeros(nsteps) # initial pressure is zero by definition
+        self.ecold.T = np.zeros(nsteps)+self.t0 # initial temperature is T0 by definition
+        h = self.ecold.rho[1]-self.ecold.rho[0]
+        x0 = self.ecold.rho[0]
+        y  = 0.0
+        for i in range(1, nsteps):
+            #"Apply Runge Kutta Formulas to find next value of y"
+            # Rundage 2015: dE/drho = P(rho,E)/rho^2
+            # Till_P returns [pout,flag,csout,tout]
+            k1 = h * Till_P(x0,y,self.params,self.ecold,calctemp=False)[0]/x0/x0
+            k2 = h * Till_P(x0 + 0.5 * h,y + 0.5 * k1,self.params,self.ecold,calctemp=False)[0]/(x0 + 0.5 * h)/(x0 + 0.5 * h)
+            k3 = h * Till_P(x0 + 0.5 * h,y + 0.5 * k2,self.params,self.ecold,calctemp=False)[0]/(x0 + 0.5 * h)/(x0 + 0.5 * h)
+            k4 = h * Till_P(x0 + h,y + k3,self.params,self.ecold,calctemp=False)[0]/(x0+h)/(x0+h)
+            #k1 = h * dydx(x0, y)
+            #k2 = h * dydx(x0 + 0.5 * h, y + 0.5 * k1)
+            #k3 = h * dydx(x0 + 0.5 * h, y + 0.5 * k2)
+            #k4 = h * dydx(x0 + h, y + k3)
 
+            # Update next value of y
+            y = y + (1.0 / 6.0)*(k1 + 2 * k2 + 2 * k3 + k4)
+            
+            # Update next value of x
+            x0 = x0 + h
+            
+            # update structure arrays
+            self.ecold.rho[i] = x0
+            self.ecold.U[i]   = y
+            self.ecold.P[i]   = Till_P(x0,y,self.params,self.ecold,calctemp=False)[0]
+            #print('Tillotson cold curve: ',i,x0,y,Till_P(x0,y,self.params,self.ecold,calctemp=False)[0])
+        return
     def FillTable(self, matparams=None, modelname=None):
         """Function to populate table with Tillotson EOS. Assumes ND,NU,rho,and U are filled."""
         if matparams is None:
-            print('Must provide a material parameter list [rho0, E0, EIV, ECV, AA, BB, a, b, alpha, beta].')
+            print('Must provide a material parameter list [rho0, E0, EIV, ECV, AA, BB, a, b, alpha, beta, cv].')
             exit(0)
-        # matparams: [rho0, E0, EIV, ECV, AA, BB, a, b, alpha, beta]
-        # units:     [kg/m3, J/kg, J/kg, J/kg, Pa, Pa, [-]x4]
+        # matparams: [rho0, E0, EIV, ECV, AA, BB, a, b, alpha, beta, cv]
+        # units:     [kg/m3, J/kg, J/kg, J/kg, Pa, Pa, [-]x4, J/K/kg]
         # print(self.NU,self.ND)
         self.cs = np.zeros((self.NU,self.ND))
         self.P  = np.zeros((self.NU,self.ND))
+        self.T  = np.zeros((self.NU,self.ND))
         self.region = np.zeros((self.NU,self.ND))
 #        print('Using the iSALE Tillotson implementation.')
         print('Using standard Tillotson implementation (e.g., Hosono et al. 2019, Melosh 1989).')
@@ -1531,11 +1598,58 @@ class TillotsonClass:
                 tmp                = Till_P_Hosono(dens,eng,matparams) # returns [P Pa, flag]
                 self.P[ie,ir]      = tmp[0]/1.e9 # Pa to GPa
                 self.region[ie,ir] = tmp[1] # cold, hot, interpolated regions
-                self.cs[ie,ir]     = Till_SoundSpeed(dens,eng,matparams)/1.E3 # km/s ; function should return m/s but it's not *** CHECK
-                #tmp                = Till_P(dens,eng,matparams) # returns [P Pa, flag, cs]
-                #self.P[ie,ir]      = tmp[0]/1.e9 # Pa to GPa
-                #self.region[ie,ir] = tmp[1] # cold, hot, interpolated regions
-                #self.cs[ie,ir]     = tmp[2]/1.E3 # km/s
+                self.cs[ie,ir]     = Till_SoundSpeed(dens,eng,matparams)/1.E3 # km/s 
+
+    def FillTable_iSALE(self, matparams=None, modelname=None):
+        """Function to populate table with Tillotson EOS. Assumes ND,NU,rho,and U are filled."""
+        if matparams is None:
+            print('Must provide a material parameter list [rho0, E0, EIV, ECV, AA, BB, a, b, alpha, beta, cv].')
+            exit(0)
+        # matparams: [rho0, E0, EIV, ECV, AA, BB, a, b, alpha, beta, cv]
+        # units:     [kg/m3, J/kg, J/kg, J/kg, Pa, Pa, [-]x4, J/K/kg]
+        # print(self.NU,self.ND)
+        self.cs = np.zeros((self.NU,self.ND))
+        self.P  = np.zeros((self.NU,self.ND))
+        self.T  = np.zeros((self.NU,self.ND))
+        self.region = np.zeros((self.NU,self.ND))
+        print('Using the iSALE Tillotson implementation.')
+#        print('Using standard Tillotson implementation (e.g., Hosono et al. 2019, Melosh 1989).')
+        print('Tillotson parameters: ',matparams)
+        # Till_P is expecting mks units
+        for ie in range(0,self.NU):
+            for ir in range(0,self.ND):
+                flag               = 0
+                eng                = self.U[ie]*1.e6 # J/kg
+                dens               = self.rho[ir]*1000. # kg/m3
+                tmp                = Till_P(dens,eng,matparams,self.ecold,calctemp=True) # returns [P Pa, flag]
+                self.P[ie,ir]      = tmp[0]/1.e9 # Pa to GPa
+                self.region[ie,ir] = tmp[1] # cold, hot, interpolated regions
+                self.cs[ie,ir]     = tmp[2]/1.e3 # km/s
+                self.T[ie,ir]      = tmp[3] # K
+                
+    def FillTable_ea(self, matparams=None, modelname=None):
+        """Function to populate table with Tillotson EOS. Assumes ND,NU,rho,and U are filled."""
+        if matparams is None:
+            print('Must provide a material parameter list [rho0, E0, EIV, ECV, AA, BB, a, b, alpha, beta, cv].')
+            exit(0)
+        # matparams: [rho0, E0, EIV, ECV, AA, BB, a, b, alpha, beta, cv]
+        # units:     [kg/m3, J/kg, J/kg, J/kg, Pa, Pa, [-]x4, J/K/kg]
+        # print(self.NU,self.ND)
+        self.cs = np.zeros((self.NU,self.ND))
+        self.P  = np.zeros((self.NU,self.ND))
+        self.T  = np.zeros((self.NU,self.ND))
+        self.region = np.zeros((self.NU,self.ND))
+        print('Using the iSALE Asphaug implementation.')
+        print('Tillotson parameters: ',matparams)
+        for ie in range(0,self.NU):
+            for ir in range(0,self.ND):
+                flag               = 0
+                eng                = self.U[ie]*1.e6 # J/kg
+                dens               = self.rho[ir]*1000. # kg/m3
+                tmp                = tilleos_ea(dens,eng,matparams) # returns [P Pa, flag]
+                self.P[ie,ir]      = tmp[0]/1.e9 # Pa to GPa
+                self.region[ie,ir] = tmp[1] # cold, hot, interpolated regions
+                self.cs[ie,ir]     = tmp[2]/1.e3 # km/s
 
     def calchugoniot(self, r00=None, e0=None, pmax=None, writefilename=None):
         """Function for calculating a Hugoniot from Tillotson EOS table."""
@@ -1556,9 +1670,11 @@ class TillotsonClass:
 
         ie0 = int(np.round(np.interp(e0,self.U,np.arange(self.NU)))) # uses nearest value if e0 not in array
         ir0 = int(np.round(np.interp(r00,self.rho,np.arange(self.ND)))) # uses nearest value if r0 not in the array
+        print('Hug ie0,ir0=',ie0,ir0)
         r0  = self.rho[ir0] # g/cm^3
         p0  = self.P[ie0,ir0] # GPa
         e0  = self.U[ie0] # MJ/kg
+        t0  = self.t0
         up0 = 0. # no initial particle velocity km/s
         us0 = self.cs[ie0,ir0] # km/s use sound velocity for initial
         cs0 = self.cs[ie0,ir0] # km/s use sound velocity for initial
@@ -1569,16 +1685,18 @@ class TillotsonClass:
         self.hug.up = np.append(self.hug.up, up0)
         self.hug.us = np.append(self.hug.us, us0)
         self.hug.cs = np.append(self.hug.cs, cs0)
-        
-        #for iir in range(ir0+1,self.ND):
-        iir=ir0+1
-        pnew=p0
-        while pnew<pmax:
+        self.hug.T = np.append(self.hug.T, t0)
+        #iir=ir0+1
+        #pnew=p0
+        #while pnew<pmax:
+        #print(iir,pnew,self.P[ie0::,iir],r0,self.rho[iir],e0,self.U[ie0::])
+        for iir in range(ir0+1,self.ND):
             ediff =0.5*(self.P[ie0::,iir]+p0)*(1./r0-1./self.rho[iir])+e0 -(self.U[ie0::])  # MJ/kg
             # np.interp wants x values increasing
             pnew = np.interp(0.,np.flip(ediff),np.flip(self.P[ie0::,iir]))
             enew = np.interp(0.,np.flip(ediff),np.flip(self.U[ie0::]))
             csnew = np.interp(0.,np.flip(ediff),np.flip(self.cs[ie0::,iir]))
+            tnew = np.interp(0.,np.flip(ediff),np.flip(self.T[ie0::,iir]))
             upnew = np.sqrt((pnew-p0)*(1./r0-1./self.rho[iir]))
             usnew = (1./r0)*np.sqrt((pnew-p0)/(1./r0-1./self.rho[iir]))
             #print(self.rho[iir],pnew,enew,upnew,usnew)
@@ -1588,10 +1706,28 @@ class TillotsonClass:
             self.hug.up = np.append(self.hug.up, upnew)
             self.hug.us = np.append(self.hug.us, usnew)
             self.hug.cs = np.append(self.hug.cs, csnew)
-            iir += 1
+            self.hug.T = np.append(self.hug.T, tnew)
+            #print(iir,pnew)
+            #iir += 1
         self.hug.NH=len(self.hug.P)
         self.hug.units='units: rho g/cm3, P GPa, U MJ/kg, Up km/s, Us km/s, cs km/s'
         print('Done calculating Hugoniot with Tillotson EOS table.')
+    def __str__(self):
+        """ Print the Tillotson EOS parameters """
+        return f'\n{self.MODELNAME} Tillotson EOS parameters [SESAME Units]: \n' + \
+               f'   rhoref: {self.rho0} \n' + \
+               f'   a:      {self.a} \n' + \
+               f'   b:      {self.b} \n' + \
+               f'   AA:     {self.AA} \n' + \
+               f'   BB:     {self.BB} \n' + \
+               f'   E0:     {self.E0} \n' + \
+               f'   alpha:  {self.alpha} \n' + \
+               f'   beta:   {self.beta} \n' + \
+               f'   Eiv:    {self.EIV} \n' + \
+               f'   Ecv:    {self.ECV} \n' + \
+               f'   cv:     {self.cv} \n' + \
+               f' params [mks]: {self.params} \n'
+#
 #
 ###########################################################################################
 ########## TILLOTSON EOS FUNCTIONS
@@ -1662,24 +1798,27 @@ def Till_P_Hosono(dens,eng,tilleos):
     pmin=1.e-7
     
     # option 1
-    if ( (dens>=tilleos[r0]) or (eng < tilleos[EIV]) ):
+    if ( (dens>tilleos[r0]) or (eng < tilleos[EIV]) ):
         # condensed region
         flag=1
         pco = Till_P_co(dens,eng,tilleos)
-        if pco < pmin:
-            pout = pmin
-        else:
-            pout = pco
+        #if pco < pmin:
+        #    pout = pmin
+        #else:
+        #    pout = pco
+        # allow tension
+        pout = pco
         return [pout,flag]
     else:
-        if ( (dens < tilleos[r0]) and (eng > tilleos[ECV]) ):
+        if ( (dens < tilleos[r0]) and (eng >= tilleos[ECV]) ):
             # expanded region
             flag=3
             pex = Till_P_ex(dens,eng,tilleos)
-            if pex < pmin:
-                pout = pmin
-            else:
-                pout = pex
+            #if pex < pmin:
+            #    pout = pmin
+            #else:
+            #    pout = pex
+            pout=pex
             return [pout,flag]
         else:
             # interpolated region
@@ -1690,12 +1829,12 @@ def Till_P_Hosono(dens,eng,tilleos):
             #if Pco < pmin:
             #    Pco = pmin
             Pint = ((eng-tilleos[EIV])*Pex+(tilleos[ECV]-eng)*Pco)/(tilleos[ECV]-tilleos[EIV])
-            if Pint < pmin:
-                pout = pmin
-            else:
-                pout = Pint
+            #if Pint < pmin:
+            #    pout = pmin
+            #else:
+            #    pout = Pint
+            pout=Pint
             return [pout,flag]
-        
     '''    
     # option 2
     if ( (dens>=tilleos[r0]) or (eng < tilleos[EIV]) ):
@@ -1721,7 +1860,6 @@ def Till_P_Hosono(dens,eng,tilleos):
     return [pout,flag]
     '''
     # END HOSONO TILLOTSON FUNCTION
-
 def Till_dPdrho(dens,eng,tilleos):
     drho=0.0001
     a = Till_P_Hosono(dens+drho,eng,tilleos)
@@ -1730,59 +1868,71 @@ def Till_dPdrho(dens,eng,tilleos):
 
 def Till_dPdu(dens,eng,tilleos):
     ddu=0.0001
-    a=Till_P_Hosono(dens,eng+ddu,tilleos) 
-    b=Till_P_Hosono(dens,eng-ddu,tilleos) 
+    a=Till_P_Hosono(dens,eng+ddu,tilleos)
+    b=Till_P_Hosono(dens,eng-ddu,tilleos)
     return (a[0] - b[0])/(2.*ddu)
 
 def Till_SoundSpeed(dens,eng,tilleos):
-    if dens<= 100.:
-        cs = 1.e-8 # m/s
-    else:
-        tmp = Till_P_Hosono(dens,eng,tilleos)
-        cs = tmp[0]/(dens*dens)*Till_dPdu(dens,eng,tilleos) + Till_dPdrho(dens,eng,tilleos)
-        if cs < 0.:
-            cs = 0.
-        cs = np.sqrt(cs + 1.e-16)
+    #if dens<= 100.:
+    #    cs = 1.e-8 # m/s
+    #else:
+    ptil = Till_P_Hosono(dens,eng,tilleos)[0]
+    cs2   = ptil/(dens*dens)*Till_dPdu(dens,eng,tilleos) + Till_dPdrho(dens,eng,tilleos)
+    if cs2 < 0.:
+        cs2 = np.abs(ptil/dens) # better to use ideal gas approx
+    cs = np.sqrt(cs2)
     return cs
 # END HOSONO FUNCTIONS
 # ------------------------------
-# iSALE implementation of Tillotson
-def Till_P(rin,ein,tilleos):
-    # returns [pout,flag,csout]
+# iSALE Dellon implementation of Tillotson --> now substantially modified
+# added cold curve and temperature calcs 2023-06-30 STS
+# region logic fixed and temp variables removed sts 7/3/2023
+
+def Till_P(rin,ein,tilleos,ecold,calctemp=True):
+    """ tilleos is the params list for the material
+    ecold is an EOScurve object with the cold curve at t0
+    returns [pout,flag,csout,tout]
+    """
     # output variables
-    flag=0 # flag for the region of the EOS
-    pout=0.
-    csout=0.
-    # tout = 0. # add temperature later
+    flag  = 0  # flag for the region of the EOS
+    pout  = 0.
+    csout = 0.
+    tout  = 0.
     #
     # iSALE implementation of Tillotson
-    r0 = 0 # index numbers for material parameters in the tilleos array
-    E0 = 1
-    EIV = 2
-    ECV=3
-    AA=4
-    BB=5
-    a=6
-    b=7
-    alpha=8
-    beta=9
+    # index numbers for material parameters in the tilleos array
+    # should all be in code units/self-consistent units
+    r0    = 0 
+    E0    = 1
+    EIV   = 2
+    ECV   = 3
+    AA    = 4
+    BB    = 5
+    a     = 6
+    b     = 7
+    alpha = 8
+    beta  = 9
+    cv    = 10 # cv is converted to code units eu/K/(original volume cm3)
     #
     # if density is zero or negative return 0 pressure
     if (rin <= 0.):
         pout  = 0.
         csout = 0.
+        tout = 0.
         flag  = -1
-        return [pout,flag,csout]
+        return [pout,flag,csout,tout]
     #
     # define intermediate variables
     eta  = rin/tilleos[r0]
     mu   = eta - 1.0
     imu  = tilleos[r0]/rin - 1.0
-    temp = tilleos[E0] * np.power(eta,2.)
-    if (temp > 0.):
-        erel = ein/temp
-    else:
-        erel = 0.
+    #temp = tilleos[E0] * np.power(eta,2.)
+    erel = ein/(tilleos[E0] * np.power(eta,2.))
+    #if (temp > 0.):
+    #    erel = ein/temp
+    #else:
+    #    # avoids divide by zero
+    #    erel = 0.
     ierel = 1./(erel + 1.)
     grun  = tilleos[a] + tilleos[b]*ierel
     gterm = tilleos[a] * rin * ein
@@ -1792,54 +1942,86 @@ def Till_P(rin,ein,tilleos):
     ph = 0.
     pc = 0.
     #
-    if ( (eta < 1.) and (ein >= tilleos[EIV]) ):
-        # expanded region above EIV
+    #if ( (eta < 1.) & (ein >= tilleos[ECV]) ):
+    # calculate ph for expanded region above ECV
+    #flag = 3
+    #tmp  = tilleos[alpha]*np.power(imu,2.)
+    exp_a = np.exp(-tilleos[alpha]*np.power(imu,2.))
+    #if (tmp < 100.): # why 100? need to make some plots on this limit
+    #    exp_a = np.exp(-tmp)
+    #else:
+    #    exp_a = 0.
+    #tmp = tilleos[beta]*imu
+    exp_b = np.exp(-tilleos[beta]*imu)
+    #if (tmp < 100.): # check this limit
+    #    exp_b = np.exp(-tmp)
+    #else:
+    #    exp_b = 0.
+    # compute "hot pressure"
+    ph  = gterm + (eterm + tilleos[AA]*mu*exp_b)*exp_a  
+    #
+    # compute sound speed from derivatives
+    dpre2   = tilleos[b]*ein*ierel*(1.+2.*(tilleos[alpha]*imu/eta + erel*ierel))*exp_a
+    dpre3   = (tilleos[AA]/rin)*(1.+(mu/np.power(eta,2.))*(tilleos[beta]+2.*tilleos[alpha]*imu))*exp_a*exp_b
+    dpreh   = tilleos[a]*ein+dpre2+dpre3
+    dperh   = rin*(tilleos[a]+tilleos[b]*ierel*(1.-erel*ierel)*exp_a)
+    c_dperh = (ph/np.power(rin,2.))*dperh
+    cs2_h   = dpreh + c_dperh
+    cs2     = cs2_h 
+
+    #if ( (eta >= 1.) or (ein < tilleos[EIV]) ):
+    # compressed region or expanded below energy of complete vaporization
+    # should update this flag and calculate rho_IV for proper use of the low energy expansion
+    if (eta >= 1.):
+        #flag=1
+        # low energy compression
+        b_temp = tilleos[BB] # in compression without cubic 
+    else:
+        #flag=4
+        # low energy expansion
+        # different versions are implemented
+        # Brundage 2013 uses zero
+        # iSALE Dellen uses AA or suggests BB if BB<AA
+        # obviously needs some comparisons to data to know what to do here
+        # b_temp = tilleos[AA] # in expansion
+        b_temp = 0.0 # using Brundage option for simplicity at this point
+    #pcold = (tilleos[AA] * mu) + (b_temp * np.power(mu,2.))
+    pcold = (tilleos[AA] * mu) + (tilleos[BB] * np.power(mu,2.))
+    pc    = gterm + eterm + pcold
+    # allow tension for pyKO
+    #if (pc < 0.):
+    #    pc=1.e-10
+    #
+    # compute sound speed from derivatives
+    dprec   = (tilleos[AA]+2.*b_temp*mu)/tilleos[r0] + ein*(grun+2.*tilleos[b]*erel*ierel*ierel)
+    dperc   = rin * (grun-tilleos[b]*erel*ierel*ierel)
+    c_dperc = (pc/(np.power(rin,2.)))*dperc
+    cs2_c   = dprec + c_dperc
+    cs2     = cs2_c
+    
+    if calctemp:
+        # Estimate the temperature for rho>rho0
+        # extract the cold curve energy for the current density
+        # ecold needs to be in same units as this function to work
+        ecold_rin = np.interp(rin,ecold.rho,ecold.U)
+        tout=ecold.T[0]+(ein-ecold_rin)/tilleos[cv]
+        #print(rin,ein,ecold_rin,tilleos[cv],tout)
+
+    # Figure out the right region
+    if ( (eta < 1.) & (ein >= tilleos[ECV]) ):
+        # expanded region above ECV
         flag = 3
-        tmp  = tilleos[alpha]*np.power(imu,2.)
-        if (tmp < 100.):
-            exp_a = np.exp(-tmp)
-        else:
-            exp_a = 0.
-        tmp = tilleos[beta]*imu
-        if (tmp < 100.):
-            exp_b = np.exp(-tmp)
-        else:
-            exp_b = 0.
-        # compute "hot pressure"
-        ph  = gterm + (eterm + tilleos[AA]*mu*exp_b)*exp_a  
-        #
-        # compute sound speed from derivatives
-        dpre2   = tilleos[b]*ein*ierel*(1.+2.*(tilleos[alpha]*imu/eta + erel*ierel))*exp_a
-        dpre3   = (tilleos[AA]/rin)*(1.+(mu/np.power(eta,2.))*(tilleos[beta]+2.*tilleos[alpha]*imu))*exp_a*exp_b
-        dpreh   = tilleos[a]*ein+dpre2+dpre3
-        dperh   = rin*(tilleos[a]+tilleos[b]*ierel*(1.-erel*ierel)*exp_a)
-        c_dperh = (ph/np.power(rin,2.))*dperh
-        cs2_h   = dpreh + c_dperh
-        cs2     = cs2_h 
-    #
-    if ( (eta >= 1.) or (ein < tilleos[ECV]) ):
-        # compressed region or expanded below energy of complete vaporization
-        flag = 1
+        cs2  = cs2_h 
+        pout = ph
+    if ( (eta >= 1.) or (ein < tilleos[EIV]) ):
+        cs2  = cs2_c
+        pout = pc
         if (eta >= 1.):
-            b_temp = tilleos[BB] # in compression
+            flag=1
         else:
-            b_temp = tilleos[AA] # in expansion -- why does iSALE do this?
-        pcold = (tilleos[AA] * mu) + (b_temp * np.power(mu,2.))
-        pc    = gterm + eterm + pcold
-        # allow tension for pyKO
-        #if (pc < 0.):
-        #    pc=1.e-10
-        #
-        # compute sound speed from derivatives
-        dprec   = (tilleos[AA]+2.*b_temp*mu)/tilleos[r0] + ein*(grun+2.*tilleos[b]*erel*ierel*ierel)
-        dperc   = rin * (grun-tilleos[b]*erel*ierel*ierel)
-        c_dperc = (pc/(np.power(rin,2.)))*dperc
-        cs2_c   = dprec + c_dperc
-        cs2     = cs2_c
+            flag=4
     #
-    pout = pc + ph
-    #
-    if (ph*pc != 0.):    
+    if (ein > tilleos[EIV]) & (ein < tilleos[ECV]) & (eta < 1.):
         # interpolated region
         flag=2
         pout = ((ein-tilleos[EIV])*ph+(tilleos[ECV]-ein)*pc)/(tilleos[ECV]-tilleos[EIV])
@@ -1858,9 +2040,122 @@ def Till_P(rin,ein,tilleos):
     if cs2>0:
         csout = np.sqrt(cs2)
     else:
-        csout = np.sqrt(tilleos[AA]/tilleos[r0])
-    return [pout,flag,csout]
+        #csout = np.sqrt(tilleos[AA]/tilleos[r0])
+        # use ideal gas approximation when low density limit?
+        csout = np.sqrt(np.abs(pout/rin))
+    return [pout,flag,csout,tout]
     # END OF TILLOTSON EOS ISALE IMPLEMENTATION FUNCTIONS
+##------------------------------
+## Erik Asphaug Tillotson Routine converted from tilleos.f 7/3/2023
+## Did not have temperature implemented
+## Using this to cross-check the sound speed derivates with iSALE version
+def tilleos_ea(rin,ein,tilleos):
+    # tilleos is the params list for the material
+    # returns [pout,flag,csout]
+    # initialize output variables as zeros
+    # Tillotson region flag: 1-condensed, 2-interpolated, 3-expanded, 4-low energy expansion
+    flag  = 0  # flag for the region of the EOS
+    pout  = 0. # P(rin,ein)
+    csout = 0. # cs(rin,ein)
+
+    # Index numbers for tilleos array; cv=10 not used here
+    r0    = 0 # index numbers for material parameters in the tilleos array
+    E0    = 1
+    EIV   = 2
+    ECV   = 3
+    AA    = 4
+    BB    = 5
+    a     = 6
+    b     = 7
+    alpha = 8
+    beta  = 9
+    
+    # assign Tillotson parameters into Asphaug variable names
+    rozn    = tilleos[r0]    # rozero[imat]
+    ezn     = tilleos[E0]    # uzero[imat]
+    capan   = tilleos[AA]    # capa[imat]
+    esn     = tilleos[EIV]   # es[imat]
+    espn    = tilleos[ECV]   # esp[imat]
+    difesn  = espn-esn
+    capbn   = tilleos[BB]    # capb[imat]
+    smallaj = tilleos[a]     # smalla[imat]
+    smallbj = tilleos[b]     # smallb[imat]
+    alphaj  = tilleos[alpha] # alpha[imat]
+    betaj   = tilleos[beta]  # beta[imat]
+    
+    ui    = ein
+    rhoi  = rin
+    rhoi2 = rin*rin
+    eta   = rhoi/rozn
+    xmu   = eta - 1.
+    rap   = rozn/rhoi
+    
+    # condensed phase, compute pressure and sound speed
+    p1 = smallbj/(ui/(ezn*eta*eta) + 1.)
+    pressc = (smallaj + p1) * ui * rhoi + capan * xmu + capbn * xmu * xmu
+
+    p1 = ui/(ezn*eta*eta) + 1.
+    c2 = p1*p1
+    c3 = p1 - 1.
+    c4 = smallbj * ui * (3. * c3 + 1.) / c2
+    dpdi = smallaj * rhoi + smallbj * rhoi / c2
+    dpdrho = smallaj * ui + capan / rozn + 2. * capbn * xmu / rozn + c4
+    cvelc = dpdrho + dpdi * pressc / rhoi2
+    
+    # expanded phase, compute pressure and sound speed
+    # for now, keep original Asphaug lower value limits
+    p1 = ui/ezn/eta**2 + 1.
+    p2 = smallaj * ui * rhoi
+    p3 = smallbj * ui * rhoi / p1
+    p4 = capan * xmu
+    vow = 1. / eta
+    p6 = betaj * (vow - 1.)
+    # changed value limit from 70 to 100 to match iSALE cross check
+    p6 = min(p6, 100.)
+    p6 = np.exp(-p6)
+    p7 = alphaj * (vow - 1.) ** 2
+    p7 = min(p7, 100.)
+    p7 = np.exp(-p7)
+    pressv = p2 + (p3 + p4 * p6) * p7
+
+    c1 = smallaj * ui
+    c2 = p1 ** 2
+    c3 = p1 - 1.
+    c4 = smallbj * ui * (3. * c3 + 1.) / c2
+    c5 = p6 * p7 * capan
+    c6 = 2. * alphaj * (vow - 1.)
+    dpdrho = c1 + p7 * c4 + p7 * p3 * rozn * c6 / rhoi2 + c5 * (1. / rozn + xmu * rozn / rhoi2 * (c6 + betaj))
+    dpdi = smallaj * rhoi + p7 / c2 * smallbj * rhoi
+    cvelv = dpdrho + dpdi * pressv / rhoi2
+    if cvelv < 0.: 
+        cvelv = 0.
+
+    # pick up the right state
+    # default is condensed region
+    flag    = 1
+    pri     = pressc
+    vsoundi = cvelc
+    if rap >= 1. and ui >= espn:
+        # expanded region
+        flag    = 3 
+        pri     = pressv
+        vsoundi = cvelv
+    if rap >= 1. and ui > esn and ui < espn:
+        # interpolated region
+        flag    = 2
+        pri     = (pressv * (ui - esn) + pressc * (espn - ui)) / difesn
+        vsoundi = (cvelv * (ui - esn) + cvelc * (espn - ui)) / difesn
+
+    # do not limit the sound speed for now; cross checking with iSALE
+    #cmin = .25 * capan / rozn
+    #vsoundi = max(cmin, vsoundi)
+    
+    pout  = pri
+    if vsoundi < 0.:
+        vsoundi = np.abs(pout/rin)
+    csout = np.sqrt(vsoundi)
+    return [pout,flag,csout]
+#################
 ####################################################################################
 ### END eostable.py FILE ###
 ####################################################################################
