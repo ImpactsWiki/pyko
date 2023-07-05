@@ -1994,8 +1994,8 @@ class DomainClass:
         #
         for imat in np.arange(run.nmat):
             # Do not check for fractures if the material is not Von Mises material. DEBUG stsm check fracture conditions
-            #if (run.istrid[imat] == 'VM'):
-            if False:
+            if (run.istrid[imat] != 'HYDRO'):
+            # if False:
                 # select interior array points for this material
                 tmp = npwhere((self.matid == imat) & (self.ibc == 0))[0]
                 ioddimat = tmp[tmp %2 == 1] # select only odd indices for zone values
