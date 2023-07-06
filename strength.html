@@ -327,6 +327,7 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#von-mises-strength">Von Mises strength</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#steinberg-guinan-strength-model">Steinberg-Guinan strength model</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hydrodynamic-material">Hydrodynamic material</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fracture-and-void-space">Fracture and void space</a></li>
 </ul>
@@ -356,6 +357,25 @@ document.write(`
 </pre></div>
 </div>
 </section>
+<section id="steinberg-guinan-strength-model">
+<h2>Steinberg-Guinan strength model<a class="headerlink" href="#steinberg-guinan-strength-model" title="Permalink to this headline">#</a></h2>
+<p>A very beta version of the Steinberg-Guinan strength model is in v0.6.1x-dev based on Wilkins book. It needs to be debugged. See Test15 notebook.</p>
+<p>Example configuration file entry (mks):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mat1</span><span class="p">:</span>
+    <span class="nb">str</span><span class="p">:</span>
+        <span class="n">name</span>   <span class="p">:</span> <span class="s1">&#39;Al-Wilkins-SG&#39;</span>
+        <span class="nb">type</span>   <span class="p">:</span> <span class="s1">&#39;SG&#39;</span>
+        <span class="n">Y0</span>     <span class="p">:</span> <span class="mf">0.29E9</span>
+        <span class="n">Ymax</span>   <span class="p">:</span> <span class="mf">0.68E9</span>
+        <span class="n">beta</span>   <span class="p">:</span> <span class="mf">125.0</span>
+        <span class="n">n</span>      <span class="p">:</span> <span class="mf">0.1</span>
+        <span class="n">b</span>      <span class="p">:</span> <span class="mf">8.0</span>
+        <span class="n">h</span>      <span class="p">:</span> <span class="mf">6.2E-4</span>
+        <span class="n">Tm0</span>    <span class="p">:</span> <span class="mf">1220.0</span>
+        <span class="n">mu0</span>    <span class="p">:</span> <span class="mf">27.6E9</span>
+</pre></div>
+</div>
+</section>
 <section id="hydrodynamic-material">
 <h2>Hydrodynamic material<a class="headerlink" href="#hydrodynamic-material" title="Permalink to this headline">#</a></h2>
 <p>A hydrodynamic material (shear modulus <span class="math notranslate nohighlight">\(G=0\)</span>) is indicated with this configuration file entry:</p>
@@ -367,9 +387,10 @@ document.write(`
 </section>
 <section id="fracture-and-void-space">
 <h2>Fracture and void space<a class="headerlink" href="#fracture-and-void-space" title="Permalink to this headline">#</a></h2>
-<p>Dynamic fracture is implemented.</p>
-<p>Fracture requires the Mie-Grueneisen EOS or a tabular EOS with a tension region.</p>
-<p>pfrac is the fracture stress. nrhomin is the maximum distension (rhomin/rhoref). The default value for nrhomin is 0.8.</p>
+<p>Dynamic fracture is implemented as an optional feature. Fracture needs development to be more stable or ignored under extreme conditions.</p>
+<p>Fracture requires an EOS with a tension region.</p>
+<p>The fracture algorithm is not used if the frac input block is not included. Comment out or remove to prevent facture.</p>
+<p>Input parameters: pfrac is the fracture stress. nrhomin is the maximum distension (rhomin/rhoref). The default value for nrhomin is 0.8.</p>
 <p>Example configuration file entry (mks):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mat1</span><span class="p">:</span>
     <span class="n">frac</span><span class="p">:</span>
@@ -451,6 +472,7 @@ The full convergence loop for contact time should be implemented in the future.<
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#von-mises-strength">Von Mises strength</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#steinberg-guinan-strength-model">Steinberg-Guinan strength model</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hydrodynamic-material">Hydrodynamic material</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fracture-and-void-space">Fracture and void space</a></li>
 </ul>

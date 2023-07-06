@@ -13,6 +13,7 @@ This code was developed from the book <a href="https://link.springer.com/book/10
     * Free: zero pressure
 * Elastic-plastic model
     * Von Mises
+    * Steinberg-Guinan (very beta version; needs validation)
 * Interfaces
     * Initial gaps
     * Dynamic fracture
@@ -41,6 +42,7 @@ This code was developed from the book <a href="https://link.springer.com/book/10
 * Absorbing boundary condition
 * Numba performance enhancements (this code is about 10x slower than fortran)
 * Thermal diffusion
+* MGR EOS that is more flexible with the formulations for the Hugoniot and gamma(V)
 
 ## pyKO source files
 
@@ -89,3 +91,5 @@ Example input files are included with Jupyter Notebooks, for training and visual
 * Test 13: Compare MGR/TIL/SES Al plate impact
 * Test 13b: Compare MGR/TIL/SES Fe plate impact
 * Test 14: Compare different Tillotson EOS functions; compare MGR/TIL/SES Fe Hugoniots and cold curves
+* Test 15: Steinberg-Guinan strength model plate impact
+

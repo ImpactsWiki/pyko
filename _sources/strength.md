@@ -32,6 +32,26 @@ mat1:
 ```
 
 
+## Steinberg-Guinan strength model
+
+A very beta version of the Steinberg-Guinan strength model is in v0.6.1x-dev based on Wilkins book. It needs to be debugged. See Test15 notebook.
+
+Example configuration file entry (mks):
+```
+mat1:
+    str:
+        name   : 'Al-Wilkins-SG'
+        type   : 'SG'
+        Y0     : 0.29E9
+        Ymax   : 0.68E9
+        beta   : 125.0
+        n      : 0.1
+        b      : 8.0
+        h      : 6.2E-4
+        Tm0    : 1220.0
+        mu0    : 27.6E9
+```
+
 
 ## Hydrodynamic material
 
@@ -44,11 +64,13 @@ mat1:
 
 ## Fracture and void space
 
-Dynamic fracture is implemented.
+Dynamic fracture is implemented as an optional feature. Fracture needs development to be more stable or ignored under extreme conditions.
 
-Fracture requires the Mie-Grueneisen EOS or a tabular EOS with a tension region.
+Fracture requires an EOS with a tension region.
 
-pfrac is the fracture stress. nrhomin is the maximum distension (rhomin/rhoref). The default value for nrhomin is 0.8.
+The fracture algorithm is not used if the frac input block is not included. Comment out or remove to prevent facture.
+
+Input parameters: pfrac is the fracture stress. nrhomin is the maximum distension (rhomin/rhoref). The default value for nrhomin is 0.8.
 
 Example configuration file entry (mks):
 ```
