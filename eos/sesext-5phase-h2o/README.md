@@ -23,7 +23,7 @@ The IDL save file is in NIST units: K, MPa, kg/m3, kJ/kg
 
 The 301-SESAME style table is in: K, GPa, g/cm3, MJ/kg, MJ/kg/K
 
-In the h2o_table_v8.3bNT.txt file, the format is a 201 style table except that the Helmholtz free energy has been replaced with specific entropy. 
+In the h2o_table_v8.3bNT.txt file, the format is a 301 style table except that the Helmholtz free energy has been replaced with specific entropy. 
 
 The file 5PhaseEOS.zip contains both a no-tension table and a tension table in v8.0 gridding (no phase info).
 
