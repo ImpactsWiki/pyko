@@ -1,6 +1,10 @@
 # pyKO CHANGELOG
 https://github.com/ImpactsWiki/pyko
 
+## v0.6.x-dev 2023-07-05 in progress
+* Beta version of Steinberg-Guinan model
+* Fracture algorithm not used if the fracture input block is not used
+
 ## v0.6.1 2023-07-04 Update
 
 * Added constant heat capacity temperature to Mie-Grueneisen EOS; initialize positive temperature with zero internal energy

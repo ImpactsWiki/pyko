@@ -22,6 +22,7 @@ CHANGELOG
 see CHANGELOG.md in GitHub repo
 
 VERSIONS
+    2023-07-05: v0.6.x in progress adding plastic strain and SG strength model
     2023-07-04: v0.6.1 - added temperatures to TIL and MGR EOS models. Bug fixes.
     2023-06-27: v0.6 first public release for beta testing
 """
@@ -56,7 +57,7 @@ with warnings.catch_warnings():
     Q_([])
 #
 # GLOBAL VARIABLE
-__version__ = 'v0.6.1-2023-07-04' 
+__version__ = 'v0.6.x-dev-2023-07-05' 
 #
 ############################################################## 
 # KO CODE UNITS FROM WILKINS BOOK
@@ -84,6 +85,7 @@ __version__ = 'v0.6.1-2023-07-04'
 # Constitutive model names
 #           'HYDRO' Hydrodynamic; shear modulus=0
 #           'VM'    Von Mises Yield
+#           'SG'    Steinberg-Guinan strength model v0.6.2+
 #                   more strength models coming later
 #            Dynamic fracture and void closure is implemented in v0.5+
 #
@@ -820,27 +822,32 @@ class SteinbergGuinanClass:
         self.h     = 0.0
         self.Tm0   = 0.0
         self.mu0   = 0.0
+        self.gamm0 = 0.0
     def __str__(self):
         """ Print Steinberg-Guinan material parameters """
         return f'\n{self.name} Steinberg-Guinan parameters [code units]: \n' + \
             f'   Yield stress: {self.Y0} \n' + \
             f'   Max yield stress: {self.Ymax} \n' + \
-            f'   b: {self.b} \n' + \
-            f'   n: {self.n} \n' + \
-            f'   h: {self.h} \n' + \
+            f'   beta:             {self.beta} \n' + \
+            f'   n:                {self.n} \n' + \
+            f'   b:                {self.b} \n' + \
+            f'   h:                {self.h} \n' + \
             f'   Melt temperature: {self.Tm0} \n' + \
-            f'   Shear modulus: {self.mu0} \n'
+            f'   Shear modulus:    {self.mu0} \n' + \
+            f'   g0 (from EOS):    {self.gamma0} \n'
     #
 class FractureClass:
     """ Fracture strength class. Fracture requires -P > pfrac and rho < rhomin*rhoref. """
     def __init__(self):
-        self.name     = ''  # option string for fracture parameters
-        self.pfrac    = 0.  # fracture pressure; fracture requires -P > pfrac
-        self.nrhomin   = 0.8  # normalized maximum distension factor; fracture requires rho < (nrhomin*rhoref); usually 0.8-0.95
+        self.name     = ''     # optional string to describe fracture parameters
+        self.usefrac  = False  # Boolean to enter fracture code section; default is fracture is off unless found in the input parameters file
+        self.pfrac    = 1.E99  # fracture pressure; fracture requires -P > pfrac
+        self.nrhomin  = 0.8    # normalized maximum distension factor; fracture requires rho < (nrhomin*rhoref); usually 0.8-0.95
     def __str__(self):
         """ Fracture parameters """
         return f'\n{self.name} Fracture parameters [code units]: \n' + \
-            f'   Fracture pressure: {self.pfrac} \n' + \
+            f'   Fracture is turned on:                       {self.usefrac} \n' + \
+            f'   Fracture pressure:                           {self.pfrac} \n' + \
             f'   Fracture maximum distension (rhomin/rhoref): {self.nrhomin}'
     #        
 class BCClass:
@@ -905,6 +912,12 @@ class OutputClass:
         #self.q        = np.zeros(0) # artificial viscosity Mbar
         #self.eps1     = np.zeros(0) # velocity strain dup/dpos, per microsec
         #self.eps2     = np.zeros(0) # velocity strain up/pos, per microsec
+        # plastic strain variables
+        self.epsip1   = np.zeros(0) # incremental plastic strain in x dir
+        self.epsip2   = np.zeros(0) # incremental plastic strain in y dir
+        self.epsip3   = np.zeros(0) # incremental plastic strain in z dir
+        self.epstrain = np.zeros(0) # effective plastic strain
+        self.eestrain = np.zeros(0) # accumulated total elastic strain
         # these variables are evaluated at n=3; full time step ahead
         #self.beta     = np.zeros(0) # (sigmar-sigmao)/(0.5 dpos)*rho = beta in Wilkins
         #self.s1       = np.zeros(0) # s1 stress deviator deriv = 2G(deps1-dvr/vr/3)
@@ -914,7 +927,8 @@ class OutputClass:
         self.dtminj   = np.zeros(0) # calculated minimum time step
         # variables in time only - n
         #self.ibc      = np.zeros(0,dtype='int') # boundary condition id number, integer
-        #self.yld      = np.zeros(0) # yield stress
+        self.yld      = np.zeros(0) # yield stress
+        self.mu       = np.zeros(0) # shear modulus
         self.pfrac    = np.zeros(0) # fracture stress
         #self.deltaz   = np.zeros(0) # distortion energy Mbar
         self.alocal   = np.zeros(0) # sound speed; intermediate variable for AV
@@ -938,6 +952,8 @@ class OutputClass:
                '  j:      (dimless)' + \
               f'  entropy:{self.entropy.units} \n' + \
               f'  dtminj: {self.dtminj.units} \n' + \
+              f'  yld:    {self.yld.units} \n' + \
+              f'  mu:     {self.mu.units} \n' + \
               f'  pfrac:  {self.pfrac.units} \n' + \
               f'  alocal: {self.alocal.units} \n'
               )
@@ -972,6 +988,11 @@ class DebugClass:
         self.q        = np.zeros(0) # artificial viscosity Mbar
         self.eps1     = np.zeros(0) # velocity strain dup/dpos, per microsec
         self.eps2     = np.zeros(0) # velocity strain up/pos, per microsec
+        self.epsip1   = np.zeros(0) # incremental plastic strain x dir
+        self.epsip2   = np.zeros(0) # incremental plastic strain y dir
+        self.epsip3   = np.zeros(0) # incremental plastic strain z dir
+        self.epstrain = np.zeros(0) # effective plastic strain
+        self.eestrain = np.zeros(0) # total elastic strain
         # these variables are evaluated at n=3; full time step ahead
         self.beta     = np.zeros(0) # (sigmar-sigmao)/(0.5 dpos)*rho = beta in Wilkins
         self.s1       = np.zeros(0) # s1 stress deviator deriv = 2G(deps1-dvr/vr/3)
@@ -981,6 +1002,7 @@ class DebugClass:
         # variables in time only - n
         self.ibc      = np.zeros(0,dtype='int') # boundary condition id number, integer
         self.yld      = np.zeros(0) # yield stress
+        self.mu       = np.zeros(0) # Shear modulus
         self.pfrac    = np.zeros(0) # fracture stress
         self.deltaz   = np.zeros(0) # distortion energy Mbar
         self.dtminj   = np.zeros(0) # 
@@ -1014,6 +1036,11 @@ class DomainClass:
         self.q        = np.zeros((n,j)) # artificial viscosity Mbar
         self.eps1     = np.zeros((n,j)) # velocity strain dup/dpos, per microsec
         self.eps2     = np.zeros((n,j)) # velocity strain up/pos, per microsec
+        self.epsip1   = np.zeros((n,j)) # incremental plastic strain x-dir, per microsec
+        self.epsip2   = np.zeros((n,j)) # incremental plastic strain y-dir, per microsec
+        self.epsip3   = np.zeros((n,j)) # incremental plastic strain z-dir, per microsec
+        self.epstrain = np.zeros((n,j))
+        self.eestrain = np.zeros((n,j))
         # these variables are evaluated at n=3; full time step ahead
         self.beta     = np.zeros((n,j)) # (sigmar-sigmao)/(0.5 dpos)*rho = beta in Wilkins
         self.iev0     = np.zeros((n,j)) # internal energy per initial volume 1e12 erg/cm3
@@ -1038,7 +1065,8 @@ class DomainClass:
         # variables in space only - j
         self.matid    = np.zeros(j) # material id number
         self.ibc      = np.zeros(j,dtype='int') # boundary condition id number, integer
-        self.yld      = np.zeros(j) # yield stress
+        self.yld      = np.zeros(j) # yield stress (output to validate models that have dynamic weakening/strengthening mechanisms)
+        self.mu       = np.zeros(j) # shear modulus (output to validate models that have dynamic weakening/strengthening mechanisms)
         self.pfrac    = np.zeros(j) # fracture stress
         self.rho0     = np.zeros(j) # initial density rho0 g/cm3; DEBUG later can free up this memory by referring to imat definition
         self.rho      = np.zeros(j) # local density g/cm3
@@ -1097,6 +1125,11 @@ class DomainClass:
         self.q        = np.zeros((n,j)) # artificial viscosity Mbar
         self.eps1     = np.zeros((n,j)) # velocity strain dup/dpos, per microsec
         self.eps2     = np.zeros((n,j)) # velocity strain up/pos, per microsec
+        self.epsip1   = np.zeros((n,j)) # incremental plastic strain in x-dir, per microsec
+        self.epsip2   = np.zeros((n,j)) # incremental plastic strain in y-dir, per microsec
+        self.epsip3   = np.zeros((n,j)) # incremental plastic strain in z-dir, per microsec
+        self.epstrain = np.zeros((n,j))
+        self.eestrain = np.zeros((n,j))
         # these variables are evaluated at n=3; full time step ahead
         self.beta     = np.zeros((n,j)) # (sigmar-sigmao)/(0.5 dpos)*rho = beta in Wilkins
         self.iev0     = np.zeros((n,j)) # internal energy per initial volume 1e12 erg/cm3
@@ -1109,6 +1142,7 @@ class DomainClass:
         self.matid    = np.zeros(j) # material id number
         self.ibc      = np.zeros(j,dtype='int') # boundary condition id number, integer
         self.yld      = np.zeros(j) # yield stress
+        self.mu       = np.zeros(j) # shear modulus
         self.pfrac    = np.zeros(j) # fracture stress
         self.rho0     = np.zeros(j) # initial density rho0 g/cm3; DEBUG later can free up this memory by referring to imat definition
         self.rho      = np.zeros(j) # local density g/cm3
@@ -1187,29 +1221,34 @@ class DomainClass:
         # PREVIOUSLY FILLED VARIABLES: pos,matid,ibc
         # now fill in material initial conditions
         for imat in np.arange(run.nmat):
+            #
             # initialize velocities; here for all domain array points to start
             self.up[:,self.matid==imat] = run.iupstart[imat]
-            #self.up[:,max(self.matid==imat)] = run.iupstart[imat]/2.
             # initialize all array points with initial rho0
             self.rho0[self.matid==imat] = run.irhostart[imat] # user input
             self.rho[self.matid==imat] = run.irhostart[imat] # user input
             self.vr[:,self.matid==imat] = 1.0 # relative volume to initial state == 1.0
             self.iev0[:,self.matid==imat] = run.iiev0start[imat] # user input
             self.pres[:,self.matid==imat] = run.ipstart[imat] # user input
-            # DEBUG: initialization for entropy yet 
+            #
+            # DEBUG: initialization for entropy yet
+            #
             # DEBUG: need to propertly initialize temps for all EOS
-            self.temp[:,self.matid==imat] = run.itempstart[imat] # starting temp for ideal gas E/cv
+            self.temp[:,self.matid==imat] = run.itempstart[imat]
+            #
             # initialize the material properties
-            # DEBUG ADD FLAGS FOR DIFFERENT STRENGTH MODELS
-            # FOR NOW JUST HYDRO and VM
+            # STRENGTH MODELS
+            # set the initial yield strength for each cell
             if run.istrid[imat] == 'VM':
                 self.yld[self.matid==imat]=run.istr[imat].ys
-                #self.pfrac[self.matid==imat]=run.istr[imat].pfrac
-            #DEBUG add fracture strength later
-            #if run.istrid[imat] == 'HYDRO':
-            #    self.pfrac[self.matid==imat]=run.istr[imat].pfrac
-            # for any material enter pfrac
+                self.mu[self.matid==imat]=run.istr[imat].gmod
+            if run.istrid[imat] == 'SG':
+                self.yld[self.matid==imat]=run.istr[imat].Y0
+                self.mu[self.matid==imat]=run.istr[imat].mu0
+            #
+            # INITIAL FRACTURE STRENGTH
             self.pfrac[self.matid==imat]=run.ifrac[imat].pfrac
+            #
             ### Wilkins Appendix B.2 Eq 1 Mass zoning
             # initialize mass in the zones j=odd
             # select interior array points for this material; exclude boundaries
@@ -1218,7 +1257,9 @@ class DomainClass:
             self.mass[ioddimat] = run.irhostart[imat] * \
                 ( nppower(self.pos[2,ioddimat+1],run.dgeom) - \
                   nppower(self.pos[2,ioddimat-1],run.dgeom) ) / run.dgeom
+            #
             # DEBUG: initialize sound speeds and temperature properly; depends on EOS model
+            #
             # add phase information for some tabular EOS
             if (run.ieosid[imat] == 'SES'):
                 sesphase = run.ieos[imat].sesphase(self.rho[ioddimat],self.iev0[2,ioddimat]/self.rho0[ioddimat])
@@ -1560,7 +1601,7 @@ class DomainClass:
         self.eps1[n+1,ioddj] = (self.up[n+1,ioddj+1]-self.up[n+1,ioddj-1]) / \
                                (self.pos[n+1,ioddj+1]-self.pos[n+1,ioddj-1])
         if (run.dflag == 'PLA'):  # use string for boolean checks
-            self.eps2[n+1,ioddj] = 0. # zero for planar geometry
+            self.eps2[n+1,ioddj] = 0. # zero for planar geometry; enforces plane strain
         else:
             self.eps2[n+1,ioddj] = (self.up[n+1,ioddj+1]+self.up[n+1,ioddj-1]) / \
                                     (self.pos[n+1,ioddj+1]+self.pos[n+1,ioddj-1])
@@ -1573,7 +1614,10 @@ class DomainClass:
             tmp = npwhere((self.matid == imat) & (self.ibc == 0))[0]
             ioddimat = tmp[tmp %2 == 1] # select only odd indices for zone values
             if (run.istrid[imat] == 'VM'):
-                gmod = run.istr[imat].gmod # Mbar
+                #gmod = run.istr[imat].gmod # Mbar
+                gmod = self.mu[ioddimat] # Mbar
+            if (run.istrid[imat] == 'SG'):
+                gmod = self.mu[ioddimat] # Mbar
             if (run.istrid[imat] == 'HYDRO'):
                 gmod = 0. # Mbar
                 #if verbose: print('imat, shear modulus',imat,gmod)
@@ -1594,19 +1638,29 @@ class DomainClass:
         # not using the actual EOS sound speed
         #
         # ------------ check for yielding interior odd j ---------------------
-        ### Wilkins Appendix B.2 Eq 6 Von Mises yield condition
+        ### YIELD STRENGTH OPTIONS: HYDRO, VM, SG
         # check for strength model; can be different for each material
-        # material specific code is unnecessary if every material is VM yield strength 
-        #    and each material yield values are already stored in self.yld
-        # keep this code for future development of strain-dependent strength models
+        # actual yield strength used in the code is stored in self.yld variable
+        # thus can be an output variable for checking/validation
+        # sscale is the scaling factor
+        # eps1 and eps2 are the velocity strains calculated above
+        # Borg variable names from fortran KO v13
+        #   epsip1, epsip2, epsip3 are incremental plastic strain in x,y,z directions
+        #   eqsn   is the equivalent plastic strain at the current time step n
+        #   eqsn2s is the equivalent plastic strain at intermediate future time step (n+2)*
+        #   eqsn2  is the equivalent plastic strain at the next time step (n+2)  
+        #   eestrain is the total elastic strain calculated from equivalent stress
+        #   epstrain is the total plastic strain
         for imat in np.arange(run.nmat):
             # select interior array points for this material
             tmp = npwhere((self.matid == imat) & (self.ibc == 0))[0]
             ioddimat = tmp[tmp %2 == 1] # select only odd indices for zone values
             if (run.istrid[imat] == 'VM'):
+                ### Wilkins Appendix B.2 Eq 6 Von Mises yield condition
                 # calculate Von Mises yield criterion
                 # must have already populated primary self.yld array
                 # calculate the deviatoric strain at n+1 and compare it to the yield strength
+                # for VM model domain yld and mu values are set in the mesh initialization and do not change
                 k = (np.square(self.s1[n+2,ioddimat]) + \
                      np.square(self.s2[n+2,ioddimat]) + \
                      np.square(self.s3[n+2,ioddimat])) - \
@@ -1616,15 +1670,122 @@ class DomainClass:
                 if len(iyld)>0:
                     # material has yielded
                     #if verbose: print('Material has yielded: imat, j vals ',imat,iyld)
-                    # multiply the stress deviators to reduce to max shear stresses
+                    # multiply the stress deviators to reduce to max shear stresses p193 App B.2.6
                     sscale = npsqrt(2./3.)*self.yld[iyld] / \
                              npsqrt(np.square(self.s1[n+2,iyld]) + \
                                      np.square(self.s2[n+2,iyld]) + \
                                      np.square(self.s3[n+2,iyld]))
+                    # v0.6.2 adding plastic strain
+                    # incremental equivalent plastic stress at n
+                    eqsn = npsqrt(3./2.)*npsqrt(self.s1[n,iyld]**2. + self.s2[n,iyld]**2. + self.s3[n,iyld]**2.)
+                    # incremental equivalent plastic stress at (n+2)*
+                    eqsn2s = npsqrt(3./2.)*npsqrt(self.s1[n+2,iyld]**2. + self.s2[n+2,iyld]**2. + self.s3[n+2,iyld]**2.)
+                    # multiply by scale factor to put the stress back on the yield surface
                     self.s1[n+2,iyld] *= sscale 
                     self.s2[n+2,iyld] *= sscale 
                     self.s3[n+2,iyld] *= sscale
                     #if verbose: print('sscale, self.s1=',sscale,self.s1[n+2,iyld])
+                    # calculate the incremental plastic strain in each direction with yielded stress components
+                    # Willkins Eq 3.21
+                    self.epsip1[n+2,iyld] = self.epsip1[n,iyld]+(1./sscale - 1.)*self.s1[n+2,iyld]/(2.*self.mu[iyld])
+                    self.epsip2[n+2,iyld] = self.epsip2[n,iyld]+(1./sscale - 1.)*self.s2[n+2,iyld]/(2.*self.mu[iyld])
+                    self.epsip3[n+2,iyld] = self.epsip3[n,iyld]+(1./sscale - 1.)*self.s3[n+2,iyld]/(2.*self.mu[iyld])
+                    # now recalculate the total incremental plastic strain at n and (n+1) with updated sx
+                    # incremental equivalent plastic stress at n
+                    eqsn = npsqrt(3./2.)*npsqrt(self.s1[n,iyld]**2. + self.s2[n,iyld]**2. + self.s3[n,iyld]**2.)
+                    # equivalent plastic stress at (n+2)
+                    eqsn2 = npsqrt(3./2.)*npsqrt(self.s1[n+2,iyld]**2. + self.s2[n+2,iyld]**2. + self.s3[n+2,iyld]**2.)
+                    # equivalent plastic stress
+                    # eqstress[n+2,iyld] = eqsn2 
+                    # update the total plastic strain at n+2 by adding incremental plastic strain at n+2
+                    self.epstrain[n+2,iyld] = self.epstrain[n,iyld] + (1./sscale)*eqsn2/(3.0*self.mu[iyld])
+                    # update accumulated elastic strain
+                    self.eestrain[n+2,iyld] = self.eestrain[n,iyld] + (eqsn2-eqsn)/(3.0*self.mu[iyld])
+                    #
+            if (run.istrid[imat] == 'SG'):
+                ### Wilkins Steinberg-Guinan strength model as implemented in fortran KO v13 by Borg
+                # loop over each cell in SG material to converge to yield conditions separately
+                isg = 0
+                for isg in ioddimat:
+                    ipstrain = 0.0
+                    ynew     = 0.0
+                    ytry     = self.yld[isg] 
+                    ytest    = 1. # convergence test variable initialize
+                    ycount   = 0 # count the number of iterations
+                                 # limit the number of strength convergence loops
+                    while (ytest > 1.e-7) and (ycount < 5):
+                        k = (np.square(self.s1[n+2,isg]) + \
+                             np.square(self.s2[n+2,isg]) + \
+                             np.square(self.s3[n+2,isg])) - \
+                            (2./3.)*np.square(ytry)
+                        sscale = npsqrt(2./3.)*ytry / \
+                                 npsqrt(np.square(self.s1[n+2,isg]) + \
+                                         np.square(self.s2[n+2,isg]) + \
+                                         np.square(self.s3[n+2,isg]))
+                        # equivalent plastic stress at (n+2)
+                        eqsn2    = npsqrt(3./2.)*npsqrt(self.s1[n+2,isg]**2. + self.s2[n+2,isg]**2. + self.s3[n+2,isg]**2.)
+                        ipstrain = (1./sscale-1.)*eqsn2/(3.*self.mu[isg])
+                        # calculate intermediate values for SG model
+                        Tmsg = run.istr[imat].Tm0*np.power(self.vr[n,isg],2./3.)*np.exp(2.*run.istr[imat].gamma0*(1.-self.vr[n,isg]))
+                        y1sg = run.istr[imat].Y0*(1.0+run.istr[imat].beta*(self.epstrain[n,isg]+ipstrain))**run.istr[imat].n
+                        if y1sg > run.istr[imat].Ymax:
+                            y1sg = run.istr[imat].Ymax
+                        # update the shear modulus with the incremental plastic strain
+                        # this is the equation for GS mu below Eq 3.32 in Wilkins
+                        self.mu[isg] = run.istr[imat].mu0*(1.0+run.istr[imat].b*self.pres[n,isg]*np.power(self.vr[n,isg],1./3.)- \
+                                                           run.istr[imat].h*(self.temp[n,isg]-300.0))
+                        # Borg uses a different equation than Wilkins why?? because no temperature?
+                        #self.mu[isg] = run.istr[imat].mu0*(1.0+run.istr[imat].b*self.pres[n,isg]*np.power(self.vr[n,isg],1./3.)- \
+                        #                                   run.istr[imat].h*(1.0+run.istr[imat].b*ipstrain/self.deltat)
+                        # update yield strength Eq. 3.32 Wilkins
+                        if self.temp[n,isg] <= Tmsg:
+                            ynew = y1sg * \
+                                   (1.0+run.istr[imat].b*self.pres[n,isg]*np.power(self.vr[n,isg],1./3.)-run.istr[imat].h*(self.temp[n,isg]-300.))
+                        else:
+                            ynew = 0.0
+                            self.mu[isg] = 0.0
+                        # test for convergence
+                        ytest = np.abs(ytry-ynew)
+                        ycount = ycount+1
+                    # after convergence of strain and yield stress; has this cell yielded?
+                    self.yld[isg] = ynew
+                    k = (np.square(self.s1[n+2,isg]) + \
+                         np.square(self.s2[n+2,isg]) + \
+                         np.square(self.s3[n+2,isg])) - \
+                        (2./3.)*np.square(self.yld[isg])
+                    if (k > 0.):
+                        # the material has yielded, update stress field
+                        # multiply the stress deviators to reduce to max shear stresses p193 App B.2.6
+                        sscale = npsqrt(2./3.)*self.yld[isg] / \
+                                 npsqrt(np.square(self.s1[n+2,isg]) + \
+                                         np.square(self.s2[n+2,isg]) + \
+                                         np.square(self.s3[n+2,isg]))
+                        # v0.6.2 adding plastic strain
+                        # incremental equivalent plastic stress at n
+                        eqsn = npsqrt(3./2.)*npsqrt(self.s1[n,isg]**2. + self.s2[n,isg]**2. + self.s3[n,isg]**2.)
+                        # incremental equivalent plastic stress at (n+2)*
+                        eqsn2s = npsqrt(3./2.)*npsqrt(self.s1[n+2,isg]**2. + self.s2[n+2,isg]**2. + self.s3[n+2,isg]**2.)
+                        # multiply by scale factor to put the stress back on the yield surface
+                        self.s1[n+2,isg] *= sscale 
+                        self.s2[n+2,isg] *= sscale 
+                        self.s3[n+2,isg] *= sscale
+                        #if verbose: print('sscale, self.s1=',sscale,self.s1[n+2,iyld])
+                        # calculate the incremental plastic strain in each direction with yielded stress components
+                        # Willkins Eq 3.21
+                        self.epsip1[n+2,isg] = self.epsip1[n,isg]+(1./sscale - 1.)*self.s1[n+2,isg]/(2.*self.mu[isg])
+                        self.epsip2[n+2,isg] = self.epsip2[n,isg]+(1./sscale - 1.)*self.s2[n+2,isg]/(2.*self.mu[isg])
+                        self.epsip3[n+2,isg] = self.epsip3[n,isg]+(1./sscale - 1.)*self.s3[n+2,isg]/(2.*self.mu[isg])
+                        # now recalculate the total incremental plastic strain at n and (n+1) with updated sx
+                        # incremental equivalent plastic stress at n
+                        eqsn = npsqrt(3./2.)*npsqrt(self.s1[n,isg]**2. + self.s2[n,isg]**2. + self.s3[n,isg]**2.)
+                        # equivalent plastic stress at (n+2)
+                        eqsn2 = npsqrt(3./2.)*npsqrt(self.s1[n+2,isg]**2. + self.s2[n+2,isg]**2. + self.s3[n+2,isg]**2.)
+                        # equivalent plastic stress
+                        # eqstress[n+2,isg] = eqsn2 
+                        # update the total plastic strain at n+2 by adding incremental plastic strain at n+2
+                        self.epstrain[n+2,isg] = self.epstrain[n,isg] + (1./sscale)*eqsn2/(3.0*self.mu[isg])
+                        # update accumulated elastic strain
+                        self.eestrain[n+2,isg] = self.eestrain[n,isg] + (eqsn2-eqsn)/(3.0*self.mu[isg])
         #
         # ------------ update artificial viscosity on interior odd j ---------------------
         ### Wilkins Appendix B.2 Eq 7 Artificial viscosity
@@ -1990,12 +2151,11 @@ class DomainClass:
         # ------------ check for fracture ---------------------
         # check if any cell for imat has exceeded the spall strength
         # use values at n+2 to create the fracture for the start of the next time step
-        # fracture needs more testing.
+        # DEBUG: FRACTURE NEEDS MORE TESTING
         #
         for imat in np.arange(run.nmat):
-            # Do not check for fractures if the material is not Von Mises material. DEBUG stsm check fracture conditions
-            if (run.istrid[imat] != 'HYDRO'):
-            # if False:
+            # v0.6.2 Each material has a fracture Boolean flag.
+            if run.ifrac[imat].usefrac:
                 # select interior array points for this material
                 tmp = npwhere((self.matid == imat) & (self.ibc == 0))[0]
                 ioddimat = tmp[tmp %2 == 1] # select only odd indices for zone values
@@ -2011,7 +2171,7 @@ class DomainClass:
                             print('SPALL imat, ioddimat[icheck], nextibc = ',imat, ioddimat[icheck], nextibc)
                             self.createinteriorfracture(run,imat,ioddimat[icheck],nextibc)
                         if False:
-                            # check if right next to an existing fracture
+                            # check if right next to an existing fracture -- don't do this; need more sensible way to prevent runaway fracture in more extreme events
                             lookindex = np.append(ioddimat[icheck],[np.min(ioddimat[icheck])-4,np.min(ioddimat[icheck])-4,np.min(ioddimat[icheck])-2,np.max(ioddimat[icheck])+2, np.max(ioddimat[icheck])+4, np.max(ioddimat[icheck])+4])
                             tmp = np.where(self.ibc[lookindex] != 0)[0]
                             if (len(tmp)==0):
@@ -2177,6 +2337,16 @@ class DomainClass:
         self.eps1[2:4,:]        = 0.
         self.eps2               = np.roll(self.eps2,2,axis=0)
         self.eps2[2:4,:]        = 0.
+        self.epsip1             = np.roll(self.epsip1,2,axis=0)
+        self.epsip1[2:4,:]      = 0.
+        self.epsip2             = np.roll(self.epsip2,2,axis=0)
+        self.epsip2[2:4,:]      = 0.
+        self.epsip3             = np.roll(self.epsip3,2,axis=0)
+        self.epsip3[2:4,:]      = 0.
+        self.epstrain           = np.roll(self.epstrain,2,axis=0)
+        self.epstrain[2:4,:]    = 0.
+        self.eestrain           = np.roll(self.eestrain,2,axis=0)
+        self.eestrain[2:4,:]    = 0.        
         self.s1                 = np.roll(self.s1,2,axis=0)
         self.s1[2:4,:]          = 0.
         self.s2                 = np.roll(self.s2,2,axis=0)
@@ -2196,6 +2366,9 @@ class DomainClass:
         # sigmar[j] and sigmao[j] are recalculated at the beginning
         # of the time step. They are only calculated for present n, so
         # not updated in the time shifts above.
+        #
+        # strength parameters?
+        # should yld, mu, pfrac be updated with the shift? no - just calculate for present n
         #
     def createinteriorboundary(self,run,imat,ninteriorbc):
         jend = max(np.where(self.matid == imat)[0]) 
@@ -2217,6 +2390,11 @@ class DomainClass:
         self.q        = np.zeros((n,j)) # artificial viscosity Mbar
         self.eps1     = np.zeros((n,j)) # velocity strain dup/dpos, per microsec
         self.eps2     = np.zeros((n,j)) # velocity strain up/pos, per microsec
+        self.epsip1   = np.zeros((n,j)) # incremental equivalent plastic strain x dir
+        self.epsip2   = np.zeros((n,j)) # incremental equivalent plastic strain y dir
+        self.epsip3   = np.zeros((n,j)) # incremental equivalent plastic strain z dir
+        self.epstrain = np.zeros((n,j)) # equivalent plastic strain
+        self.eestrain = np.zeros((n,j)) # total elastic strain
         self.beta     = np.zeros((n,j)) # (sigmar-sigmao)/(0.5 dpos)*rho = beta in Wilkins
         self.iev0     = np.zeros((n,j)) # internal energy per initial volume 1e12 erg/cm3
         self.pres     = np.zeros((n,j)) # pressure Mbar
@@ -2226,6 +2404,7 @@ class DomainClass:
         self.temp     = np.zeros((n,j)) # temperature K
         self.entropy  = np.zeros((n,j)) # entropy [DEBUG check eu/cm3 units]
         self.yld      = np.zeros(j) # yield stress
+        self.mu       = np.zeros(j) # shear modulus
         self.pfrac    = np.zeros(j) # fracture stress
         self.rho0     = np.zeros(j) # initial density rho0 g/cm3; DEBUG later can free up this memory by referring to imat definition
         self.rho      = np.zeros(j) # local density g/cm3
@@ -2288,6 +2467,8 @@ class DomainClass:
         self.ibc      = tmp
         tmp           = np.delete(self.yld,delarr)
         self.yld      = tmp
+        tmp           = np.delete(self.mu,delarr)
+        self.mu       = tmp
         tmp           = np.delete(self.pfrac,delarr)
         self.pfrac    = tmp 
         tmp           = np.delete(self.rho0,delarr)
@@ -2328,6 +2509,16 @@ class DomainClass:
         self.eps1     = tmp
         tmp           = np.delete(self.eps2,delarr,axis=1)                 
         self.eps2     = tmp
+        tmp           = np.delete(self.epsip1,delarr,axis=1)                 
+        self.epsip1   = tmp
+        tmp           = np.delete(self.epsip2,delarr,axis=1)                 
+        self.epsip2   = tmp
+        tmp           = np.delete(self.epsip3,delarr,axis=1)                 
+        self.epsip3   = tmp        
+        tmp           = np.delete(self.epstrain,delarr,axis=1)                 
+        self.epstrain = tmp        
+        tmp           = np.delete(self.eestrain,delarr,axis=1)                 
+        self.eestrain = tmp        
         tmp           = np.delete(self.beta,delarr,axis=1)                 
         self.beta     = tmp
         tmp           = np.delete(self.iev0,delarr,axis=1)                 
@@ -2420,6 +2611,16 @@ class DomainClass:
         self.eps1     = np.insert(self.eps1,jend+2,[0.,0.,0.,0.],axis=1)     
         self.eps2     = np.insert(self.eps2,jend+1,self.eps2[:,jend+1],axis=1)   
         self.eps2     = np.insert(self.eps2,jend+2,[0.,0.,0.,0.],axis=1)   
+        self.epsip1   = np.insert(self.epsip1,jend+1,self.epsip1[:,jend+1],axis=1)     
+        self.epsip1   = np.insert(self.epsip1,jend+2,[0.,0.,0.,0.],axis=1)     
+        self.epsip2   = np.insert(self.epsip2,jend+1,self.epsip2[:,jend+1],axis=1)     
+        self.epsip2   = np.insert(self.epsip2,jend+2,[0.,0.,0.,0.],axis=1)     
+        self.epsip3   = np.insert(self.epsip3,jend+1,self.epsip3[:,jend+1],axis=1)
+        self.epsip3   = np.insert(self.epsip3,jend+2,[0.,0.,0.,0.],axis=1)
+        self.epstrain = np.insert(self.epstrain,jend+1,self.epstrain[:,jend+1],axis=1)
+        self.epstrain = np.insert(self.epstrain,jend+2,[0.,0.,0.,0.],axis=1) 
+        self.eestrain = np.insert(self.eestrain,jend+1,self.eestrain[:,jend+1],axis=1)
+        self.eestrain = np.insert(self.eestrain,jend+2,[0.,0.,0.,0.],axis=1)  
         self.beta     = np.insert(self.beta,jend+1,self.beta[:,jend+1],axis=1)    
         self.beta     = np.insert(self.beta,jend+2,[0.,0.,0.,0.],axis=1)    
         self.iev0     = np.insert(self.iev0,jend+1,self.iev0[:,jend+1],axis=1)   
@@ -2439,6 +2640,7 @@ class DomainClass:
         # (j) arrays
         newarr = [0.,0.]
         self.yld      = np.insert(self.yld,jend+1,[self.yld[jend+1],0.])
+        self.mu       = np.insert(self.mu,jend+1,[self.mu[jend+1],0.])
         self.pfrac    = np.insert(self.pfrac,jend+1,[self.pfrac[jend+1],0.])
         self.rho0     = np.insert(self.rho0,jend+1,[self.rho0[jend+1],1.])
         self.rho      = np.insert(self.rho,jend+1,[self.rho[jend+1],0.])
@@ -2513,7 +2715,9 @@ class DomainClass:
         #
     def appendoutput(self,run,verbose=False):
         """ Appends data to ascii output file. NO UNITS CONVERSION.
-            Primarily used for debugging and comparison to fortran KO."""
+            Primarily used for debugging and comparison to fortran KO v11.
+            DOES NOT HAVE PLASTIC STRAIN v0.6.2
+            """
         n=1
         if verbose: print('Writing time ',self.time[n+2],' to file ',run.outputfilename)   
         with open(run.outputfilename,"a") as f: 
@@ -2552,6 +2756,7 @@ class DomainClass:
     def binaryoutputpint(self,run,verbose=False):
         """ Create time snapshot of cell centered values ready for pandas dataframe. 
             The output class is in the units defined by the user input in the yaml configuration file.
+            NEED TO ADD STRAIN VARIABLES TO THSI FILE and yld mu
         """
         # set up special code units for pint
         ureg.define('eu = 1.0E12 ergs')   # energy unit
@@ -2599,6 +2804,15 @@ class DomainClass:
         dataout.phase   = Q_(np.asarray(self.phase[ioddj]),'dimensionless')
         dtminjarr = Q_(np.asarray(self.dtminj[ioddj]),config['codeunits']['time'])
         dataout.dtminj  = dtminjarr.to(config['units']['time'])
+        # add strength variables to the output: plastic strain, yield strength, shear modulus, fracture strength
+        dataout.epsip1   = Q_(np.asarray(self.epsip1[n+2,ioddj]),'dimensionless')
+        dataout.epsip2   = Q_(np.asarray(self.epsip2[n+2,ioddj]),'dimensionless')
+        dataout.epsip3   = Q_(np.asarray(self.epsip3[n+2,ioddj]),'dimensionless')
+        dataout.epstrain = Q_(np.asarray(self.epstrain[n+2,ioddj]),'dimensionless')
+        dataout.eestrain = Q_(np.asarray(self.eestrain[n+2,ioddj]),'dimensionless')
+        dataout.yld      = Q_(np.asarray(self.yld[ioddj]),config['codeunits']['pressure']).to(config['units']['pressure'])
+        dataout.mu       = Q_(np.asarray(self.mu[ioddj]),config['codeunits']['pressure']).to(config['units']['pressure'])
+        dataout.pfrac    = Q_(np.asarray(self.pfrac[ioddj]),config['codeunits']['pressure']).to(config['units']['pressure'])
         with open(run.outputfilename,"ab") as f: 
             #print('dumping dataout class with pickle ',self.stepn)
             pickle.dump(dataout,f)
@@ -2616,6 +2830,7 @@ class DomainClass:
     def binarydebugoutputpint(self,run,verbose=False):
         """ Create time snapshot of all array values ready for pandas dataframe. 
             The output class is in the units defined by the user input in the yaml configuration file.
+            NEED TO ADD MU AND STRAIN VARIABLES FOR v0.6.2
         """
         # set up special code units for pint
         ureg.define('eu = 1.0E12 ergs')   # energy unit
@@ -2977,7 +3192,9 @@ def readinput_yaml(run,verbose=False):
             run.ieos[imat].c0 = c0.to(config['codeunits']['velocity']).magnitude
             # s1 dimless
             run.ieos[imat].s1 = config[matlist[imat]]['eos']['s1'] # dimless
-            # no s2 in v0.6.1
+            # s2 units time/length
+            #s2 = Q_(np.asarray(config[matlist[imat]]['eos']['s2'],dtype='float'),config['units']['s2'])
+            #run.ieos[imat].s2 = s2.to(config['codeunits']['s2']).magnitude
             # gamma dimless
             run.ieos[imat].gamma0 = config[matlist[imat]]['eos']['gamma0'] 
             # specific heat capacity cv
@@ -3107,6 +3324,7 @@ def readinput_yaml(run,verbose=False):
             # calculate the cold curve for temperature estimate (crude; only valid over small range)
             run.ieos[imat].calcecold()
         # -----------------------------------------------------------------------
+        # STRENGTH INPUTS
         # Fill in strength model parameters for each material
         if config[matlist[imat]]['str']['type'] == 'HYDRO':
             run.istrid.append('HYDRO')
@@ -3115,7 +3333,7 @@ def readinput_yaml(run,verbose=False):
             run.istr[imat].name='mat'+str(imat+1)
         if config[matlist[imat]]['str']['type'] == 'VM':
             run.istrid.append('VM')
-            strnew = VonMisesClass() # von Mises strength and fracture
+            strnew = VonMisesClass() # von Mises yield strength
             run.istr.append(strnew)
             run.istr[imat].name = 'mat'+str(imat+1)
             # ys Yield strength
@@ -3124,21 +3342,52 @@ def readinput_yaml(run,verbose=False):
             # gmod Shear Modulus
             gmod = Q_(np.asarray(config[matlist[imat]]['str']['gmod'],dtype='float'),config['units']['pressure'])
             run.istr[imat].gmod = gmod.to(config['codeunits']['pressure']).magnitude
+        if config[matlist[imat]]['str']['type'] == 'SG':
+            run.istrid.append('SG')
+            strnew = SteinbergGuinanClass() # Steinberg-Guinan yield strength
+            run.istr.append(strnew)
+            run.istr[imat].name = 'mat'+str(imat+1)
+            run.istr[imat].Y0   = Q_(np.asarray(config[matlist[imat]]['str']['Y0'],dtype='float'),config['units']['pressure']).to(config['codeunits']['pressure']).magnitude
+            run.istr[imat].Ymax = Q_(np.asarray(config[matlist[imat]]['str']['Ymax'],dtype='float'),config['units']['pressure']).to(config['codeunits']['pressure']).magnitude
+            run.istr[imat].beta = Q_(np.asarray(config[matlist[imat]]['str']['beta'],dtype='float'),'dimensionless').magnitude
+            run.istr[imat].n    = Q_(np.asarray(config[matlist[imat]]['str']['n'],dtype='float'),'dimensionless').magnitude
+            run.istr[imat].b    = Q_(np.asarray(config[matlist[imat]]['str']['b'],dtype='float'),'dimensionless').magnitude
+            run.istr[imat].h    = Q_(np.asarray(config[matlist[imat]]['str']['h'],dtype='float'),'dimensionless').magnitude
+            run.istr[imat].Tm0  = Q_(np.asarray(config[matlist[imat]]['str']['Tm0'],dtype='float'),config['units']['temperature']).to(config['codeunits']['temperature']).magnitude
+            run.istr[imat].mu0  = Q_(np.asarray(config[matlist[imat]]['str']['mu0'],dtype='float'),config['units']['pressure']).to(config['codeunits']['pressure']).magnitude
+            if run.ieosid[imat] == 'MGR':
+                run.istr[imat].gamma0 = run.ieos[imat].gamma0
+            if run.ieosid[imat] == 'TIL':
+                run.istr[imat].gamma0 = run.ieos[imat].a + run.ieos[imat].b
+            if run.ieosid[imat] == 'SES':
+                print('NEED GAMMA0 FROM SESAME EOS')
+                run.istr[imat].gamma0 = 1.0
+                stop
+        #
         # -----------------------------------------------------------------------
         # Dynamic fracture parameters
         fracnew = FractureClass()
         run.ifrac.append(fracnew)
         run.ifrac[imat].name='mat'+str(imat+1)
-        pfrac = Q_(np.asarray(config[matlist[imat]]['frac']['pfrac'],dtype='float'),config['units']['pressure'])
-        run.ifrac[imat].pfrac = pfrac.to(config['codeunits']['pressure']).magnitude
-        # nrhomin is an optional input parameter
-        if 'nrhomin' in config[matlist[imat]]['frac'].keys():
-            #print('Key nrhomin exists')
-            nrhomin = Q_(np.asarray(config[matlist[imat]]['frac']['nrhomin'],dtype='float'),'dimensionless')
-            run.ifrac[imat].nrhomin = nrhomin.magnitude
+        # if the fracture input parameters are present, read in the parameters
+        # if not present, the code assumes that fracture feature is not being used
+        if 'frac' in config[matlist[imat]]:
+            # fracture input parameters are present
+            run.ifrac[imat].usefrac = True
+            pfrac = Q_(np.asarray(config[matlist[imat]]['frac']['pfrac'],dtype='float'),config['units']['pressure'])
+            run.ifrac[imat].pfrac = pfrac.to(config['codeunits']['pressure']).magnitude
+            # nrhomin is an optional input parameter
+            if 'nrhomin' in config[matlist[imat]]['frac'].keys():
+                #print('Key nrhomin exists')
+                nrhomin = Q_(np.asarray(config[matlist[imat]]['frac']['nrhomin'],dtype='float'),'dimensionless')
+                run.ifrac[imat].nrhomin = nrhomin.magnitude
+            else:
+                print('Key nrhomin does not exist. Using default 0.8 for '+run.ifrac[imat].name)
+                run.ifrac[imat].nrhomin = 0.8
         else:
-            print('Key nrhomin does not exist. Using default 0.8')
-            run.ifrac[imat].nrhomin = 0.8
+            run.ifrac[imat].usefrac = False
+            print('Fracture is turned off for '+run.ifrac[imat].name)
+        #
         # -----------------------------------------------------------------------
         # if gravity, read in reference position for the initial state
         # gravity is an optional input parameter with each material
